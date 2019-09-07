@@ -76,3 +76,5 @@ SLEEP_LED_ENABLE = no    # Breathing sleep LED during USB suspend
 RAW_ENABLE = yes
 DYNAMIC_KEYMAP_ENABLE = yes
 CIE1931_CURVE = yes
+
+LAYOUTS = 65_all

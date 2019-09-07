@@ -1591,6 +1591,9 @@ void backlight_effect_indicators_set_colors( uint8_t index, HS color )
             {
                 backlight_set_color( 54+14, rgb.r, rgb.g, rgb.b ); // LD14
             }
+#elif defined(RGB_BACKLIGHT_DUSK65)
+            backlight_set_color( 36+6, rgb.r, rgb.g, rgb.b ); // LC6
+            backlight_set_color( 54+14, rgb.r, rgb.g, rgb.b ); // LD14
 #endif
         }
     }
@@ -1822,7 +1825,7 @@ void backlight_config_set_value( uint8_t *data )
     uint8_t *value_data = &(data[1]);
     switch ( *value_id )
     {
-#if defined (RGB_BACKLIGHT_ZEAL60) || defined(RGB_BACKLIGHT_ZEAL65)
+#if defined (RGB_BACKLIGHT_ZEAL60) || defined(RGB_BACKLIGHT_ZEAL65) || defined(RGB_BACKLIGHT_DUSK65)
         case id_use_split_backspace:
         {
             g_config.use_split_backspace = (bool)*value_data;

@@ -1,4 +1,4 @@
-/* Copyright 2017 Jason Williams (Wilba)
+/* Copyright 2019 Jason Williams (Wilba)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,9 +19,9 @@
 #include "keyboards/wilba_tech/wt_rgb_backlight_keycodes.h"
 #include "keyboards/wilba_tech/via_keycodes.h"
 
-#define XXXX KC_NO
+#define ____ KC_NO
 
-#define LAYOUT_60_all ( \
+#define LAYOUT_65_all ( \
     K000, K001, K002, K003, K004, K005, K006, K007, K008, K009, K010, K011, K012, K013, K213, K014, \
     K100, K101, K102, K103, K104, K105, K106, K107, K108, K109, K110, K111, K112, K113,       K114, \
     K200, K201, K202, K203, K204, K205, K206, K207, K208, K209, K210, K211, K212,             K214, \
@@ -31,6 +31,6 @@
     { K000, K001, K002, K003, K004, K005, K006, K007, K008, K009, K010, K011, K012, K013, K014 }, \
     { K100, K101, K102, K103, K104, K105, K106, K107, K108, K109, K110, K111, K112, K113, K114 }, \
     { K200, K201, K202, K203, K204, K205, K206, K207, K208, K209, K210, K211, K212, K213, K214 }, \
-    { K300, K301, K302, K303, K304, K305, K306, K307, K308, K309, K310, XXXX, K312, K313, K314 }, \
-    { K400, K401, K402, XXXX, XXXX, K405, XXXX, XXXX, XXXX, K409, K410, XXXX, K412, K413, K414 }  \
+    { K300, K301, K302, K303, K304, K305, K306, K307, K308, K309, K310, ____, K312, K313, K314 }, \
+    { K400, K401, K402, ____, ____, K405, ____, ____, ____, K409, K410, ____, K412, K413, K414 }  \
 }
