@@ -794,7 +794,16 @@ const Point g_map_led_to_point_polar[BACKLIGHT_LED_COUNT] PROGMEM = {
     {221,255}, {225,255}, {229,255}, {22,255}, {12,255}, {244,255}, {234,255}, {255,255},
 };
 #elif defined(RGB_BACKLIGHT_DUSK65)
+//zeal
+// Note: Left spacebar stab is at 4,2 (LC7)
+// Right spacebar stab is at 4,9 (D14)
+//
+// C17,  C8,  C7, ---, ---, ---, ---,  C0, ---, D14, D15, D16, D17, B17, B16
 
+// Note: Left spacebar stab is at 4,3 (LC6)
+// Right spacebar stab is at 4,8 (D14)
+//
+// C17,  C8,  C7,  C6, ---,  C0, ---, ---, D14, D15, D16, ---, D17, B17, B16
 const Point g_map_led_to_point[BACKLIGHT_LED_COUNT] PROGMEM = {
     // LA0..LA17
     {120,16}, {104,16}, {88,16}, {72,16}, {56,16}, {40,16}, {24,16}, {4,16}, {4,32},
@@ -803,11 +812,11 @@ const Point g_map_led_to_point[BACKLIGHT_LED_COUNT] PROGMEM = {
     {144,0}, {160,0}, {176,0}, {192,0}, {216,0}, {224,0}, {240,0}, {240,16}, {240,32},
     {136,16}, {152,16}, {168,16}, {184,16}, {200,16}, {220,16}, {240,48}, {240,64}, {224,64},
     // LC0..LC17
-    {96,64}, {100,48}, {84,48}, {68,48}, {52,48}, {36,48}, {255,255}, {48,60}, {28,64},
+    {96,64}, {116,48}, {100,48}, {84,48}, {68,48}, {52,48}, {255,255}, {48,60}, {28,64},
     {108,32}, {92,32}, {76,32}, {60,32}, {44,32}, {28,32}, {20,44}, {10,48}, {4,64},
     // LD0..LD17
-    {124,32}, {140,32}, {156,32}, {172,32}, {188,32}, {214,32}, {180,48}, {202,48}, {224,48},
-    {116,48}, {132,48}, {148,48}, {164,48}, {255,255}, {144,60}, {164,64}, {188,64}, {208,64}
+    {124,32}, {140,32}, {156,32}, {172,32}, {188,32}, {214,32}, {202,48}, {255,255}, {224,48},
+    {132,48}, {148,48}, {164,48}, {180,48}, {255,255}, {144,60}, {36,48}, {188,64}, {208,64}
 };
 const Point g_map_led_to_point_polar[BACKLIGHT_LED_COUNT] PROGMEM = {
     // LA0..LA17
@@ -2219,6 +2228,10 @@ void backlight_init_drivers(void)
                           ( index == 54+13 ) ||  // LD13
                           ( index >= 72+0 && index <= 72+8 ) ||  // LE0-LE8
                           ( index == 90+13 ) ); // LF13
+#elif defined(RGB_BACKLIGHT_DUSK65)
+        bool enabled = !( ( index == 18+5 && !g_config.use_split_backspace ) || // LB5
+                          ( index == 54+7 ) || // LD7
+                          ( index == 54+13 ) ); // LD13
 #endif
         // This only caches it for later
         IS31FL3731_set_led_control_register( index, enabled, enabled, enabled );

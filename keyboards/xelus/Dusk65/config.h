@@ -30,8 +30,8 @@
 #define MATRIX_COLS 15
 
 // Zeal60 PCB default pin-out
-#define MATRIX_ROW_PINS { F0, F1, F4, F6, F7 }
-#define MATRIX_COL_PINS { F5, D5, B1, B2, B3, D3, D2, C7, C6, B6, B5, B4, D7, D6, D4 }
+#define MATRIX_ROW_PINS { B0, B1, F0, F1, F4 }
+#define MATRIX_COL_PINS { E6, D5, B2, B3, D3, F6, F7, C7, C6, B6, B5, B4, D7, D6, D4 }
 #define UNUSED_PINS
 
 // IS31FL3731 driver
