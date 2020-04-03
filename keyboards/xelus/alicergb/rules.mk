@@ -1,5 +1,6 @@
 # MCU name
-MCU = STM32F303
+MCU = STM32F072
+BOARD = ST_STM32F072B_DISCOVERY
 
 # Do not put the microcontroller into power saving mode
 # when we get USB suspend event. We want it to keep updating
@@ -9,21 +10,23 @@ OPT_DEFS += -DNO_SUSPEND_POWER_DOWN
 # Build Options
 #   comment out to disable the options.
 #
-BACKLIGHT_ENABLE = no              # Enable keyboard backlight functionality
 BOOTMAGIC_ENABLE = lite            # Virtual DIP switch configuration
 MOUSEKEY_ENABLE = yes              # Mouse keys
 EXTRAKEY_ENABLE = yes              # Audio control and System control
 CONSOLE_ENABLE = no                # Console for debug
 COMMAND_ENABLE = no                # Commands for debug and configuration
+BACKLIGHT_ENABLE = no              # Enable keyboard backlight functionality
 SLEEP_LED_ENABLE = no              # Breathing sleep LED during USB suspend
 NKRO_ENABLE = yes                  # USB Nkey Rollover
 AUDIO_ENABLE = no                  # Audio output on port C6
 NO_USB_STARTUP_CHECK = no          # Disable initialization only when usb is plugged in
-#SERIAL_LINK_ENABLE = yes
+MIDI_ENABLE = no                   # MIDI support
+UNICODE_ENABLE = no                # Uni code
+BLUETOOTH_ENABLE = no              # Enable Bluetooth with the Adafruit EZ-Key HID
+FAUXCLICKY_ENABLE = no             # Use buzzer to emulate clicky switches
+RGBLIGHT_ENABLE = no               # Enable WS2812 RGB underlight. - We have custom RGB underglow
 
 CIE1931_CURVE = yes
-
-LAYOUTS = 60_ansi
 
 # project specific files
 SRC =	keyboards/wilba_tech/wt_main.c \

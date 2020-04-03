@@ -15,5 +15,5 @@
  */
 
 #ifndef RGB_BACKLIGHT_HS60
-#error RGB_BACKLIGHT_HS60 not defined, recheck config.h
+#error RGB_BACKLIGHT_ALICERGB not defined, recheck config.h
 #endif
