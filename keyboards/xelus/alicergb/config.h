@@ -31,10 +31,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 /* key matrix size */
 #define MATRIX_ROWS 5
-#define MATRIX_COLS 14
+#define MATRIX_COLS 15
 
 #define MATRIX_ROW_PINS { B3, B4, B5, A8, A4 }
-#define MATRIX_COL_PINS { A13, A10, A9, A14, A15, B8, B9, C13, C14, C15, A0, A1, A2, A3 }
+#define MATRIX_COL_PINS { A13, A10, A9, A14, A15, B8, B9, C13, C14, C15, A0, A1, A2, A3, A5 }
 // To enable debugger set A13 A14 -> A5 A6
 
 /* COL2ROW, ROW2COL*/
@@ -90,7 +90,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define RGB_BACKLIGHT_ENABLED 1
 
 #define RGB_BACKLIGHT_HS60
-#define TIMER3_TOP
 
 // they aren't really used if RGB_BACKLIGHT_HS60 defined
 #define RGB_BACKLIGHT_USE_SPLIT_BACKSPACE 0

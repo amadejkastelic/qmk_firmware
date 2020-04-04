@@ -28,6 +28,8 @@ RGBLIGHT_ENABLE = no               # Enable WS2812 RGB underlight. - We have cus
 
 CIE1931_CURVE = yes
 
+LAYOUT = LAYOUT_all
+
 # project specific files
 SRC =	keyboards/wilba_tech/wt_main.c \
 		keyboards/wilba_tech/wt_rgb_backlight.c \
