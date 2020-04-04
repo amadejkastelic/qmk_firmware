@@ -20,12 +20,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "config_common.h"
 
 /* USB Device descriptor parameter */
-#define VENDOR_ID       0x8968
-#define PRODUCT_ID      0x4854
-#define DEVICE_VER      0x0002
-#define MANUFACTURER    Yiancar-Designs
-#define PRODUCT         HS60 V2
-#define DESCRIPTION     GH60 compatible, tool free RGB keyboard
+#define VENDOR_ID       0x5845 // XE
+#define PRODUCT_ID      0x0A62 // Alice62
+#define DEVICE_VER      0x0001
+#define MANUFACTURER    Xelus
+#define PRODUCT         ALICE RGB
+#define DESCRIPTION     Alice RGB
 
 #define HS60_ANSI
 
@@ -33,9 +33,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define MATRIX_ROWS 5
 #define MATRIX_COLS 15
 
-#define MATRIX_ROW_PINS { B3, B4, B5, A8, A4 }
-#define MATRIX_COL_PINS { A13, A10, A9, A14, A15, B8, B9, C13, C14, C15, A0, A1, A2, A3, A5 }
-// To enable debugger set A13 A14 -> A5 A6
+#define MATRIX_ROW_PINS { B13, B12, A5, A4, A3 }
+#define MATRIX_COL_PINS { B11, B10, B2, B1, B0, A7, A6, A13, B7, B6, B5, B4, B3, A15, A14}
 
 /* COL2ROW, ROW2COL*/
 #define DIODE_DIRECTION COL2ROW
@@ -43,57 +42,21 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 /* Debounce reduces chatter (unintended double-presses) - set 0 if debouncing is not needed */
 #define DEBOUNCE 5
 
-/* define if matrix has ghost (lacks anti-ghosting diodes) */
-//#define MATRIX_HAS_GHOST
-
-/* If defined, GRAVE_ESC will always act as ESC when CTRL is held.
- * This is userful for the Windows task manager shortcut (ctrl+shift+esc).
- */
-// #define GRAVE_ESC_CTRL_OVERRIDE
-
-/*
- * Force NKRO
- *
- * Force NKRO (nKey Rollover) to be enabled by default, regardless of the saved
- * state in the bootmagic EEPROM settings. (Note that NKRO must be enabled in the
- * makefile for this to work.)
- *
- * If forced on, NKRO can be disabled via magic key (default = LShift+RShift+N)
- * until the next keyboard reset.
- *
- * NKRO may prevent your keystrokes from being detected in the BIOS, but it is
- * fully operational during normal computer usage.
- *
- * For a less heavy-handed approach, enable NKRO via magic key (LShift+RShift+N)
- * or via bootmagic (hold SPACE+N while plugging in the keyboard). Once set by
- * bootmagic, NKRO mode will always be enabled until it is toggled again during a
- * power-up.
- *
- */
-//#define FORCE_NKRO
-
-/*
- * Magic Key Options
- *
- * Magic keys are hotkey commands that allow control over firmware functions of
- * the keyboard. They are best used in combination with the HID Listen program,
- * found here: https://www.pjrc.com/teensy/hid_listen.html
- *
- * The options below allow the magic key functionality to be changed. This is
- * useful if your keyboard/keypad is missing keys and you want magic key support.
- *
- */
-
-
 /* Backlight options */
 
 #define RGB_BACKLIGHT_ENABLED 1
 
-#define RGB_BACKLIGHT_HS60
+#define RGB_BACKLIGHT_ALICERGB
 
-// they aren't really used if RGB_BACKLIGHT_HS60 defined
+//IS31FL3731 driver
+#define DRIVER_COUNT 2
+#define DRIVER_LED_TOTAL 72
+
+// Enabled/Disable LEDs based on layout
 #define RGB_BACKLIGHT_USE_SPLIT_BACKSPACE 0
 #define RGB_BACKLIGHT_USE_SPLIT_LEFT_SHIFT 0
+
+// not used
 #define RGB_BACKLIGHT_USE_SPLIT_RIGHT_SHIFT 0
 #define RGB_BACKLIGHT_USE_7U_SPACEBAR 0
 #define RGB_BACKLIGHT_USE_ISO_ENTER 0
@@ -118,19 +81,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define RGB_BACKLIGHT_COLOR_1 { .h = 0, .s = 255 }
 #define RGB_BACKLIGHT_COLOR_2 { .h = 127, .s = 255 }
 
-#define DRIVER_COUNT 2
-#define DRIVER_LED_TOTAL 64
-
 // These define which keys in the matrix are alphas/mods
 // Used for backlight effects so colors are different for
 // alphas vs. mods
 // Each value is for a row, bit 0 is column 0
 // Alpha=0 Mod=1
-#define RGB_BACKLIGHT_ALPHAS_MODS_ROW_0 0b0010000000000001
-#define RGB_BACKLIGHT_ALPHAS_MODS_ROW_1 0b0000000000000001
-#define RGB_BACKLIGHT_ALPHAS_MODS_ROW_2 0b0010000000000001
+#define RGB_BACKLIGHT_ALPHAS_MODS_ROW_0 0b0010000000000011
+#define RGB_BACKLIGHT_ALPHAS_MODS_ROW_1 0b0000000000000011
+#define RGB_BACKLIGHT_ALPHAS_MODS_ROW_2 0b0010000000000011
 #define RGB_BACKLIGHT_ALPHAS_MODS_ROW_3 0b0010000000000001
-#define RGB_BACKLIGHT_ALPHAS_MODS_ROW_4 0b0011110000000111
+#define RGB_BACKLIGHT_ALPHAS_MODS_ROW_4 0b0011110000001111
 
 #define RGB_BACKLIGHT_CAPS_LOCK_INDICATOR { .color = { .h = 0, .s = 0 }, .index = 255 }
 #define RGB_BACKLIGHT_LAYER_1_INDICATOR { .color = { .h = 0, .s = 0 }, .index = 255 }
@@ -139,7 +99,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 // Backlight config starts after VIA's EEPROM usage,
 // dynamic keymaps start after this.
-#define VIA_EEPROM_CUSTOM_CONFIG_SIZE 32
+#define VIA_EEPROM_CUSTOM_CONFIG_SIZE 31
 
 // VIA lighting is handled by the keyboard-level code
 #define VIA_CUSTOM_LIGHTING_ENABLE

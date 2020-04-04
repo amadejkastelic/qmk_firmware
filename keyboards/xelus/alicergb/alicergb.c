@@ -14,6 +14,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef RGB_BACKLIGHT_HS60
+#ifndef RGB_BACKLIGHT_ALICERGB
 #error RGB_BACKLIGHT_ALICERGB not defined, recheck config.h
 #endif

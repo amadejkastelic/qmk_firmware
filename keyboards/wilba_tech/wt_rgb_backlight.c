@@ -23,6 +23,7 @@
     defined(RGB_BACKLIGHT_NK65) || \
     defined(RGB_BACKLIGHT_U80_A) || \
     defined(RGB_BACKLIGHT_DAWN60) || \
+    defined(RGB_BACKLIGHT_ALICERGB) || \
     defined(RGB_BACKLIGHT_WT60_B) || \
     defined(RGB_BACKLIGHT_WT60_BX) || \
     defined(RGB_BACKLIGHT_WT60_C)
@@ -43,7 +44,7 @@
 #include "wt_rgb_backlight_api.h"
 #include "wt_rgb_backlight_keycodes.h"
 
-#if !defined(RGB_BACKLIGHT_HS60) && !defined(RGB_BACKLIGHT_NK65)
+#if !defined(RGB_BACKLIGHT_HS60) && !defined(RGB_BACKLIGHT_NK65) && !defined(RGB_BACKLIGHT_ALICERGB)
 #include <avr/interrupt.h>
 #include "drivers/avr/i2c_master.h"
 #else
@@ -981,6 +982,44 @@ const Point g_map_led_to_point_polar[BACKLIGHT_LED_COUNT] PROGMEM = {
 	{234,255}, {222,255}, {213,255}, {197,255}, {180,255}, {167,255}, {152,255}, {147,255}, {128,255}, {101,255}
 };
 
+#elif defined(RGB_BACKLIGHT_ALICERGB)
+const Point g_map_led_to_point[BACKLIGHT_LED_COUNT] PROGMEM = {
+    // LA0..LA17
+	{104, 16}, {88 , 16}, {72 , 16}, {56 , 16}, {40 , 16}, {24 , 16}, {4  , 16}, {6  , 32},
+    {112,  0}, {96 ,  0}, {80 ,  0}, {64 ,  0}, {48 ,  0}, {32 ,  0}, {16 ,  0}, {0  ,  0}, {0 ,  0},
+
+    // LB0..LB17
+	{255,255}, {128,  0}, {144,  0}, {160,  0}, {176,  0}, {192,  0}, {208,  0}, {224,  0}, {214, 32},
+    {120, 16}, {136, 16}, {152, 16}, {168, 16}, {184, 16}, {200, 16}, {220, 16}, {224, 48}, {255,255},
+
+    // LC0..LC17
+	{100, 48}, {84 , 48}, {68 , 48}, {52 , 48}, {36 , 48}, {102, 64}, {42 , 64},
+    {108, 32}, {92 , 32}, {76 , 32}, {60 , 32}, {44 , 32}, {28 , 32}, {10 , 48}, {2  , 64},
+
+    // LD0..LD17
+	{124, 32}, {140, 32}, {156, 32}, {172, 32}, {188, 32}, {180, 48}, {202, 48}, {224, 64},
+    {116, 48}, {132, 48}, {148, 48}, {164, 48}, {160, 64},  {176, 64}, {192, 64}, {208, 64},
+
+	//RGB UNDERGLOW
+	{27 , 3}, {64 , 3}, {100, 3}, {137, 3},	{173, 3}, {209, 3}, {242, 4}, {255, 8}, {255,32}, {255,64},
+	{241,64}, {212,64},	{173,64}, {137,64}, {100,64}, {63 ,64},	{28 ,64}, {0  ,64},	{0  ,32}, {0  , 8},	//20
+};
+
+const Point g_map_led_to_point_polar[BACKLIGHT_LED_COUNT] PROGMEM = {
+	//LA1..LA16
+	{70,129}, {80,139}, {89,157}, {96,181}, {101,208}, {105,238}, {109,255}, {128,247},
+	{64,255}, {70,255}, {75,255}, {80,255}, {85,255},  {89,255},  {93,255},  {96,255},
+	//LB1..LB16
+	{58,255}, {53,255}, {48,255}, {43,255}, {39,255},  {34,255}, {32,255}, {255,233},
+	{58,129}, {48,139}, {39,157}, {32,181}, {27,208}, {23,238}, {19,255}, {237,255},
+	//LC1..LC16
+	{183,131}, {173,143}, {165,163}, {159,188}, {154,216}, {188,255}, {170,255}, {165,255},
+	{128,9}, {128,46}, {128,82}, {128,119}, {128,155}, {128,192}, {147,255}, {161,255},
+	//LD1..LD16
+	{0,27}, {0,64}, {0,101}, {0,137}, {0,174}, {228,201}, {235,255}, {224,255},
+	{195,128}, {206,136}, {215,152}, {222,175}, {208,255}, {213,255}, {217, 255}, {222,225},
+};
+
 #endif
 
 // This may seem counter-intuitive, but it's quite flexible.
@@ -1000,7 +1039,7 @@ void map_led_to_point( uint8_t index, Point *point )
 
     switch (index)
     {
-#if !defined(RGB_BACKLIGHT_DAWN60)
+#if !defined(RGB_BACKLIGHT_DAWN60) && !defined(RGB_BACKLIGHT_ALICERGB)
         case 18+4: // LB4A
             if ( g_config.use_split_backspace )
                 point->x -= 8;
@@ -1316,7 +1355,7 @@ void backlight_set_key_hit(uint8_t row, uint8_t column)
     g_any_key_hit = 0;
 }
 
-#if !defined(RGB_BACKLIGHT_HS60) && !defined(RGB_BACKLIGHT_NK65)
+#if !defined(RGB_BACKLIGHT_HS60) && !defined(RGB_BACKLIGHT_NK65) && !defined(RGB_BACKLIGHT_ALICERGB)
 // This is (F_CPU/1024) / 20 Hz
 // = 15625 Hz / 20 Hz
 // = 781
@@ -1611,7 +1650,7 @@ void backlight_effect_cycle_all(void)
     for ( int i=0; i<BACKLIGHT_LED_COUNT; i++ )
     {
         uint16_t offset2 = g_key_hit[i]<<2;
-#if !defined(RGB_BACKLIGHT_HS60) && !defined(RGB_BACKLIGHT_NK65) && !defined(RGB_BACKLIGHT_DAWN60)
+#if !defined(RGB_BACKLIGHT_HS60) && !defined(RGB_BACKLIGHT_NK65) && !defined(RGB_BACKLIGHT_DAWN60) && !defined(RGB_BACKLIGHT_ALICERGB)
         // stabilizer LEDs use spacebar hits
         if ( i == 36+6 || i == 54+13 || // LC6, LD13
                 ( g_config.use_7u_spacebar && i == 54+14 ) ) // LD14
@@ -1636,7 +1675,7 @@ void backlight_effect_cycle_left_right(void)
     for ( int i=0; i<BACKLIGHT_LED_COUNT; i++ )
     {
         uint16_t offset2 = g_key_hit[i]<<2;
-#if !defined(RGB_BACKLIGHT_HS60) && !defined(RGB_BACKLIGHT_NK65) && !defined(RGB_BACKLIGHT_DAWN60)
+#if !defined(RGB_BACKLIGHT_HS60) && !defined(RGB_BACKLIGHT_NK65) && !defined(RGB_BACKLIGHT_DAWN60) && !defined(RGB_BACKLIGHT_ALICERGB)
         // stabilizer LEDs use spacebar hits
         if ( i == 36+6 || i == 54+13 || // LC6, LD13
                 ( g_config.use_7u_spacebar && i == 54+14 ) ) // LD14
@@ -1663,7 +1702,7 @@ void backlight_effect_cycle_up_down(void)
     for ( int i=0; i<BACKLIGHT_LED_COUNT; i++ )
     {
         uint16_t offset2 = g_key_hit[i]<<2;
-#if !defined(RGB_BACKLIGHT_HS60) && !defined(RGB_BACKLIGHT_NK65) && !defined(RGB_BACKLIGHT_DAWN60)
+#if !defined(RGB_BACKLIGHT_HS60) && !defined(RGB_BACKLIGHT_NK65) && !defined(RGB_BACKLIGHT_DAWN60) && !defined(RGB_BACKLIGHT_ALICERGB)
         // stabilizer LEDs use spacebar hits
         if ( i == 36+6 || i == 54+13 || // LC6, LD13
                 ( g_config.use_7u_spacebar && i == 54+14 ) ) // LD14
@@ -1837,7 +1876,7 @@ void backlight_effect_indicators(void)
     }
 }
 
-#if !defined(RGB_BACKLIGHT_HS60) && !defined(RGB_BACKLIGHT_NK65)
+#if !defined(RGB_BACKLIGHT_HS60) && !defined(RGB_BACKLIGHT_NK65) && !defined(RGB_BACKLIGHT_ALICERGB)
 ISR(TIMER3_COMPA_vect)
 #else //STM32 interrupt
 static void gpt_backlight_timer_task(GPTDriver *gptp)
