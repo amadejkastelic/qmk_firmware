@@ -1,14 +1,12 @@
-# Instant60
+# Alice RGB
 
-Instant60 Keyboard
+Alice RGB Keyboard
 
-Keyboard Maintainer: [Andrew Kannan](https://github.com/awkannan)  
+Keyboard Maintainer: [Xelus22](https://github.com/xelus22)  
 Hardware Supported: STM32F072CBT6  
-
-[PCB Support Docs](https://docs.cannonkeys.com/instant60/)
 
 Make example for this keyboard (after setting up your build environment):
 
-    make cannonkeys/instant60:default
+    make xelus/alicergb:default
 
 See the [build environment setup](https://docs.qmk.fm/#/getting_started_build_tools) and the [make instructions](https://docs.qmk.fm/#/getting_started_make_guide) for more information. Brand new to QMK? Start with our [Complete Newbs Guide](https://docs.qmk.fm/#/newbs).
