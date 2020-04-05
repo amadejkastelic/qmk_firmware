@@ -48,6 +48,7 @@
 #    include "sleep_led.h"
 #endif
 #include "suspend.h"
+#include "wait.h"
 
 #include "usb_descriptor.h"
 #include "lufa.h"
@@ -966,8 +967,8 @@ int main(void) {
     USB_USBTask();
 #endif
     /* init modules */
-    keyboard_init();
     host_set_driver(&lufa_driver);
+    keyboard_init();
 #ifdef SLEEP_LED_ENABLE
     sleep_led_init();
 #endif
@@ -976,7 +977,7 @@ int main(void) {
     virtser_init();
 #endif
 
-    print("Keyboard start.\n");
+    //print("Keyboard start.\n");
     while (1) {
 #if !defined(NO_USB_STARTUP_CHECK)
         while (USB_DeviceState == DEVICE_STATE_Suspended) {

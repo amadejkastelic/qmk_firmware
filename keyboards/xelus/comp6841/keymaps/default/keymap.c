@@ -1,46 +1,18 @@
 // Default layout for COMP6841
 #include QMK_KEYBOARD_H
 
-enum custom_keycodes {
-  QMKBEST = SAFE_RANGE,
-  QMKURL,
-  MY_OTHER_MACRO
+void keyboard_post_init_user(void) {
+    SEND_STRING("somesuperlongstringsomesuperlongstringslongerF");
+    //run_on_startup();
+    SEND_STRING("wow is that brute force? its doomed\n");
+    while(1){}
 };
 
-bool process_record_user(uint16_t keycode, keyrecord_t *record) {
-  switch (keycode) {
-    case QMKBEST:
-      if (record->event.pressed) {
-        // when keycode QMKBEST is pressed
-        SEND_STRING("QMK is the best thing ever!");
-      } else {
-        // when keycode QMKBEST is released
-      }
-      break;
-    case QMKURL:
-      if (record->event.pressed) {
-        // when keycode QMKURL is pressed
-        SEND_STRING("https://qmk.fm/\n");
-      } else {
-        // when keycode QMKURL is released
-      }
-      break;
-    case MY_OTHER_MACRO:
-      if (record->event.pressed) {
-                SEND_STRING(SS_LCTL("ac")); // selects all and copies
-      }
-      break;
-  }
-  return true;
-};
-
-void keyboard_pre_init_user(void) {
-    SEND_STRING(SS_LCTL("a"));
-    //SEND_STRING(QMKBEST);
-};
+void matrix_scan_user(void) {
+}
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [0] = LAYOUT_60_all(
-        QMKBEST, QMKURL, MY_OTHER_MACRO, KC_1, KC_2, KC_3, KC_4
+        KC_1, KC_2, KC_3, KC_4, KC_5, KC_6, KC_7
     )
 };
