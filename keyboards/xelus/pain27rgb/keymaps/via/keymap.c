@@ -1,4 +1,4 @@
-// Default layout for Pain27RGB
+// VIA layout for Pain27RGB
 #include QMK_KEYBOARD_H
 
 //  RGB-specific keys:
