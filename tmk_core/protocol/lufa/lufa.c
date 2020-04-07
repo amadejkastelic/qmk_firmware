@@ -967,8 +967,8 @@ int main(void) {
     USB_USBTask();
 #endif
     /* init modules */
-    host_set_driver(&lufa_driver);
     keyboard_init();
+    host_set_driver(&lufa_driver);
 #ifdef SLEEP_LED_ENABLE
     sleep_led_init();
 #endif
