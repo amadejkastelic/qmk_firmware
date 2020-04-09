@@ -963,12 +963,15 @@ int main(void) {
 #    endif
     }
     print("USB configured.\n");
+    wait_ms(300);
 #else
     USB_USBTask();
 #endif
     /* init modules */
-    keyboard_init();
     host_set_driver(&lufa_driver);
+    wait_ms(600);
+    keyboard_init();
+    //wait_ms(600);
 #ifdef SLEEP_LED_ENABLE
     sleep_led_init();
 #endif
