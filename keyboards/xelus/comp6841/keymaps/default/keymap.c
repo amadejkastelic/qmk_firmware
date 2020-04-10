@@ -2,20 +2,9 @@
 #include QMK_KEYBOARD_H
 
 void keyboard_post_init_user(void) {
-    //SEND_STRING("somesuperlongstringsomesuperlongstringslongerF");
-    //run_on_startup();
-    //SEND_STRING("wow is that brute force? its doomed\n");
-    SEND_STRING("wow is that brute force? its doomed\n");
+    SEND_STRING("Wow is that brute force? It's doomed.\n");
     while(1){}
-    //SEND_STRING("wow is that brute force? its doomed\n");
 };
-
-void matrix_scan_user(void) {
-}
-
-void suspend_wakeup_init_user(void) {
-    //SEND_STRING("wow is that brute force? its doomed\n");
-}
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [0] = LAYOUT_60_all(

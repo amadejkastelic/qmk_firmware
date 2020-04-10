@@ -963,7 +963,7 @@ int main(void) {
 #    endif
     }
     print("USB configured.\n");
-    wait_ms(300);
+    wait_ms(500);
 #else
     USB_USBTask();
 #endif
