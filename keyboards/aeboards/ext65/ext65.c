@@ -22,6 +22,7 @@
 #include "ext65.h"
 
 uint16_t repeat_mode;
+bool uppercase;
 
 void tap_code16_nomods(uint8_t kc) {
     uint8_t temp_mod = get_mods();
@@ -49,10 +50,15 @@ __attribute__((weak)) bool process_record_keymap(uint16_t keycode, keyrecord_t *
 
 void tzarc_common_init(void) {
     repeat_mode    = KC_NOMODE;
+    uppercase      = false;
 }
 
 void keyboard_post_init_user(void) {
     tzarc_common_init();
+}
+
+void eeconfig_init_user(void) {
+    set_unicode_input_mode(UC_LNX);
 }
 
 typedef uint32_t (*translator_function_t)(bool is_shifted, uint32_t keycode);
@@ -200,6 +206,24 @@ bool process_record_aussie(uint16_t keycode, keyrecord_t *record) {
     return process_record_keymap(keycode, record);
 }
 
+bool process_record_spongebob(uint16_t keycode, keyrecord_t *record) {
+    if((KC_A <= keycode) && (keycode <= KC_Z)) {
+        if ( record->event.pressed ) {
+            if (uppercase == true) {
+                tap_code16(S(keycode));
+                uppercase = false;
+            } else {
+                tap_code16(keycode);
+                uppercase = true;
+            }
+        }
+        return false;
+    }
+
+    return process_record_keymap(keycode, record);
+}
+
+
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 
     switch (keycode) {
@@ -253,6 +277,28 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                 repeat_mode = keycode;
             }
             return false;
+
+        case KC_SBOB:
+            if (record->event.pressed) {
+                if (repeat_mode != KC_SBOB) {
+                    dprint("Enabling spongebob mode\n");
+                }
+                uppercase = false;
+                repeat_mode = keycode;
+            }
+            return false;
+
+        case  KC_LNUX:
+            if(record->event.pressed) {
+                set_unicode_input_mode(UC_LNX);
+            }
+            return false;
+
+        case KC_WIND:
+            if(record->event.pressed) {
+                set_unicode_input_mode(UC_WINC);
+            }
+            return false;
     }
 
     if (repeat_mode == KC_REGIONAL) {
@@ -264,6 +310,8 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         }
     } else if (repeat_mode == KC_AUSSIE) {
         return process_record_aussie(keycode, record);
+    } else if (repeat_mode == KC_SBOB) {
+        return process_record_spongebob(keycode, record);
     }
 
     return process_record_keymap(keycode, record);
