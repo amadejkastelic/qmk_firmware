@@ -211,6 +211,7 @@ bool process_record_spongebob(uint16_t keycode, keyrecord_t *record) {
         if ( record->event.pressed ) {
             if (uppercase == true) {
                 tap_code16(S(keycode));
+                clear_mods();
                 uppercase = false;
             } else {
                 tap_code16(keycode);
