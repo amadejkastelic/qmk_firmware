@@ -288,18 +288,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                 repeat_mode = keycode;
             }
             return false;
-
-        case  KC_LNUX:
-            if(record->event.pressed) {
-                set_unicode_input_mode(UC_LNX);
-            }
-            return false;
-
-        case KC_WIND:
-            if(record->event.pressed) {
-                set_unicode_input_mode(UC_WINC);
-            }
-            return false;
     }
 
     if (repeat_mode == KC_REGIONAL) {
