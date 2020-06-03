@@ -52,6 +52,19 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define DRIVER_COUNT 2
 #define DRIVER_LED_TOTAL 72
 
+// I2C defines
+#define I2C1_SCL 8
+#define I2C1_SDA 9
+
+#define I2C1_SCL_PAL_MODE 1
+#define I2C1_SDA_PAL_MODE 1
+
+#define I2C1_TIMINGR_PRESC 	0U
+#define I2C1_TIMINGR_SCLDEL 3U
+#define I2C1_TIMINGR_SDADEL 1U
+#define I2C1_TIMINGR_SCLH 	3U
+#define I2C1_TIMINGR_SCLL   9U
+
 // Enabled/Disable LEDs based on layout
 #define RGB_BACKLIGHT_USE_SPLIT_BACKSPACE 1
 #define RGB_BACKLIGHT_USE_SPLIT_RIGHT_SHIFT 1
