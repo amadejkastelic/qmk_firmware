@@ -2480,8 +2480,14 @@ void backlight_init_drivers(void)
                           ( index == 47+13 && g_config.use_7u_spacebar ) ||     //LD13
                           ( index == 47+15 && g_config.use_7u_spacebar ) );       //LD15
 #elif defined(RGB_BACKLIGHT_ALICERGB)
-        bool enabled = !( ( index == 18+7 && g_config.use_split_backspace ) || //LB7
-                          ( index == 18+17 && g_config.use_split_right_shift ) ); //LB17
+        bool enabled = !( ( index == 0+0 ) ||  //LA0
+                          ( index == 36+0 ) ||  //LC0
+                          ( index == 36+8 ) ||  //LC8
+                          ( index == 36+17 ) ||  //LC17
+                          ( index == 54+0 ) ||  //LD0
+                          ( index == 54+17 ) ||  //LD17
+                          ( index == 18+7 && !g_config.use_split_backspace ) || //LB7
+                          ( index == 18+17 && !g_config.use_split_right_shift ) ); //LB17
 #endif
         // This only caches it for later
         IS31FL3731_set_led_control_register( index, enabled, enabled, enabled );

@@ -27,8 +27,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define PRODUCT         ALICE RGB
 #define DESCRIPTION     Alice RGB
 
-#define HS60_ANSI
-
 /* key matrix size */
 #define MATRIX_ROWS 5
 #define MATRIX_COLS 15
