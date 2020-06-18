@@ -1,3 +1,3 @@
-The default keymap for SOLARIS RGB
+The default keymap for Solos
 ==========================================================
 

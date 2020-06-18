@@ -1,2 +1,2 @@
-The VIA keymap for SOLARIS RGB
+The VIA keymap for Solos
 =========================================================

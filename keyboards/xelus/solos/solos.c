@@ -14,6 +14,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef RGB_BACKLIGHT_SOLARIS
-#error RGB_BACKLIGHT_SOLARIS not defined, recheck config.h
+#ifndef RGB_BACKLIGHT_SOLOS
+#error RGB_BACKLIGHT_SOLOS not defined, recheck config.h
 #endif

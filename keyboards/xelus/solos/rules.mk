@@ -31,7 +31,7 @@ CIE1931_CURVE = yes
 LAYOUT = LAYOUT_all
 
 # project specific files
-SRC =	keyboards/wilba_tech/wt_main.c \
+SRC +=	keyboards/wilba_tech/wt_main.c \
 		keyboards/wilba_tech/wt_rgb_backlight.c \
 		drivers/issi/is31fl3736.c \
 		quantum/color.c \
