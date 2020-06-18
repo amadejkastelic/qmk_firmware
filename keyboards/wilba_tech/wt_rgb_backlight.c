@@ -24,7 +24,7 @@
     defined(RGB_BACKLIGHT_NEBULA65) || \
     defined(RGB_BACKLIGHT_U80_A) || \
     defined(RGB_BACKLIGHT_DAWN60) || \
-    defined(RGB_BACKLIGHT_SOLARIS) || \
+    defined(RGB_BACKLIGHT_SOLOS) || \
     defined(RGB_BACKLIGHT_WT60_B) || \
     defined(RGB_BACKLIGHT_WT60_BX) || \
     defined(RGB_BACKLIGHT_WT60_C)
@@ -45,7 +45,7 @@
 #include "wt_rgb_backlight_api.h"
 #include "wt_rgb_backlight_keycodes.h"
 
-#if !defined(RGB_BACKLIGHT_HS60) && !defined(RGB_BACKLIGHT_NK65) && !defined(RGB_BACKLIGHT_NEBULA65) && !defined(RGB_BACKLIGHT_SOLARIS)
+#if !defined(RGB_BACKLIGHT_HS60) && !defined(RGB_BACKLIGHT_NK65) && !defined(RGB_BACKLIGHT_NEBULA65) && !defined(RGB_BACKLIGHT_SOLOS)
 #include <avr/interrupt.h>
 #include "drivers/avr/i2c_master.h"
 #else
@@ -79,7 +79,7 @@ LED_TYPE g_ws2812_leds[WS2812_LED_TOTAL];
 #elif defined(RGB_BACKLIGHT_NK65) || defined(RGB_BACKLIGHT_NEBULA65)
 #include "drivers/issi/is31fl3733.h"
 #define BACKLIGHT_LED_COUNT 69
-#elif defined(RGB_BACKLIGHT_SOLARIS)
+#elif defined(RGB_BACKLIGHT_SOLOS)
 #include "drivers/issi/is31fl3736.h"
 #define BACKLIGHT_LED_COUNT 32
 #else
@@ -571,7 +571,7 @@ const is31_led g_is31_leds[DRIVER_LED_TOTAL] = {
     {1, C9_15,  C8_15,  C6_14}, //D15
     {1, C9_16,  C7_15,  C6_15}  //D16
 };
-#elif defined(RGB_BACKLIGHT_SOLARIS)
+#elif defined(RGB_BACKLIGHT_SOLOS)
 // This is a 7-bit address, that gets left-shifted and bit 0
 // set to 0 for write, 1 for read (as per I2C protocol)
 #define ISSI_ADDR_1 0x50
@@ -1053,7 +1053,7 @@ const Point g_map_led_to_point_polar[BACKLIGHT_LED_COUNT] PROGMEM = {
     //11 - 20
     {234,255}, {222,255}, {213,255}, {197,255}, {180,255}, {167,255}, {152,255}, {147,255}, {128,255}, {101,255}
 };
-#elif defined(RGB_BACKLIGHT_SOLARIS)
+#elif defined(RGB_BACKLIGHT_SOLOS)
     const Point g_map_led_to_point[BACKLIGHT_LED_COUNT] PROGMEM = {
     // LA1..LA16
 	{0  ,  5}, {37 ,  0}, {187,  0}, {224,  5}, {0  ,  0}, {75 ,  0}, {149,  0}, {224,  0},
@@ -1072,7 +1072,6 @@ const Point g_map_led_to_point_polar[BACKLIGHT_LED_COUNT] PROGMEM = {
 	{191,141}, {85 ,160}, {85 ,224}, {191,243}, {205,148}, {255, 96}, {255,255}, {205,236},
 	{255,160}, {191,179}, {191,205}, {255,224}, {218,168}, {181,192}, {255,255}, {218,216}
 };
-
 #endif
 
 // This may seem counter-intuitive, but it's quite flexible.
@@ -1086,7 +1085,7 @@ void map_led_to_point( uint8_t index, Point *point )
     point->x = pgm_read_byte(addr);
     point->y = pgm_read_byte(addr+1);
 
-#if defined(RGB_BACKLIGHT_M6_B) || defined(RGB_BACKLIGHT_HS60) || defined(RGB_BACKLIGHT_NK65) || defined(RGB_BACKLIGHT_NEBULA65) || defined(RGB_BACKLIGHT_SOLARIS)
+#if defined(RGB_BACKLIGHT_M6_B) || defined(RGB_BACKLIGHT_HS60) || defined(RGB_BACKLIGHT_NK65) || defined(RGB_BACKLIGHT_NEBULA65) || defined(RGB_BACKLIGHT_SOLOS)
     return;
 #endif
 
@@ -1308,8 +1307,8 @@ const uint8_t g_map_row_column_to_led[MATRIX_ROWS][MATRIX_COLS] PROGMEM = {
 	{ 31+15, 31+5 , 31+4 , 31+3 , 31+2 , 31+1 , 47+9 , 47+10, 47+11, 47+12, 255  ,47+6 , 47+7 , 15+16},
 	{ 31+16, 31+8 , 31+7 , 255  , 255  , 31+6 , 255  , 255  , 255  , 47+13, 47+14, 47+15, 47+16, 47+8 }
 };
-#elif defined(RGB_BACKLIGHT_SOLARIS)
-// Solaris
+#elif defined(RGB_BACKLIGHT_SOLOS)
+// SOLOS
 // A5, A6, A7, A8
 // A9, A10, A11, A12
 // A17, A18, A19, A20
@@ -1343,7 +1342,7 @@ void backlight_update_pwm_buffers(void)
     IS31FL3733_update_pwm_buffers( ISSI_ADDR_2, 1 );
     IS31FL3733_update_led_control_registers( ISSI_ADDR_1, 0 );
     IS31FL3733_update_led_control_registers( ISSI_ADDR_2, 1 );
-#elif defined(RGB_BACKLIGHT_SOLARIS)
+#elif defined(RGB_BACKLIGHT_SOLOS)
     IS31FL3736_update_pwm_buffers( ISSI_ADDR_1, 0 );
 #elif defined(RGB_BACKLIGHT_U80_A)
     static uint8_t driver = 0;
@@ -1377,7 +1376,7 @@ void backlight_set_color( int index, uint8_t red, uint8_t green, uint8_t blue )
     IS31FL3218_set_color( index, red, green, blue );
 #elif defined(RGB_BACKLIGHT_HS60) || defined(RGB_BACKLIGHT_NK65) || defined(RGB_BACKLIGHT_NEBULA65)
     IS31FL3733_set_color( index, red, green, blue );
-#elif defined(RGB_BACKLIGHT_SOLARIS)
+#elif defined(RGB_BACKLIGHT_SOLOS)
     IS31FL3736_set_color( index, red, green, blue );
 #elif defined(RGB_BACKLIGHT_DAWN60)
     if( index < DRIVER_LED_TOTAL ) {
@@ -1402,7 +1401,7 @@ void backlight_set_color_all( uint8_t red, uint8_t green, uint8_t blue )
     for (int i = 0; i < BACKLIGHT_LED_COUNT; i++) {
         IS31FL3733_set_color(i, red, green, blue);
     }
-#elif defined(RGB_BACKLIGHT_SOLARIS)
+#elif defined(RGB_BACKLIGHT_SOLOS)
     for (int i = 0; i < BACKLIGHT_LED_COUNT; i++) {
         IS31FL3736_set_color(i, red, green, blue);
     }
@@ -1428,7 +1427,7 @@ void backlight_set_key_hit(uint8_t row, uint8_t column)
     g_any_key_hit = 0;
 }
 
-#if !defined(RGB_BACKLIGHT_HS60) && !defined(RGB_BACKLIGHT_NK65) && !defined(RGB_BACKLIGHT_NEBULA65) && !defined(RGB_BACKLIGHT_SOLARIS)
+#if !defined(RGB_BACKLIGHT_HS60) && !defined(RGB_BACKLIGHT_NK65) && !defined(RGB_BACKLIGHT_NEBULA65) && !defined(RGB_BACKLIGHT_SOLOS)
 // This is (F_CPU/1024) / 20 Hz
 // = 15625 Hz / 20 Hz
 // = 781
@@ -1949,7 +1948,7 @@ void backlight_effect_indicators(void)
     }
 }
 
-#if !defined(RGB_BACKLIGHT_HS60) && !defined(RGB_BACKLIGHT_NK65) && !defined(RGB_BACKLIGHT_NEBULA65) && !defined(RGB_BACKLIGHT_SOLARIS)
+#if !defined(RGB_BACKLIGHT_HS60) && !defined(RGB_BACKLIGHT_NK65) && !defined(RGB_BACKLIGHT_NEBULA65) && !defined(RGB_BACKLIGHT_SOLOS)
 ISR(TIMER3_COMPA_vect)
 #else //STM32 interrupt
 static void gpt_backlight_timer_task(GPTDriver *gptp)
@@ -2460,7 +2459,7 @@ void backlight_init_drivers(void)
     // This actually updates the LED drivers
     IS31FL3733_update_led_control_registers( ISSI_ADDR_1, 0 );
     IS31FL3733_update_led_control_registers( ISSI_ADDR_2, 1 );
-#elif defined(RGB_BACKLIGHT_SOLARIS)
+#elif defined(RGB_BACKLIGHT_SOLOS)
     IS31FL3736_init( ISSI_ADDR_1 );
 
     for ( int index = 0; index < DRIVER_LED_TOTAL; index++ )
