@@ -1,3 +1,3 @@
-The default keymap for Alice RGB
+The default keymap for SOLARIS RGB
 ==========================================================
 

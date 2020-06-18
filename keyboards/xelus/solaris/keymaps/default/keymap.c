@@ -15,8 +15,6 @@
  */
 #include QMK_KEYBOARD_H
 
-//This is the ANSI version of the PCB
-
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 [0] = LAYOUT_all( /* Base */                \
     KC_F1, KC_F2, KC_F3, KC_F4,            \
