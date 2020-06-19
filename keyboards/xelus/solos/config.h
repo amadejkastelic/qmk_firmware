@@ -19,21 +19,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "config_common.h"
 
-/* USB Device descriptor parameter 
+/* USB Device descriptor parameter */
 #define VENDOR_ID       0x5845 // XE
-#define PRODUCT_ID      0x0A62 // Solaris
+#define PRODUCT_ID      0x534F // Solos - SO
 #define DEVICE_VER      0x0001
 #define MANUFACTURER    Xelus
-#define PRODUCT         SOLARIS
-#define DESCRIPTION     SOLARIS*/
-
-// USB Device descriptor parameter
-#define VENDOR_ID       0x5845 // XE
-#define PRODUCT_ID      0x0060 // Dawn60
-#define DEVICE_VER      0x0001
-#define MANUFACTURER    Xelus
-#define PRODUCT         Dawn60
-#define DESCRIPTION     Dawn60
+#define PRODUCT         Solos
+#define DESCRIPTION     Solos
 
 /* key matrix size */
 #define MATRIX_ROWS 4
