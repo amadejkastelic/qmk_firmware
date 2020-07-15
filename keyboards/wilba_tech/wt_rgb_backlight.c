@@ -55,7 +55,7 @@
 #include "drivers/chibios/i2c_master.h"
 #endif
 
-#if defined(RGB_BACKLIGHT_DAWN60)
+#if defined(RGB_BACKLIGHT_DAWN60) || defined(RGB_BACKLIGHT_ALICERGB)
 #include "ws2812.h"
 LED_TYPE g_ws2812_leds[WS2812_LED_TOTAL];
 #endif

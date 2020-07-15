@@ -31,7 +31,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define MATRIX_ROWS 5
 #define MATRIX_COLS 15
 
-#define MATRIX_ROW_PINS { B13, B12, A5, A4, A3 }
+#define MATRIX_ROW_PINS { A0, B12, A5, A4, A3 }
 #define MATRIX_COL_PINS { B11, B10, B2, B1, B0, A7, A6, A13, B7, B6, B5, B4, B3, A15, A14}
 
 /* COL2ROW, ROW2COL*/
@@ -40,15 +40,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 /* Debounce reduces chatter (unintended double-presses) - set 0 if debouncing is not needed */
 #define DEBOUNCE 5
 
-/* Backlight options */
+//RGB Underglow WS2812
+#define RGBLIGHT_ANIMATIONS
+#define WS2812_LED_TOTAL    24
+#define RGBLED_NUM          24
+#define RGB_DI_PIN B15
 
-#define RGB_BACKLIGHT_ENABLED 1
-
-#define RGB_BACKLIGHT_ALICERGB
-
-//IS31FL3731 driver
-#define DRIVER_COUNT 2
-#define DRIVER_LED_TOTAL 72
+//SPI
+#define WS2812_SPI SPID2
+#define WS2812_SPI_MOSI_PAL_MODE 0
+#define WS2812_EXTERNAL_PULLUP
 
 // I2C defines
 #define I2C1_SCL 8
@@ -62,6 +63,19 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define I2C1_TIMINGR_SDADEL 1U
 #define I2C1_TIMINGR_SCLH 	3U
 #define I2C1_TIMINGR_SCLL   9U
+
+// EEPROM Chip
+#define EEPROM_I2C_CAT24C512
+
+// Backlight options
+#define RGB_BACKLIGHT_ENABLED 1
+
+#define RGB_BACKLIGHT_ALICERGB
+
+//IS31FL3731 driver
+#define DRIVER_COUNT 2
+#define DRIVER_LED_TOTAL 72
+
 
 // Enabled/Disable LEDs based on layout
 #define RGB_BACKLIGHT_USE_SPLIT_BACKSPACE 1
