@@ -66,6 +66,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 // EEPROM Chip
 #define EEPROM_I2C_CAT24C512
+#define DYNAMIC_KEYMAP_EEPROM_MAX_ADDR 65535
 
 // Backlight options
 #define RGB_BACKLIGHT_ENABLED 1

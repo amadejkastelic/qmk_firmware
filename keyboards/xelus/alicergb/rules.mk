@@ -24,7 +24,7 @@ MIDI_ENABLE = no                   # MIDI support
 UNICODE_ENABLE = no                # Uni code
 BLUETOOTH_ENABLE = no              # Enable Bluetooth with the Adafruit EZ-Key HID
 FAUXCLICKY_ENABLE = no             # Use buzzer to emulate clicky switches
-RGBLIGHT_ENABLE = spi              # Enable WS2812 RGB underlight. - We have custom RGB underglow
+RGBLIGHT_ENABLE = no               # Enable WS2812 RGB underlight. - We have custom RGB underglow
 EEPROM_DRIVER = i2c
 
 
@@ -39,4 +39,5 @@ SRC +=	keyboards/wilba_tech/wt_main.c \
 		quantum/color.c \
 		ws2812_spi.c
 
-QUANTUM_LIB_SRC += i2c_master.c 
+QUANTUM_LIB_SRC += i2c_master.c \
+				   spi_master.c  \
