@@ -31,7 +31,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define MATRIX_ROWS 5
 #define MATRIX_COLS 15
 
-#define MATRIX_ROW_PINS { A0, B12, A5, A4, A3 }
+#define MATRIX_ROW_PINS { A10, B12, A5, A4, A3 }
 #define MATRIX_COL_PINS { B11, B10, B2, B1, B0, A7, A6, A13, B7, B6, B5, B4, B3, A15, A14}
 
 /* COL2ROW, ROW2COL*/
@@ -65,8 +65,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define I2C1_TIMINGR_SCLL   9U
 
 // EEPROM Chip
-#define EEPROM_I2C_CAT24C512
-#define DYNAMIC_KEYMAP_EEPROM_MAX_ADDR 65535
+//#define EEPROM_I2C_CAT24C512
+//#define DYNAMIC_KEYMAP_EEPROM_MAX_ADDR 65535
 
 // Backlight options
 #define RGB_BACKLIGHT_ENABLED 1
