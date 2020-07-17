@@ -89,6 +89,8 @@ LED_TYPE g_ws2812_leds[WS2812_LED_TOTAL];
 #define BACKLIGHT_LED_COUNT 108
 #elif defined(RGB_BACKLIGHT_DAWN60)
 #define BACKLIGHT_LED_COUNT 84  //64 + 20
+#elif defined(RGB_BACKLIGHT_ALICERGB)
+#define BACKLIGHT_LED_COUNT 96  //72 + 24
 #elif defined(RGB_BACKLIGHT_NEBULA12)
 #define BACKLIGHT_LED_COUNT 16
 #else
@@ -1071,7 +1073,11 @@ const Point g_map_led_to_point[BACKLIGHT_LED_COUNT] PROGMEM = {
     {106,133}, {91 ,123}, {76 ,113}, {61 ,103}, {45 ,103}, {49 ,152}, {25 ,152}, {19 ,201}, {255,255},
     // LD0..LD17
 	{255,255}, {141,134}, {156,124}, {171,113}, {186,103}, {202,103}, {217,103}, {234,152}, {248,201},
-    {137,187}, {152,176}, {167,166}, {182,156}, {198,152}, {213,152}, {153,225}, {186,207}, {255,255}
+    {137,187}, {152,176}, {167,166}, {182,156}, {198,152}, {213,152}, {153,225}, {186,207}, {255,255},
+    // Underglow
+    {0  ,  0}, {0  ,  0}, {0  ,  0}, {0  ,  0}, {0  ,  0}, {0  ,  0}, {0  ,  0}, {0  ,  0}, 
+    {0  ,  0}, {0  ,  0}, {0  ,  0}, {0  ,  0}, {0  ,  0}, {0  ,  0}, {0  ,  0}, {0  ,  0}, 
+    {0  ,  0}, {0  ,  0}, {0  ,  0}, {0  ,  0}, {0  ,  0}, {0  ,  0}, {0  ,  0}, {0  ,  0}
 };
 
 const Point g_map_led_to_point_polar[BACKLIGHT_LED_COUNT] PROGMEM = {
@@ -1086,7 +1092,11 @@ const Point g_map_led_to_point_polar[BACKLIGHT_LED_COUNT] PROGMEM = {
     {139, 45}, {123, 73}, {117,107}, {114,142}, {116,173}, {140,165}, {137,212}, {152,255}, {255,255},
     // LD0..LD17
 	{255,255}, {239, 30}, {6  , 58}, {13 , 92}, {16 ,127}, {13 ,158}, {11 ,187}, {247,219}, {234,255},
-    {198,120}, {211,110}, {224,111}, {236,123}, {242,150}, {245,179}, {202,203}, {218,198}, {255,255}
+    {198,120}, {211,110}, {224,111}, {236,123}, {242,150}, {245,179}, {202,203}, {218,198}, {255,255},
+    // Underglow
+    {0  ,  0}, {0  ,  0}, {0  ,  0}, {0  ,  0}, {0  ,  0}, {0  ,  0}, {0  ,  0}, {0  ,  0},
+    {0  ,  0}, {0  ,  0}, {0  ,  0}, {0  ,  0}, {0  ,  0}, {0  ,  0}, {0  ,  0}, {0  ,  0},
+    {0  ,  0}, {0  ,  0}, {0  ,  0}, {0  ,  0}, {0  ,  0}, {0  ,  0}, {0  ,  0}, {0  ,  0}
 };
 
 #endif
@@ -1418,7 +1428,7 @@ void backlight_set_color( int index, uint8_t red, uint8_t green, uint8_t blue )
     IS31FL3218_set_color( index, red, green, blue );
 #elif defined(RGB_BACKLIGHT_HS60) || defined(RGB_BACKLIGHT_NK65) || defined(RGB_BACKLIGHT_NEBULA65)
     IS31FL3733_set_color( index, red, green, blue );
-#elif defined(RGB_BACKLIGHT_DAWN60)
+#elif defined(RGB_BACKLIGHT_DAWN60) || defined(RGB_BACKLIGHT_ALICERGB)
     if( index < DRIVER_LED_TOTAL ) {
         IS31FL3731_set_color( index, red, green, blue );
     } else {
@@ -1441,7 +1451,7 @@ void backlight_set_color_all( uint8_t red, uint8_t green, uint8_t blue )
     for (int i = 0; i < BACKLIGHT_LED_COUNT; i++) {
         IS31FL3733_set_color(i, red, green, blue);
     }
-#elif defined(RGB_BACKLIGHT_DAWN60)
+#elif defined(RGB_BACKLIGHT_DAWN60) || defined(RGB_BACKLIGHT_ALICERGB)
     IS31FL3731_set_color_all( red, green, blue );
     for (uint8_t i = 0; i < WS2812_LED_TOTAL; i++) {
         g_ws2812_leds[i].r = red;
@@ -1677,7 +1687,7 @@ void backlight_effect_alphas_mods(void)
             }
         }
     }
-#if defined(RGB_BACKLIGHT_DAWN60)
+#if defined(RGB_BACKLIGHT_DAWN60) || defined(RGB_BACKLIGHT_ALICERGB)
     for (int i = 0; i < WS2812_LED_TOTAL; i++) {
         if ((RGB_UNDERGLOW_ALPHA_TOP_START <= i && i <= RGB_UNDERGLOW_ALPHA_TOP_END) ||
             (RGB_UNDERGLOW_ALPHA_BOT_START <= i && i <= RGB_UNDERGLOW_ALPHA_BOT_END)) {

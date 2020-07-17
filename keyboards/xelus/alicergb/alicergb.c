@@ -13,7 +13,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+#include "alicergb.h"
 
 #ifndef RGB_BACKLIGHT_ALICERGB
 #error RGB_BACKLIGHT_ALICERGB not defined, recheck config.h
 #endif
+
+void board_init(void) {
+  SYSCFG->CFGR1 |= SYSCFG_CFGR1_I2C1_DMA_RMP;
+  SYSCFG->CFGR1 &= ~(SYSCFG_CFGR1_SPI2_DMA_RMP);
+}

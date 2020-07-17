@@ -118,6 +118,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define RGB_BACKLIGHT_ALPHAS_MODS_ROW_3 0b0010000000000001
 #define RGB_BACKLIGHT_ALPHAS_MODS_ROW_4 0b0011110000001111
 
+#define RGB_UNDERGLOW_ALPHA_TOP_START 0
+#define RGB_UNDERGLOW_ALPHA_TOP_END   6   
+#define RGB_UNDERGLOW_ALPHA_BOT_START 12
+#define RGB_UNDERGLOW_ALPHA_BOT_END   15
+
 #define RGB_BACKLIGHT_CAPS_LOCK_INDICATOR { .color = { .h = 0, .s = 0 }, .index = 255 }
 #define RGB_BACKLIGHT_LAYER_1_INDICATOR { .color = { .h = 0, .s = 0 }, .index = 255 }
 #define RGB_BACKLIGHT_LAYER_2_INDICATOR { .color = { .h = 0, .s = 0 }, .index = 255 }
