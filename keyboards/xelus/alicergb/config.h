@@ -30,8 +30,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 /* key matrix size */
 #define MATRIX_ROWS 5
 #define MATRIX_COLS 15
-
-#define MATRIX_ROW_PINS { A10, B12, A5, A4, A3 }
+//actual
+#define MATRIX_ROW_PINS { B13, B12, A5, A4, A3 }
+//test
+//#define MATRIX_ROW_PINS { A10, B12, A5, A4, A3 }
 #define MATRIX_COL_PINS { B11, B10, B2, B1, B0, A7, A6, A13, B7, B6, B5, B4, B3, A15, A14}
 
 /* COL2ROW, ROW2COL*/
@@ -44,12 +46,21 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define RGBLIGHT_ANIMATIONS
 #define WS2812_LED_TOTAL    24
 #define RGBLED_NUM          24
-#define RGB_DI_PIN B15
+//#define RGB_DI_PIN B15
+#define RGB_DI_PIN A8
 
 //SPI
 #define WS2812_SPI SPID2
 #define WS2812_SPI_MOSI_PAL_MODE 0
 #define WS2812_EXTERNAL_PULLUP
+
+//PWM
+//Can be pin A1 or B3
+#define WS2812_PWM_DRIVER PWMD1  // default: PWMD2
+#define WS2812_PWM_CHANNEL 1  // default: 2
+#define WS2812_PWM_PAL_MODE 2  // Pin "alternate function", see the respective datasheet for the appropriate values for your MCU. default: 2
+#define WS2812_DMA_STREAM STM32_DMA1_STREAM1  // DMA Stream for TIMx_UP, see the respective reference manual for the appropriate values for your MCU.
+#define WS2812_DMA_CHANNEL 5  // DMA Channel for TIMx_UP, see the respective reference manual for the appropriate values for your MCU.
 
 // I2C defines
 #define I2C1_SCL 8
@@ -76,7 +87,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //IS31FL3731 driver
 #define DRIVER_COUNT 2
 #define DRIVER_LED_TOTAL 72
-
 
 // Enabled/Disable LEDs based on layout
 #define RGB_BACKLIGHT_USE_SPLIT_BACKSPACE 1

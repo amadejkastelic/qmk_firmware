@@ -36,7 +36,6 @@ SRC +=	keyboards/wilba_tech/wt_main.c \
 		keyboards/wilba_tech/wt_rgb_backlight.c \
 		drivers/issi/is31fl3731.c \
 		quantum/color.c \
-		drivers/chibios/ws2812_spi.c
+		drivers/chibios/ws2812_pwm.c
 
-QUANTUM_LIB_SRC += i2c_master.c \
-				   spi_master.c  \
+QUANTUM_LIB_SRC += i2c_master.c 
