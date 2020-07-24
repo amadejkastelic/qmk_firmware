@@ -46,8 +46,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define RGBLIGHT_ANIMATIONS
 #define WS2812_LED_TOTAL    24
 #define RGBLED_NUM          24
-//#define RGB_DI_PIN B15
-#define RGB_DI_PIN A8
+//#define RGB_DI_PIN B15 //  SPI
+#define RGB_DI_PIN A8   // PWM
+#define WS2812_EXTERNAL_PULLUP 
 
 //SPI
 #define WS2812_SPI SPID2
@@ -55,11 +56,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define WS2812_EXTERNAL_PULLUP
 
 //PWM
-//Can be pin A1 or B3
 #define WS2812_PWM_DRIVER PWMD1  // default: PWMD2
 #define WS2812_PWM_CHANNEL 1  // default: 2
 #define WS2812_PWM_PAL_MODE 2  // Pin "alternate function", see the respective datasheet for the appropriate values for your MCU. default: 2
-#define WS2812_DMA_STREAM STM32_DMA1_STREAM1  // DMA Stream for TIMx_UP, see the respective reference manual for the appropriate values for your MCU.
+#define WS2812_DMA_STREAM STM32_DMA1_STREAM5  // DMA Stream for TIMx_UP, see the respective reference manual for the appropriate values for your MCU.
 #define WS2812_DMA_CHANNEL 5  // DMA Channel for TIMx_UP, see the respective reference manual for the appropriate values for your MCU.
 
 // I2C defines
