@@ -1105,20 +1105,20 @@ const Point g_map_led_to_point_polar[BACKLIGHT_LED_COUNT] PROGMEM = {
 #elif defined(RGB_BACKLIGHT_SOLOS)
     const Point g_map_led_to_point[BACKLIGHT_LED_COUNT] PROGMEM = {
     // LA1..LA16
-	{0  ,  5}, {37 ,  0}, {187,  0}, {224,  5}, {0  ,  0}, {75 ,  0}, {149,  0}, {224,  0},
+    {0  ,  5}, {37 ,  0}, {187,  0}, {224,  5}, {0  ,  0}, {75 ,  0}, {149,  0}, {224,  0},
     {0  , 21}, {75 , 21}, {149, 21}, {224, 21}, {0  , 26}, {255,255}, {255,255}, {224, 26},
 
     // LA17..LA32
-	{0  , 43}, {75 , 43}, {149, 43}, {224, 43}, {0  , 49}, {255,255}, {255,255}, {224, 49},
+    {0  , 43}, {75 , 43}, {149, 43}, {224, 43}, {0  , 49}, {255,255}, {255,255}, {224, 49},
     {0  , 64}, {75 , 64}, {149, 64}, {224, 64}, {37 , 64}, {112, 64}, {255,255}, {187, 64}
 };
 const Point g_map_led_to_point_polar[BACKLIGHT_LED_COUNT] PROGMEM = {
 	//LA1..LA16
-	{99 ,255}, {88 ,255}, {40 ,255}, {29 ,255}, {96 ,255}, {77 ,255}, {51 ,255}, {32 ,255},
-	{115,255}, {96 ,230}, {32 ,230}, {13 ,255}, {121,255}, {255,255}, {255,255}, {7  ,255},
+    {99 ,255}, {88 ,255}, {40 ,255}, {29 ,255}, {96 ,255}, {77 ,255}, {51 ,255}, {32 ,255},
+    {115,255}, {96 ,230}, {32 ,230}, {13 ,255}, {121,255}, {255,255}, {255,255}, {7  ,255},
 	//LA17..LA32
-	{141,255}, {160,230}, {224,230}, {243,255}, {148,255}, {96 ,255}, {255,255}, {236,255},
-	{160,255}, {179,255}, {205,255}, {224,255}, {168,255}, {192,255}, {255,255}, {216,255}
+    {141,255}, {160,230}, {224,230}, {243,255}, {148,255}, {96 ,255}, {255,255}, {236,255},
+    {160,255}, {179,255}, {205,255}, {224,255}, {168,255}, {192,255}, {255,255}, {216,255}
 };
 #endif
 
@@ -1526,7 +1526,7 @@ void backlight_timer_disable(void)
 {
     TIMSK3 &= ~_BV(OCIE3A);
 }
-#elif defined(RGB_BACKLIGHT_NEBULA12) //STM32, use GPT with TIM3. Enable in halconf.h
+#elif defined(RGB_BACKLIGHT_NEBULA12) || defined(RGB_BACKLIGHT_SOLOS) //STM32, use GPT with TIM3. Enable in halconf.h
 static void gpt_backlight_timer_task(GPTDriver *gptp);
 // Timer setup at 200Khz, callback at 10k ticks = 20Hz
 static GPTConfig gpt3cfg1 = {
@@ -1551,24 +1551,24 @@ void backlight_timer_disable(void)
 #else //STM32, use GPT with TIM4. Enable in halconf.h
 static void gpt_backlight_timer_task(GPTDriver *gptp);
 // Timer setup at 200Khz, callback at 10k ticks = 20Hz
-static GPTConfig gpt3cfg1 = {
+static GPTConfig gpt4cfg1 = {
     .frequency = 200000U,
     .callback  = gpt_backlight_timer_task
 };
 
 void backlight_timer_init(void)
 {
-    gptStart(&GPTD3, &gpt3cfg1);
+    gptStart(&GPTD4, &gpt4cfg1);
 }
 
 void backlight_timer_enable(void)
 {
-    gptStartContinuous(&GPTD3, 10000);
+    gptStartContinuous(&GPTD4, 10000);
 }
 
 void backlight_timer_disable(void)
 {
-    gptStopTimer(&GPTD3);
+    gptStopTimer(&GPTD4);
 }
 #endif //!defined(RGB_BACKLIGHT_HS60) && !defined(RGB_BACKLIGHT_NK65) && !defined(RGB_BACKLIGHT_NEBULA12)
 
