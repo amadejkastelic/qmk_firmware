@@ -1,6 +1,5 @@
 # MCU name
 MCU = STM32F072
-BOARD = ST_STM32F072B_DISCOVERY
 
 # Do not put the microcontroller into power saving mode
 # when we get USB suspend event. We want it to keep updating
@@ -28,11 +27,10 @@ RGBLIGHT_ENABLE = no               # Enable WS2812 RGB underlight. - We have cus
 
 CIE1931_CURVE = yes
 
-LAYOUT = LAYOUT_all
-
 # project specific files
 SRC +=	keyboards/wilba_tech/wt_main.c \
 		keyboards/wilba_tech/wt_rgb_backlight.c \
 		drivers/issi/is31fl3736.c \
 		quantum/color.c \
-		drivers/chibios/i2c_master.c
+		
+QUANTUM_LIB_SRC += drivers/chibios/i2c_master.c
