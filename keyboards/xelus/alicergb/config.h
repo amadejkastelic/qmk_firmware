@@ -66,7 +66,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define EXTERNAL_EEPROM_SPI_SLAVE_SELECT_PIN    A8
 #define EXTERNAL_EEPROM_SPI_CLOCK_DIVISOR       64
 #define EXTERNAL_EEPROM_BYTE_COUNT              65536
-#define EXTERNAL_EEPROM_PAGE_SIZE               8
+#define EXTERNAL_EEPROM_PAGE_SIZE               64
 #define EXTERNAL_EEPROM_ADDRESS_SIZE            2
 
 // I2C defines
@@ -76,20 +76,20 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define I2C1_SCL_PAL_MODE 1
 #define I2C1_SDA_PAL_MODE 1
 
-#define I2C1_TIMINGR_PRESC 	0U
+#define I2C1_TIMINGR_PRESC  0U
 #define I2C1_TIMINGR_SCLDEL 3U
 #define I2C1_TIMINGR_SDADEL 1U
-#define I2C1_TIMINGR_SCLH 	3U
+#define I2C1_TIMINGR_SCLH   3U
 #define I2C1_TIMINGR_SCLL   9U
 
 // Backlight options
 #define RGB_BACKLIGHT_ENABLED 1
-
 #define RGB_BACKLIGHT_ALICERGB
+#define RGBLIGHT_LIMIT_VAL  200
 
 //IS31FL3731 driver
-#define DRIVER_COUNT 2
-#define DRIVER_LED_TOTAL 96
+#define DRIVER_COUNT        2
+#define DRIVER_LED_TOTAL    96
 
 // Enabled/Disable LEDs based on layout
 #define RGB_BACKLIGHT_USE_SPLIT_BACKSPACE 1
