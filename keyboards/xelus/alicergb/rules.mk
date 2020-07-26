@@ -24,7 +24,7 @@ UNICODE_ENABLE = no                # Uni code
 BLUETOOTH_ENABLE = no              # Enable Bluetooth with the Adafruit EZ-Key HID
 FAUXCLICKY_ENABLE = no             # Use buzzer to emulate clicky switches
 RGBLIGHT_ENABLE = no               # Enable WS2812 RGB underlight. - We have custom RGB underglow
-#EEPROM_DRIVER = i2c
+EEPROM_DRIVER = spi
 
 
 CIE1931_CURVE = yes

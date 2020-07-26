@@ -30,11 +30,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 /* key matrix size */
 #define MATRIX_ROWS 5
 #define MATRIX_COLS 15
-//actual
-#define MATRIX_ROW_PINS { B13, B12, A5, A4, A3 }
-//test
-//#define MATRIX_ROW_PINS { A10, B12, A5, A4, A3 }
-#define MATRIX_COL_PINS { B11, B10, B2, B1, B0, A7, A6, A13, B7, B6, B5, B4, B3, A15, A14}
+#define MATRIX_ROW_PINS { B11, B10, A3, A2, A1 }
+#define MATRIX_COL_PINS { B2, B1, B0, A7, A6, A5, A4, A13, B7, B6, B5, B4, B3, A15, A14 }
 
 /* COL2ROW, ROW2COL*/
 #define DIODE_DIRECTION COL2ROW
@@ -43,24 +40,34 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define DEBOUNCE 5
 
 //RGB Underglow WS2812
-#define RGBLIGHT_ANIMATIONS
 #define WS2812_LED_TOTAL    24
 #define RGBLED_NUM          24
-//#define RGB_DI_PIN B15 //  SPI
-#define RGB_DI_PIN A8   // PWM
+#define RGB_DI_PIN          A8
+#define RGBLIGHT_ANIMATIONS
 #define WS2812_EXTERNAL_PULLUP 
 
-//SPI
-#define WS2812_SPI SPID2
-#define WS2812_SPI_MOSI_PAL_MODE 0
-#define WS2812_EXTERNAL_PULLUP
+//PWM RGB
+#define WS2812_PWM_DRIVER   PWMD1
+#define WS2812_PWM_CHANNEL  1
+#define WS2812_PWM_PAL_MODE 2
+#define WS2812_DMA_STREAM   STM32_DMA1_STREAM5
+#define WS2812_DMA_CHANNEL  5
 
-//PWM
-#define WS2812_PWM_DRIVER PWMD1  // default: PWMD2
-#define WS2812_PWM_CHANNEL 1  // default: 2
-#define WS2812_PWM_PAL_MODE 2  // Pin "alternate function", see the respective datasheet for the appropriate values for your MCU. default: 2
-#define WS2812_DMA_STREAM STM32_DMA1_STREAM5  // DMA Stream for TIMx_UP, see the respective reference manual for the appropriate values for your MCU.
-#define WS2812_DMA_CHANNEL 5  // DMA Channel for TIMx_UP, see the respective reference manual for the appropriate values for your MCU.
+// SPI Master
+#define SPI_DRIVER          SPID2
+#define SPI_SCK_PIN         B13
+#define SPI_SCK_PAL_MODE    0
+#define SPI_MOSI_PIN        B15
+#define SPI_MOSI_PAL_MODE   0
+#define SPI_MISO_PIN        B14
+#define SPI_MISO_PAL_MODE   0
+
+// SPI EEPROM Chip
+#define EXTERNAL_EEPROM_SPI_SLAVE_SELECT_PIN    A8
+#define EXTERNAL_EEPROM_SPI_CLOCK_DIVISOR       64
+#define EXTERNAL_EEPROM_BYTE_COUNT              65536
+#define EXTERNAL_EEPROM_PAGE_SIZE               8
+#define EXTERNAL_EEPROM_ADDRESS_SIZE            2
 
 // I2C defines
 #define I2C1_SCL 8
@@ -75,10 +82,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define I2C1_TIMINGR_SCLH 	3U
 #define I2C1_TIMINGR_SCLL   9U
 
-// EEPROM Chip
-//#define EEPROM_I2C_CAT24C512
-//#define DYNAMIC_KEYMAP_EEPROM_MAX_ADDR 65535
-
 // Backlight options
 #define RGB_BACKLIGHT_ENABLED 1
 
@@ -86,7 +89,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //IS31FL3731 driver
 #define DRIVER_COUNT 2
-#define DRIVER_LED_TOTAL 72
+#define DRIVER_LED_TOTAL 96
 
 // Enabled/Disable LEDs based on layout
 #define RGB_BACKLIGHT_USE_SPLIT_BACKSPACE 1

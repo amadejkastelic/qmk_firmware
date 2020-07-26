@@ -87,7 +87,7 @@ LED_TYPE g_ws2812_leds[WS2812_LED_TOTAL];
 #elif defined(RGB_BACKLIGHT_DAWN60)
 #define BACKLIGHT_LED_COUNT 84  //64 + 20
 #elif defined(RGB_BACKLIGHT_ALICERGB)
-#define BACKLIGHT_LED_COUNT 96  //72 + 24
+#define BACKLIGHT_LED_COUNT 96
 #elif defined(RGB_BACKLIGHT_NEBULA12)
 #define BACKLIGHT_LED_COUNT 16
 #else
@@ -1101,10 +1101,15 @@ const Point g_map_led_to_point[BACKLIGHT_LED_COUNT] PROGMEM = {
     // LD0..LD17
 	{255,255}, {141,134}, {156,124}, {171,113}, {186,103}, {202,103}, {217,103}, {234,152}, {248,201},
     {137,187}, {152,176}, {167,166}, {182,156}, {198,152}, {213,152}, {153,225}, {186,207}, {255,255},
-    // Underglow
-    {0  ,  0}, {0  ,  0}, {0  ,  0}, {0  ,  0}, {0  ,  0}, {0  ,  0}, {0  ,  0}, {0  ,  0}, 
-    {0  ,  0}, {0  ,  0}, {0  ,  0}, {0  ,  0}, {0  ,  0}, {0  ,  0}, {0  ,  0}, {0  ,  0}, 
-    {0  ,  0}, {0  ,  0}, {0  ,  0}, {0  ,  0}, {0  ,  0}, {0  ,  0}, {0  ,  0}, {0  ,  0}
+
+    // LA18..LA23
+    {0  ,  0}, {0  ,  0}, {0  ,  0}, {0  ,  0}, {0  ,  0}, {0  ,  0}, 
+    // LB18..LB23
+    {0  ,  0}, {0  ,  0}, {0  ,  0}, {0  ,  0}, {0  ,  0}, {0  ,  0}, 
+    // LC18..LC23
+    {0  ,  0}, {0  ,  0}, {0  ,  0}, {0  ,  0}, {0  ,  0}, {0  ,  0}, 
+    // LD18..LD23
+    {0  ,  0}, {0  ,  0}, {0  ,  0}, {0  ,  0}, {0  ,  0}, {0  ,  0}, 
 };
 
 const Point g_map_led_to_point_polar[BACKLIGHT_LED_COUNT] PROGMEM = {
@@ -1120,10 +1125,15 @@ const Point g_map_led_to_point_polar[BACKLIGHT_LED_COUNT] PROGMEM = {
     // LD0..LD17
 	{255,255}, {239, 30}, {6  , 58}, {13 , 92}, {16 ,127}, {13 ,158}, {11 ,187}, {247,219}, {234,255},
     {198,120}, {211,110}, {224,111}, {236,123}, {242,150}, {245,179}, {202,203}, {218,198}, {255,255},
-    // Underglow
-    {0  ,  0}, {0  ,  0}, {0  ,  0}, {0  ,  0}, {0  ,  0}, {0  ,  0}, {0  ,  0}, {0  ,  0},
-    {0  ,  0}, {0  ,  0}, {0  ,  0}, {0  ,  0}, {0  ,  0}, {0  ,  0}, {0  ,  0}, {0  ,  0},
-    {0  ,  0}, {0  ,  0}, {0  ,  0}, {0  ,  0}, {0  ,  0}, {0  ,  0}, {0  ,  0}, {0  ,  0}
+
+    // LA18..LA23
+    {0  ,  0}, {0  ,  0}, {0  ,  0}, {0  ,  0}, {0  ,  0}, {0  ,  0}, 
+    // LB18..LB23
+    {0  ,  0}, {0  ,  0}, {0  ,  0}, {0  ,  0}, {0  ,  0}, {0  ,  0}, 
+    // LC18..LC23
+    {0  ,  0}, {0  ,  0}, {0  ,  0}, {0  ,  0}, {0  ,  0}, {0  ,  0}, 
+    // LD18..LD23
+    {0  ,  0}, {0  ,  0}, {0  ,  0}, {0  ,  0}, {0  ,  0}, {0  ,  0}, 
 };
 
 #endif
@@ -1536,7 +1546,7 @@ void backlight_timer_disable(void)
 {
     TIMSK3 &= ~_BV(OCIE3A);
 }
-#elif defined(RGB_BACKLIGHT_NEBULA12) //STM32, use GPT with TIM3. Enable in halconf.h
+#elif defined(RGB_BACKLIGHT_NEBULA12) || defined(RGB_BACKLIGHT_ALICERGB) //STM32, use GPT with TIM3. Enable in halconf.h
 static void gpt_backlight_timer_task(GPTDriver *gptp);
 // Timer setup at 200Khz, callback at 10k ticks = 20Hz
 static GPTConfig gpt3cfg1 = {
