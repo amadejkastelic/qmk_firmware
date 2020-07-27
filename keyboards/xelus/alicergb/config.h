@@ -63,7 +63,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define SPI_MISO_PAL_MODE   0
 
 // SPI EEPROM Chip
-#define EXTERNAL_EEPROM_SPI_SLAVE_SELECT_PIN    A8
+#define EXTERNAL_EEPROM_SPI_SLAVE_SELECT_PIN    A9
 #define EXTERNAL_EEPROM_SPI_CLOCK_DIVISOR       64
 #define EXTERNAL_EEPROM_BYTE_COUNT              65536
 #define EXTERNAL_EEPROM_PAGE_SIZE               64
