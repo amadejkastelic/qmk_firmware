@@ -1,2 +1,2 @@
-The VIA keymap for Alice RGB
+The VIA keymap for Valor RGB
 =========================================================

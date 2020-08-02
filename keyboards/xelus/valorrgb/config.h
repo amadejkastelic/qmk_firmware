@@ -21,11 +21,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 /* USB Device descriptor parameter */
 #define VENDOR_ID       0x5845 // XE
-#define PRODUCT_ID      0x0A62 // Alice62
+#define PRODUCT_ID      0xA162 // ValorRGB
 #define DEVICE_VER      0x0001
 #define MANUFACTURER    Xelus
-#define PRODUCT         ALICE RGB
-#define DESCRIPTION     Alice RGB
+#define PRODUCT         Valor RGB
+#define DESCRIPTION     Valor RGB
 
 /* key matrix size */
 #define MATRIX_ROWS 5
@@ -49,7 +49,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define SPI_MISO_PAL_MODE   0
 
 // SPI EEPROM Chip
-#define EXTERNAL_EEPROM_SPI_SLAVE_SELECT_PIN    A9
+#define EXTERNAL_EEPROM_SPI_SLAVE_SELECT_PIN    B12
 #define EXTERNAL_EEPROM_SPI_CLOCK_DIVISOR       64
 #define EXTERNAL_EEPROM_BYTE_COUNT              65536
 #define EXTERNAL_EEPROM_PAGE_SIZE               64
