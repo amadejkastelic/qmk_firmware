@@ -70,11 +70,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 // Backlight options
 #define RGB_BACKLIGHT_ENABLED 1
-#define RGB_BACKLIGHT_ALICERGB
+#define RGB_BACKLIGHT_VALORRGB
 
 //IS31FL3731 driver
 #define DRIVER_COUNT        2
-#define DRIVER_LED_TOTAL    111
+#define DRIVER_LED_TOTAL    128
 
 // Enabled/Disable LEDs based on layout
 #define RGB_BACKLIGHT_USE_SPLIT_BACKSPACE 1

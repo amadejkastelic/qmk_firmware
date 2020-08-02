@@ -34,8 +34,7 @@ LAYOUT = LAYOUT_all
 # project specific files
 SRC +=	keyboards/wilba_tech/wt_main.c \
 		keyboards/wilba_tech/wt_rgb_backlight.c \
-		drivers/issi/is31fl3731.c \
+		drivers/issi/is31fl3733.c \
 		quantum/color.c \
-		drivers/chibios/ws2812_pwm.c
 
 QUANTUM_LIB_SRC += i2c_master.c 
