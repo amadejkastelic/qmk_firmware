@@ -1058,7 +1058,7 @@ const Point g_map_led_to_point_polar[BACKLIGHT_LED_COUNT] PROGMEM = {
     {234,255}, {222,255}, {213,255}, {197,255}, {180,255}, {167,255}, {152,255}, {147,255}, {128,255}, {101,255}
 };
 
-#elif defined(RGB_BACKLIGHT_VALORRGB) // TODO
+#elif defined(RGB_BACKLIGHT_VALORRGB)
 const Point g_map_led_to_point[BACKLIGHT_LED_COUNT] PROGMEM = {
     // LA1..A16
     {0  ,  0}, {255,255}, {0  , 37}, {0  , 52}, {0  ,  3}, {0  , 14}, {0  , 48}, {255,255},
