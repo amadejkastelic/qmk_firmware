@@ -39,28 +39,19 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 /* Debounce reduces chatter (unintended double-presses) - set 0 if debouncing is not needed */
 #define DEBOUNCE 5
 
-// SPI Master
-#define SPI_DRIVER          SPID2
-#define SPI_SCK_PIN         B13
-#define SPI_SCK_PAL_MODE    0
-#define SPI_MOSI_PIN        B15
-#define SPI_MOSI_PAL_MODE   0
-#define SPI_MISO_PIN        B14
-#define SPI_MISO_PAL_MODE   0
-
-// SPI EEPROM Chip
-#define EXTERNAL_EEPROM_SPI_SLAVE_SELECT_PIN    B12
-#define EXTERNAL_EEPROM_SPI_CLOCK_DIVISOR       64
-#define EXTERNAL_EEPROM_BYTE_COUNT              65536
-#define EXTERNAL_EEPROM_PAGE_SIZE               64
-#define EXTERNAL_EEPROM_ADDRESS_SIZE            2
+// I2C EEPROM Chip
+//#define EXTERNAL_EEPROM_I2C_BASE_ADDRESS - leave default
+#define EXTERNAL_EEPROM_BYTE_COUNT      32768
+#define EXTERNAL_EEPROM_PAGE_SIZE       64
+#define EXTERNAL_EEPROM_ADDRESS_SIZE    2
+#define EXTERNAL_EEPROM_WRITE_TIME      5
 
 // I2C defines
-#define I2C1_SCL 8
-#define I2C1_SDA 9
+#define I2C1_SCL            8
+#define I2C1_SDA            9
 
-#define I2C1_SCL_PAL_MODE 1
-#define I2C1_SDA_PAL_MODE 1
+#define I2C1_SCL_PAL_MODE   1
+#define I2C1_SDA_PAL_MODE   1
 
 #define I2C1_TIMINGR_PRESC  0U
 #define I2C1_TIMINGR_SCLDEL 3U
