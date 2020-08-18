@@ -2628,14 +2628,24 @@ void backlight_init_drivers(void)
                           ( index == 47+13 && g_config.use_7u_spacebar ) ||     //LD13
                           ( index == 47+15 && g_config.use_7u_spacebar ) );       //LD15
 #elif defined(RGB_BACKLIGHT_VALORRGB)
-        bool enabled = !( ( index == 0+0 ) ||  //LA0
-                          ( index == 36+0 ) ||  //LC0
-                          ( index == 36+8 ) ||  //LC8
-                          ( index == 36+17 ) ||  //LC17
-                          ( index == 54+0 ) ||  //LD0
-                          ( index == 54+17 ) ||  //LD17
-                          ( index == 18+7 && !g_config.use_split_backspace ) || //LB7
-                          ( index == 18+17 && !g_config.use_split_right_shift ) ); //LB17
+        bool enabled = !( ( index == 0+2-1 ) || //A2
+                          ( index == 0+8-1 ) || //A8
+                          ( index == 0+15-1 ) || //A15
+                          ( index == 0+24-1 ) || //A24
+                          ( index == 0+25-1 ) || //A25
+                          ( index == 0+31-1 ) || //A31
+                          ( index == 0+40-1 ) || //A40
+                          ( index == 0+48-1 ) || //A48
+                          ( index == 0+55-1 ) || //A55
+                          ( index == 0+56-1 ) || //A56
+                          ( index == 64+9-1 ) || //B9
+                          ( index == 64+15-1 ) || //B15
+                          ( index == 64+23-1 ) || //B23
+                          ( index == 64+24-1 ) || //B24
+                          ( index == 64+32-1 ) || //B32
+                          ( index == 64+39-1 ) || //B39
+                          ( index == 64+40-1 )    //B40
+                        );
 #elif defined(RGB_BACKLIGHT_NEBULA12)
         bool enabled = !( ( index >= 9-1 && index <= 12-1 ) ); // A9-A12
 #endif
