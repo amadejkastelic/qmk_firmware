@@ -42,6 +42,9 @@
 /* Locking resynchronize hack */
 #define LOCKING_RESYNC_ENABLE
 
+#define USB_POLLING_INTERVAL_MS 1
+#define QMK_KEYS_PER_SCAN 4
+
 // I2C OLED defines
 #define I2C1_SCL 8
 #define I2C1_SDA 9

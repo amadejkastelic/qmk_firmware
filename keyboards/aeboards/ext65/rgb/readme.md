@@ -1,10 +1,10 @@
-# Ext65Rev2
+# Ext65RGB
 
-Ext65Rev2 Keyboard
+Ext65RGB Keyboard
 
 * Keyboard Maintainer: [Xelus22](https://github.com/Xelus22)
-* Hardware Supported: Ext65Rev2
-* Hardware Availability: [Keyboard Treehouse](https://keyboardtreehouse.com/collections/all/products/ext65-r2-pcb)
+* Hardware Supported: Ext65RGB
+* Hardware Availability: [Keyboard Treehouse](https://keyboardtreehouse.com)
 
 Make example for this keyboard (after setting up your build environment):
 
