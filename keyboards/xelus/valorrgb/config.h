@@ -39,12 +39,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 /* Debounce reduces chatter (unintended double-presses) - set 0 if debouncing is not needed */
 #define DEBOUNCE 5
 
-// I2C EEPROM Chip
-//#define EXTERNAL_EEPROM_I2C_BASE_ADDRESS - leave default
-#define EXTERNAL_EEPROM_BYTE_COUNT      32768
-#define EXTERNAL_EEPROM_PAGE_SIZE       64
-#define EXTERNAL_EEPROM_ADDRESS_SIZE    2
-#define EXTERNAL_EEPROM_WRITE_TIME      5
+#define USB_POLLING_INTERVAL_MS 1
+#define QMK_KEYS_PER_SCAN 4
 
 // I2C defines
 #define I2C1_SCL            8
@@ -58,6 +54,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define I2C1_TIMINGR_SDADEL 1U
 #define I2C1_TIMINGR_SCLH   3U
 #define I2C1_TIMINGR_SCLL   9U
+
+// I2C EEPROM Chip
+// #define EXTERNAL_EEPROM_I2C_BASE_ADDRESS - leave default
+#define EXTERNAL_EEPROM_BYTE_COUNT      32768
+#define EXTERNAL_EEPROM_PAGE_SIZE       64
+#define EXTERNAL_EEPROM_ADDRESS_SIZE    2
+#define EXTERNAL_EEPROM_WRITE_TIME      5
 
 // Backlight options
 #define RGB_BACKLIGHT_ENABLED 1
