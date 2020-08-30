@@ -58,17 +58,25 @@
 #define I2C1_TIMINGR_SCLH 	3U
 #define I2C1_TIMINGR_SCLL   9U
 
-#define RGB_BACKLIGHT_ENABLED 1
+// I2C EEPROM Chip
+// #define EXTERNAL_EEPROM_I2C_BASE_ADDRESS - leave default
+#define EXTERNAL_EEPROM_BYTE_COUNT      32768
+#define EXTERNAL_EEPROM_PAGE_SIZE       64
+#define EXTERNAL_EEPROM_ADDRESS_SIZE    2
+#define EXTERNAL_EEPROM_WRITE_TIME      5
+
 
 // This conditionally compiles the backlight code for specifics
+#define RGB_BACKLIGHT_ENABLED 1
 #define RGB_BACKLIGHT_EXT65RGB
 
+// IS31FL3731 driver
+#define DRIVER_COUNT 3
+#define DRIVER_LED_TOTAL 108
 
-// enable/disable LEDs based on layout
-// switch between split backspace (1) or normal backspace(0)
+// Enable/disable LEDs based on layout
+// not used
 #define RGB_BACKLIGHT_USE_SPLIT_BACKSPACE 1
-
-//not used
 #define RGB_BACKLIGHT_USE_ISO_ENTER 0
 #define RGB_BACKLIGHT_USE_7U_SPACEBAR 0
 #define RGB_BACKLIGHT_USE_SPLIT_LEFT_SHIFT 0

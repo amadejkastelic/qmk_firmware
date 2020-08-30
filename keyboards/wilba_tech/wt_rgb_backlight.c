@@ -51,7 +51,7 @@
 #include "wt_rgb_backlight_api.h"
 #include "wt_rgb_backlight_keycodes.h"
 
-#if !defined(RGB_BACKLIGHT_HS60) && !defined(RGB_BACKLIGHT_NK65) && !defined(RGB_BACKLIGHT_NK87) && !defined(RGB_BACKLIGHT_NEBULA65) && !defined(RGB_BACKLIGHT_NEBULA12) || !defined(RGB_BACKLIGHT_EXT65RGB)
+#if !defined(RGB_BACKLIGHT_HS60) && !defined(RGB_BACKLIGHT_NK65) && !defined(RGB_BACKLIGHT_NK87) && !defined(RGB_BACKLIGHT_NEBULA65) && !defined(RGB_BACKLIGHT_NEBULA12) && !defined(RGB_BACKLIGHT_EXT65RGB)
 #include <avr/interrupt.h>
 #include "drivers/avr/i2c_master.h"
 #else
@@ -1711,7 +1711,7 @@ void backlight_timer_disable(void)
 {
     TIMSK3 &= ~_BV(OCIE3A);
 }
-#elif defined(RGB_BACKLIGHT_NEBULA12) //STM32, use GPT with TIM3. Enable in halconf.h
+#elif defined(RGB_BACKLIGHT_NEBULA12) || defined(RGB_BACKLIGHT_EXT65RGB) //STM32, use GPT with TIM3. Enable in halconf.h
 static void gpt_backlight_timer_task(GPTDriver *gptp);
 // Timer setup at 200Khz, callback at 10k ticks = 20Hz
 static GPTConfig gpt3cfg1 = {
@@ -1887,22 +1887,25 @@ void backlight_effect_alphas_mods(void)
 #elif defined(RGB_BACKLIGHT_EXT65RGB)
                 switch(row) {
                     case 5:
+                        is_alpha = ( ( 0b11100000111100001 & (1<<column) ) == 0);
                         break;
                     case 6:
+                        is_alpha = ( ( 0b11100000111100001 & (1<<column) ) == 0);
                         break;
                     case 7:
+                        is_alpha = ( ( 0b11100000111100001 & (1<<column) ) == 0);
                         break;
                     case 8:
+                        is_alpha = ( ( 0b11100000111100001 & (1<<column) ) == 0);
                         break;
                     case 9:
-                        break;
-                    case 10:
+                        is_alpha = ( ( 0b11100000111100001 & (1<<column) ) == 0);
                         break;
                     default:
+                        is_alpha = ( column < 16 ) && (( g_config.alphas_mods[row-1] & (1<<column) ) == 0);
                         break;
                 }
-                    is_alpha = ( column < 16 ) && (( g_config.alphas_mods[row-1] & (1<<column) ) == 0);
-                }
+                
 #else
                 is_alpha = ( g_config.alphas_mods[row] & (1<<column) ) == 0;
 #endif
@@ -2022,7 +2025,7 @@ void backlight_effect_cycle_all(void)
         uint16_t offset2 = g_key_hit[i]<<2;
 #if defined(RGB_BACKLIGHT_EXT65RGB)
         // stabilizer LEDs use spacebar hits
-        if ( i == 36+6 || i == 54+14 ) || // LC6, LD14
+        if ( i == 36+6 || i == 54+14 ) // LC6, LD14
         {
             offset2 = g_key_hit[36+0]<<2;   //C0
         }
@@ -2053,7 +2056,7 @@ void backlight_effect_cycle_left_right(void)
         uint16_t offset2 = g_key_hit[i]<<2;
 #if defined(RGB_BACKLIGHT_EXT65RGB)
         // stabilizer LEDs use spacebar hits
-        if ( i == 36+6 || i == 54+14 ) || // LC6, LD14
+        if ( i == 36+6 || i == 54+14 ) // LC6, LD14
         {
             offset2 = g_key_hit[36+0]<<2;   //C0
         }
@@ -2086,7 +2089,7 @@ void backlight_effect_cycle_up_down(void)
         uint16_t offset2 = g_key_hit[i]<<2;
 #if defined(RGB_BACKLIGHT_EXT65RGB)
         // stabilizer LEDs use spacebar hits
-        if ( i == 36+6 || i == 54+14 ) || // LC6, LD14
+        if ( i == 36+6 || i == 54+14 ) // LC6, LD14
         {
             offset2 = g_key_hit[36+0]<<2;   //C0
         }
