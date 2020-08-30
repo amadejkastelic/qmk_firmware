@@ -65,6 +65,8 @@
 #define EXTERNAL_EEPROM_ADDRESS_SIZE    2
 #define EXTERNAL_EEPROM_WRITE_TIME      5
 
+// Dynamic keymap and macro size
+#define DYNAMIC_KEYMAP_EEPROM_MAX_ADDR  262144
 
 // This conditionally compiles the backlight code for specifics
 #define RGB_BACKLIGHT_ENABLED 1
