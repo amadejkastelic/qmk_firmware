@@ -67,6 +67,7 @@
 
 // Dynamic keymap and macro size
 #define DYNAMIC_KEYMAP_EEPROM_MAX_ADDR  262144
+#define DYNAMIC_KEYMAP_LAYER_COUNT      32
 
 // This conditionally compiles the backlight code for specifics
 #define RGB_BACKLIGHT_ENABLED 1
@@ -82,7 +83,7 @@
 #define RGB_BACKLIGHT_USE_ISO_ENTER 0
 #define RGB_BACKLIGHT_USE_7U_SPACEBAR 0
 #define RGB_BACKLIGHT_USE_SPLIT_LEFT_SHIFT 0
-#define RGB_BACKLIGHT_USE_SPLIT_RIGHT_SHIFT 10
+#define RGB_BACKLIGHT_USE_SPLIT_RIGHT_SHIFT 0
 #define RGB_BACKLIGHT_DISABLE_HHKB_BLOCKER_LEDS 0
 
 // disable backlight when USB suspended (PC sleep/hibernate/shutdown)
