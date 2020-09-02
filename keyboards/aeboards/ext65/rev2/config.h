@@ -74,3 +74,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define BACKLIGHT_LEVELS 6
 #define BACKLIGHT_BREATHING
 #define BREATHING_PERIOD 6
+
+#define USB_POLLING_INTERVAL_MS 1
+#define QMK_KEYS_PER_SCAN 4
+#define UNICODE_SELECTED_MODES UC_WINC
+
+#define LAYER_STATE_8BIT
+
+#define DEBUG_MATRIX_SCAN_RATE
