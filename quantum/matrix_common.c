@@ -84,7 +84,7 @@ uint8_t matrix_key_count(void) {
     return count;
 }
 
-__attribute__((weak)) void matrix_io_delay(void) { __asm__ volatile("nop\nnop\nnop\n"); }
+__attribute__((weak)) void matrix_io_delay(void) { wait_us(MATRIX_IO_DELAY); }
 
 __attribute__((weak)) void matrix_output_select_delay(void) { waitInputPinDelay(); }
 __attribute__((weak)) void matrix_output_unselect_delay(void) { matrix_io_delay(); }

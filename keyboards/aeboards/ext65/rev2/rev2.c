@@ -46,3 +46,5 @@ layer_state_t layer_state_set_kb(layer_state_t state) {
     return layer_state_set_user(state);
 }
 #endif
+
+void matrix_io_delay(void) { __asm__ volatile("nop\nnop\nnop\n"); }
