@@ -42,7 +42,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     KC_TRNS, KC_TRNS, UC_WINC, KC_TRNS, KC_TRNS, KC_TRNS, KC_UP  , KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_VOLD, KC_VOLU, KC_MUTE,          KC_TRNS,
     KC_TRNS, KC_MPLY, KC_MPRV, KC_MNXT, KC_TRNS, KC_LEFT, KC_DOWN, KC_RGHT, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,                   KC_TRNS,
     KC_TRNS, KC_MUTE, KC_VOLD, KC_VOLU, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_NOMODE, KC_AUSSIE, KC_REGIONAL, KC_SBOB,           KC_PGUP, KC_TRNS,
-    KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,                            KC_TRNS,                   KC_TRNS, RESET  ,                   KC_HOME, KC_PGDN, KC_END
+    KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,                            KC_TRNS,                   DEBUG, RESET  ,                   KC_HOME, KC_PGDN, KC_END
   ),
 
   [2] = LAYOUT_ext65(
@@ -80,13 +80,16 @@ void render_keylock_status(led_t led_state) {
     oled_write_ln(PSTR(" "), false);
 }
 
-void render_mod_status(uint8_t modifiers) {
-    oled_write_ln(PSTR("Mods:"), false);
-    oled_write(PSTR("S"), (modifiers & MOD_MASK_SHIFT));
-    oled_write(PSTR("C"), (modifiers & MOD_MASK_CTRL));
-    oled_write(PSTR("A"), (modifiers & MOD_MASK_ALT));
-    oled_write_ln(PSTR("G"), (modifiers & MOD_MASK_GUI));
-    oled_write_ln(PSTR(" "), false);
+layer_state_t layer_state_set_user(layer_state_t state) {
+    switch (biton32(state)) {
+      case 1:
+        writePinHigh(D1);
+        break;
+      default: //  for any other layers, or the default layer
+        writePinLow(D1);
+        break;
+      }
+    return state;
 }
 
 void oled_task_user(void) {
