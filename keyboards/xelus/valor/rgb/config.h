@@ -1,5 +1,5 @@
 /*
-Copyright 2018 Yiancar
+Copyright 2020 Harrison Chan (Xelus)
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -21,16 +21,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 /* USB Device descriptor parameter */
 #define VENDOR_ID       0x5845 // XE
-#define PRODUCT_ID      0xA162 // ValorRGB
+#define PRODUCT_ID      0x5653 // ValorRGB
 #define DEVICE_VER      0x0001
 #define MANUFACTURER    Xelus
-#define PRODUCT         Valor RGB
-#define DESCRIPTION     Valor RGB
+#define PRODUCT         Xelus ValorRGB
 
 /* key matrix size */
 #define MATRIX_ROWS 5
 #define MATRIX_COLS 15
-#define MATRIX_ROW_PINS { B11, B10, A3, A2, A1 }
+#define MATRIX_ROW_PINS { B11, B10, A3, A1, A2 }
 #define MATRIX_COL_PINS { B2, B1, B0, A7, A6, A5, A4, A13, B7, B6, B5, B4, B3, A15, A14 }
 
 /* COL2ROW, ROW2COL*/
@@ -45,10 +44,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // I2C defines
 #define I2C1_SCL            8
 #define I2C1_SDA            9
-
 #define I2C1_SCL_PAL_MODE   1
 #define I2C1_SDA_PAL_MODE   1
-
 #define I2C1_TIMINGR_PRESC  0U
 #define I2C1_TIMINGR_SCLDEL 3U
 #define I2C1_TIMINGR_SDADEL 1U
@@ -61,6 +58,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define EXTERNAL_EEPROM_PAGE_SIZE       64
 #define EXTERNAL_EEPROM_ADDRESS_SIZE    2
 #define EXTERNAL_EEPROM_WRITE_TIME      5
+
+// Dynamic Keymap
+#define DYNAMIC_KEYMAP_EEPROM_MAX_ADDR  65535
 
 // Backlight options
 #define RGB_BACKLIGHT_ENABLED 1

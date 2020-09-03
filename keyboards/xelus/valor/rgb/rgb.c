@@ -1,4 +1,4 @@
-/* Copyright 2018 Yiancar
+/* Copyright 2020 Harrison Chan (Xelus)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,6 +18,8 @@
 #ifndef RGB_BACKLIGHT_VALORRGB
 #error RGB_BACKLIGHT_VALORRGB not defined, recheck config.h
 #endif
+
+void matrix_io_delay(void) { __asm__ volatile("nop\nnop\nnop\n"); }
 
 void board_init(void) {
   SYSCFG->CFGR1 &= ~(SYSCFG_CFGR1_I2C1_DMA_RMP);

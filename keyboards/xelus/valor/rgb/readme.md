@@ -1,6 +1,6 @@
-# Valor RGB
+# ValorRGB
 
-Valor RGB Keyboard
+ValorRGB Keyboard
 
 * Keyboard Maintainer: [Xelus22](https://github.com/Xelus22)
 * Hardware Supported: STM32F072CBT6
