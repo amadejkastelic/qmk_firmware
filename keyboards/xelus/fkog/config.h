@@ -32,7 +32,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define MATRIX_COL_PINS { A0, A1, A2, A3, A4, A5, C5, C4, C3, C2, D7, A6, A7, C6, C7 }
 #define DIODE_DIRECTION COL2ROW
 
-#define RGBLED_NUM 16
+#define RGBLED_NUM 20
 #define RGBLIGHT_ANIMATIONS
 
 #define BACKLIGHT_PIN D4
