@@ -36,6 +36,8 @@ layer_state_t layer_state_set_kb(layer_state_t state) {
 
 
 uint16_t repeat_mode;
+uint8_t prev_upper;
+uint8_t prev_lower;
 bool uppercase;
 
 void tap_code16_nomods(uint8_t kc) {
@@ -65,6 +67,8 @@ __attribute__((weak)) bool process_record_keymap(uint16_t keycode, keyrecord_t *
 void tzarc_common_init(void) {
     repeat_mode    = KC_NOMODE;
     uppercase      = false;
+    prev_upper     = 0;
+    prev_lower     = 0;
 }
 
 void keyboard_post_init_user(void) {
@@ -221,21 +225,35 @@ bool process_record_aussie(uint16_t keycode, keyrecord_t *record) {
 }
 
 bool process_record_spongebob(uint16_t keycode, keyrecord_t *record) {
-    if (keycode == KC_BSPC)  {
-        if ( record->event.pressed ) {
-            uppercase = !uppercase;
-        }
+    if (keycode == KC_ENTER && record->event.pressed) {
+        uppercase = false;
+        return process_record_keymap(keycode, record);
+    }
+
+    if (uppercase == false && record->event.pressed )  {
+        uppercase = true;
+        return process_record_keymap(keycode, record);
     }
 
     if((KC_A <= keycode) && (keycode <= KC_Z)) {
         if ( record->event.pressed ) {
-            if (uppercase == true) {
+            bool press = (TCNT0 + TCNT1 + TCNT3 + TCNT4) % 2;
+
+            if (prev_upper > 2) {           // if more than 3 lower's in a row print upper
+                prev_upper = 0;
+                press = false;
+            } else if (prev_lower > 2) {    // if more than 3 upper's in a row print lower
+                prev_lower = 0;
+                press = true;
+            }
+            if (press) {
+                prev_upper++;
                 tap_code16(S(keycode));
                 clear_mods();
             } else {
+                prev_lower++;
                 tap_code16(keycode);
             }
-            uppercase = !uppercase;
         }
         return false;
     } 
@@ -304,6 +322,8 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                     dprint("Enabling spongebob mode\n");
                 }
                 uppercase = false;
+                prev_upper = 0;
+                prev_lower = 0;
                 repeat_mode = keycode;
             }
             return false;
