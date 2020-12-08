@@ -236,8 +236,9 @@ const is31_led g_is31_leds[DRIVER_LED_TOTAL] = {
 // This is a 7-bit address, that gets left-shifted and bit 0
 // set to 0 for write, 1 for read (as per I2C protocol)
 // ADDR_2 is not needed. it is here as a dummy
-#define ISSI_ADDR_1 0x50
-#define ISSI_ADDR_2 0x52
+#define ISSI_ADDR_1 0x50 //01010000
+//#define ISSI_ADDR_2 0x52 //01010010
+#define ISSI_ADDR_2 0x58 //01011000
 
 const is31_led g_is31_leds[DRIVER_LED_TOTAL] = {
 /* Refer to IS31 manual for these locations
