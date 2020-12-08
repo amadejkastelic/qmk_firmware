@@ -85,10 +85,7 @@ LED_TYPE g_ws2812_leds[WS2812_LED_TOTAL];
 #elif defined(RGB_BACKLIGHT_NK65) || defined(RGB_BACKLIGHT_NEBULA65)
 #include "drivers/issi/is31fl3733.h"
 #define BACKLIGHT_LED_COUNT 69
-#elif defined(RGB_BACKLIGHT_NK87)
-#include "drivers/issi/is31fl3733.h"
-#define BACKLIGHT_LED_COUNT 128
-#elif defined(RGB_BACKLIGHT_VALORRGB)
+#elif defined(RGB_BACKLIGHT_NK87) || defined(RGB_BACKLIGHT_VALORRGB)
 #include "drivers/issi/is31fl3733.h"
 #define BACKLIGHT_LED_COUNT 128
 #else
@@ -2779,6 +2776,29 @@ void backlight_init_drivers(void)
 #elif defined(RGB_BACKLIGHT_VALORRGB)
     IS31FL3733_init( ISSI_ADDR_1, 0 );
     IS31FL3733_init( ISSI_ADDR_2, 0 );
+    for ( int index = 0; index < DRIVER_LED_TOTAL; index++ )
+    {
+        bool enabled = !( ( index == 0+2-1 ) || //A2
+                          ( index == 0+8-1 ) || //A8
+                          ( index == 0+15-1 ) || //A15
+                          ( index == 0+24-1 ) || //A24
+                          ( index == 0+25-1 ) || //A25
+                          ( index == 0+31-1 ) || //A31
+                          ( index == 0+40-1 ) || //A40
+                          ( index == 0+48-1 ) || //A48
+                          ( index == 0+55-1 ) || //A55
+                          ( index == 0+56-1 ) || //A56
+                          ( index == 64+9-1 ) || //B9
+                          ( index == 64+15-1 ) || //B15
+                          ( index == 64+23-1 ) || //B23
+                          ( index == 64+24-1 ) || //B24
+                          ( index == 64+32-1 ) || //B32
+                          ( index == 64+39-1 ) || //B39
+                          ( index == 64+40-1 )    //B40
+                        );
+        // This only caches it for later
+        IS31FL3733_set_led_control_register( index, enabled, enabled, enabled );
+    }
     // This actually updates the LED drivers
     IS31FL3733_update_led_control_registers( ISSI_ADDR_1, 0 );
     IS31FL3733_update_led_control_registers( ISSI_ADDR_2, 1 );
@@ -2884,25 +2904,6 @@ void backlight_init_drivers(void)
         bool enabled = !( ( index == 15+7 && !g_config.use_split_backspace ) || //other backspace
                           ( index == 47+13 && g_config.use_7u_spacebar ) ||     //LD13
                           ( index == 47+15 && g_config.use_7u_spacebar ) );       //LD15
-#elif defined(RGB_BACKLIGHT_VALORRGB)
-        bool enabled = !( ( index == 0+2-1 ) || //A2
-                          ( index == 0+8-1 ) || //A8
-                          ( index == 0+15-1 ) || //A15
-                          ( index == 0+24-1 ) || //A24
-                          ( index == 0+25-1 ) || //A25
-                          ( index == 0+31-1 ) || //A31
-                          ( index == 0+40-1 ) || //A40
-                          ( index == 0+48-1 ) || //A48
-                          ( index == 0+55-1 ) || //A55
-                          ( index == 0+56-1 ) || //A56
-                          ( index == 64+9-1 ) || //B9
-                          ( index == 64+15-1 ) || //B15
-                          ( index == 64+23-1 ) || //B23
-                          ( index == 64+24-1 ) || //B24
-                          ( index == 64+32-1 ) || //B32
-                          ( index == 64+39-1 ) || //B39
-                          ( index == 64+40-1 )    //B40
-                        );
 #elif defined(RGB_BACKLIGHT_NEBULA12)
         bool enabled = !( ( index >= 9-1 && index <= 12-1 ) ); // A9-A12
 #elif defined(RGB_BACKLIGHT_M50_A)
