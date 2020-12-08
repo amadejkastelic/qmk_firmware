@@ -54,17 +54,17 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 // I2C EEPROM Chip
 // #define EXTERNAL_EEPROM_I2C_BASE_ADDRESS - leave default
-#define EXTERNAL_EEPROM_BYTE_COUNT      32768
-#define EXTERNAL_EEPROM_PAGE_SIZE       64
-#define EXTERNAL_EEPROM_ADDRESS_SIZE    2
-#define EXTERNAL_EEPROM_WRITE_TIME      5
+// #define EXTERNAL_EEPROM_BYTE_COUNT      32768
+// #define EXTERNAL_EEPROM_PAGE_SIZE       64
+// #define EXTERNAL_EEPROM_ADDRESS_SIZE    2
+// #define EXTERNAL_EEPROM_WRITE_TIME      5
 
 // Dynamic Keymap
-#define DYNAMIC_KEYMAP_EEPROM_MAX_ADDR  65535
+// #define DYNAMIC_KEYMAP_EEPROM_MAX_ADDR  32768
 
 // Backlight options
 #define RGB_BACKLIGHT_ENABLED 1
-#define RGB_BACKLIGHT_VALORRGB
+#define RGB_BACKLIGHT_DELUX
 
 //IS31FL3731 driver
 #define DRIVER_COUNT        2

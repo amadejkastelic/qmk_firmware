@@ -13,10 +13,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#include "rgb.h"
+#include "delux.h"
 
-#ifndef RGB_BACKLIGHT_VALORRGB
-#error RGB_BACKLIGHT_VALORRGB not defined, recheck config.h
+#ifndef RGB_BACKLIGHT_DELUX
+#error RGB_BACKLIGHT_DELUX not defined, recheck config.h
 #endif
 
 //void matrix_io_delay(void) { __asm__ volatile("nop\nnop\nnop\n"); }
