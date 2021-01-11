@@ -1,4 +1,3 @@
-#include "rev1.h"
 #include <string.h>
 #include <quantum.h>
 #include <process_unicode_common.h>
@@ -33,6 +32,7 @@ layer_state_t layer_state_set_kb(layer_state_t state) {
         break;
       }
     return layer_state_set_user(state);
+}
 
 
 uint16_t repeat_mode;
@@ -64,19 +64,20 @@ void tap_unicode_glyph_nomods(uint32_t glyph) {
 
 __attribute__((weak)) bool process_record_keymap(uint16_t keycode, keyrecord_t *record) { return true; }
 
-void tzarc_common_init(void) {
+void keyboard_post_init_kb(void) {
     repeat_mode    = KC_NOMODE;
     uppercase      = false;
     prev_upper     = 0;
     prev_lower     = 0;
+
+    keyboard_post_init_user();
 }
 
-void keyboard_post_init_user(void) {
-    tzarc_common_init();
-}
-
-void eeconfig_init_user(void) {
+void eeconfig_init_kb(void) {
     set_unicode_input_mode(UC_LNX);
+
+    eeconfig_update_kb(0);
+    eeconfig_init_user();
 }
 
 typedef uint32_t (*translator_function_t)(bool is_shifted, uint32_t keycode);
@@ -262,7 +263,7 @@ bool process_record_spongebob(uint16_t keycode, keyrecord_t *record) {
 }
 
 
-bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+bool process_record_kb(uint16_t keycode, keyrecord_t *record) {
 
     switch (keycode) {
         case KC_LOWER:
@@ -344,6 +345,3 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 
     return process_record_keymap(keycode, record);
 }
-
-
-void matrix_io_delay(void) { __asm__ volatile("nop\nnop\nnop\n"); }
