@@ -33,12 +33,12 @@
 #define MATRIX_COL_PINS { B11, B10, B2, B1, A7, B0 }
 #define UNUSED_PINS
 
-#define ENCODERS_PAD_A { B12 }
-#define ENCODERS_PAD_B { B13 }
+//#define ENCODERS_PAD_A { B12 }
+//#define ENCODERS_PAD_B { B13 }
 
 #define DIP_SWITCH_PINS { B14, A15, A0, B9 }
 
-#define MUSIC_MAP
+//#define MUSIC_MAP
 #undef AUDIO_VOICES
 // Note: following undef isn't really necessary on STM32, C6_AUDIO is AVR related
 #undef C6_AUDIO
