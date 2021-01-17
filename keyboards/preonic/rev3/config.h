@@ -126,5 +126,7 @@
 #define RGBLED_NUM 9
 #define RGBLIGHT_ANIMATIONS
 
+#define USB_POLLING_INTERVAL_MS 1
+#define QMK_KEYS_PER_SCAN 4
 
 #endif
