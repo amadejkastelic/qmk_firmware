@@ -61,6 +61,10 @@
 // Dynamic Keymap
 //#define DYNAMIC_KEYMAP_EEPROM_MAX_ADDR  65535
 
+// SPI RGB Underglow Defines
+#define WS2812_SPI SPID1 // default: SPID1
+#define WS2812_SPI_MOSI_PAL_MODE 0 
+
 // PWM RGB Underglow Defines
 #define WS2812_PWM_DRIVER PWMD3
 #define WS2812_PWM_CHANNEL 2
@@ -149,3 +153,5 @@
 
 #define USB_POLLING_INTERVAL_MS 1
 #define QMK_KEYS_PER_SCAN 8
+
+#define WAIT_US_TIMER GPTD3
