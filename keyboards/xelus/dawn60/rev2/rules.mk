@@ -23,7 +23,8 @@ RGBLIGHT_ENABLE = no        # Enable keyboard RGB underglow
 BLUETOOTH_ENABLE = no       # Enable Bluetooth
 AUDIO_ENABLE = no           # Audio output
 EEPROM_DRIVER = i2c
-
+OPT = 2
+LTO_ENABLE = yes
 CIE1931_CURVE = yes
 LAYOUT = LAYOUT_all
 
