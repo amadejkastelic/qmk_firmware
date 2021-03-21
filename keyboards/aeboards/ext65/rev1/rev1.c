@@ -12,7 +12,7 @@ void keyboard_pre_init_user(void) {
   setPinOutput(D1);
 }
 
-void matrix_io_delay(void) { __asm__ volatile("nop\nnop\nnop\n"); }
+void matrix_io_delay(void) { __asm__ volatile("nop\nnop\n"); }
 
 bool led_update_kb(led_t led_state) {
     bool res = led_update_user(led_state);
