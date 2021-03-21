@@ -46,8 +46,16 @@
 /* Locking resynchronize hack */
 #define LOCKING_RESYNC_ENABLE
 
+//#define NO_ACTION_TAPPING
+//#define NO_ACTION_ONESHOT
+#define NO_ACTION_MACRO
+#define NO_ACTION_FUNCTION
+#define FORCE_NKRO
+
 #define USB_POLLING_INTERVAL_MS 1
-#define QMK_KEYS_PER_SCAN 4
+#define QMK_KEYS_PER_SCAN 8
 #define UNICODE_SELECTED_MODES UC_WINC
 
 #define LAYER_STATE_8BIT
+
+//#define DEBUG_MATRIX_SCAN_RATE
