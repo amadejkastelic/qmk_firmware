@@ -33,4 +33,4 @@ FAUXCLICKY_ENABLE = no      # Use buzzer to emulate clicky switches
 UNICODE_ENABLE = yes
 LTO_ENABLE = yes
 OPT = 3
-DEBOUNCE_TYPE = sym_defer_pk
+DEBOUNCE_TYPE = asym_eager_defer_pk
