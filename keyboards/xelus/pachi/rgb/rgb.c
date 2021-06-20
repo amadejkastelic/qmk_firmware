@@ -237,14 +237,6 @@ const rgb_matrix_driver_t rgb_matrix_driver = {
     .set_color_all = IS31FL3741_set_color_all
 };
 
-void eeconfig_init_kb(void) {  // EEPROM is getting reset!
-    rgb_matrix_enable();                            // Enable RGB by default
-    rgb_matrix_mode(RGB_MATRIX_CUSTOM_test_mode);   // set to RGBLIGHT_MODE_RGB_TEST by default
-
-    eeconfig_update_kb(0);
-    eeconfig_init_user();
-}
-
 void keyboard_post_init_kb(void) {
     debug_enable=true;
     //rgb_matrix_mode(RGB_MATRIX_CUSTOM_test_mode);  // set to RGBLIGHT_MODE_RGB_TEST by default
