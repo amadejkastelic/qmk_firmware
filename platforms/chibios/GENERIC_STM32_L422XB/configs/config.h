@@ -1,5 +1,4 @@
-/* Copyright 2018 Jason Williams (Wilba)
- * Copyright 2021 Harrison Chan (Xelus)
+/* Copyright 2018-2021 Harrison Chan (@Xelus)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,14 +14,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#pragma once
+/* Address for jumping to bootloader on STM32 chips. */
+/* It is chip dependent, the correct number can be looked up by checking against ST's application note AN2606.
+ */
+#define STM32_BOOTLOADER_ADDRESS 0x1FFF0000
 
-#include "quantum.h"
+#define PAL_STM32_OSPEED_HIGHEST PAL_STM32_OSPEED_HIGH
 
-#if defined(KEYBOARD_aeboards_constellation_rev1)
-    #include "rev1.h"
-#elif defined(KEYBOARD_aeboards_constellation_rev2)
-    #include "rev2.h"
-#elif defined(KEYBOARD_aeboards_constellation_rev3)
-    #include "rev3.h"
+#ifndef EARLY_INIT_PERFORM_BOOTLOADER_JUMP
+#    define EARLY_INIT_PERFORM_BOOTLOADER_JUMP TRUE
 #endif
