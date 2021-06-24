@@ -1,5 +1,5 @@
 # MCU name
-MCU = STM32L433
+MCU = STM32L422
 
 # Build Options
 #   change yes to no to disable
@@ -24,9 +24,7 @@ EEPROM_DRIVER = i2c
 
 RGB_MATRIX_ENABLE = yes
 RGB_MATRIX_DRIVER = custom
+RGB_MATRIX_CUSTOM_KB = yes
 
 COMMON_VPATH += $(DRIVER_PATH)/issi
 SRC += drivers/issi/is31fl3741.c
-
-LTO_ENABLE = yes
-OPT = 2
