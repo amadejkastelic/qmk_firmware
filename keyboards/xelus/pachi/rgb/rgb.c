@@ -19,7 +19,7 @@
 #include <ch.h>
 
 // tested and working
-void matrix_io_delay(void) { __asm__ volatile("nop\nnop\nnop\n"); }
+// void matrix_io_delay(void) { __asm__ volatile("nop\nnop\nnop\n"); }
 
 #ifdef RGB_MATRIX_ENABLE
 #include <i2c_master.h>
