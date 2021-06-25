@@ -36,16 +36,16 @@
 
 #define LAYOUT_all LAYOUT_alice_split_bs
 
-#ifdef RGB_MATRIX_ENABLE
-typedef union {
-  uint32_t raw;
-  struct {
-    bool         disable_layer_led   :1;
-    bool         rgb_matrix_enable   :1;
-    bool         led_level           :1;
-    uint8_t      led_level_res       :2; // DO NOT REMOVE
-  };
-} keyboard_config_t;
+// #ifdef RGB_MATRIX_ENABLE
+// typedef union {
+//   uint32_t raw;
+//   struct {
+//     bool         disable_layer_led   :1;
+//     bool         rgb_matrix_enable   :1;
+//     bool         led_level           :1;
+//     uint8_t      led_level_res       :2; // DO NOT REMOVE
+//   };
+// } keyboard_config_t;
 
-extern keyboard_config_t keyboard_config;
-#endif
+// extern keyboard_config_t keyboard_config;
+// #endif

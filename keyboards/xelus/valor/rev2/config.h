@@ -83,4 +83,6 @@
 // Disable (comment out) define to use LEDs normally in RGB Matrix
 #define RGB_INDICATORS_OFF_DURING_ANIMATION
 
+#define WS2812_EXTERNAL_PULLUP
+
 #define RGB_MATRIX_STARTUP_MODE RGB_MATRIX_CUSTOM_test_mode

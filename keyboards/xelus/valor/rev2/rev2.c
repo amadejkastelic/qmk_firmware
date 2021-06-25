@@ -18,7 +18,7 @@
 
 #ifdef RGB_MATRIX_ENABLE
 
-keyboard_config_t keyboard_config;
+// keyboard_config_t keyboard_config;
 
 led_config_t g_led_config = { {
   // Key Matrix to LED Index
@@ -60,9 +60,9 @@ led_config_t g_led_config = { {
 
 }, {
   // LED Index to Flag
-  2, 2, 2, 2, 2, 2, 2, 2,
-  2, 2, 2, 2, 2, 2, 2, 2,
-  2, 2, 2, 2, 2, 2, 2, 2,
+  8, 8, 8, 8, 8, 8, 8, 8,
+  8, 8, 8, 8, 8, 8, 8, 8,
+  8, 8, 8, 8, 8, 8, 8, 8,
   4, 4, 4, 4
 } };
 
@@ -111,9 +111,6 @@ void suspend_wakeup_init_kb(void) {
 //     keyboard_config.rgb_matrix_enable = true;
 //     keyboard_config.led_level = true;
 //     keyboard_config.led_level_res = 0b11;
-
-//     rgb_matrix_enable();        // Enable RGB by default
-//     rgb_matrix_mode(255);       //rgb test
 
 //     eeconfig_update_kb(keyboard_config.raw);
 //     eeconfig_init_user();

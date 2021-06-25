@@ -17,7 +17,7 @@ BACKLIGHT_ENABLE = no       # Enable keyboard backlight functionality
 RGBLIGHT_ENABLE = no       # Enable keyboard RGB underglow
 BLUETOOTH_ENABLE = no       # Enable Bluetooth
 AUDIO_ENABLE = no           # Audio output
-LTO_ENABLE = yes
+# LTO_ENABLE = yes
 
 LAYOUTS = alice_split_bs
 
@@ -27,4 +27,4 @@ RGB_MATRIX_ENABLE = yes
 RGB_MATRIX_DRIVER = WS2812
 RGB_MATRIX_CUSTOM_KB = yes
 
-WS2812_DRIVER = pwm
+WS2812_DRIVER = bitbang
