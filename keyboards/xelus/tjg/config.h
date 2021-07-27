@@ -29,7 +29,7 @@
 
 //underglow
 #define DIRECT_PINS { \
-    { F5, F1, B1, D0, B5 }, \
+    { F5, F1, B1, D3, B5 }, \
     { F6, F4, B2, D2, B4 }, \
     { NO_PIN, F7, C7, NO_PIN, NO_PIN }  \
 }
