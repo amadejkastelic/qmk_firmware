@@ -36,12 +36,12 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     ),
 
     [1] = LAYOUT(
-        _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          _______,
+        _______, RGB_HUI, RGB_HUD, RGB_SAI, RGB_SAD, RGB_SPI, RGB_SPD, _______, _______, _______, _______, _______, _______, _______,          _______,
         _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          _______,
         _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, RESET,            _______,
         _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          _______,          _______,
-        _______,          _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          _______, _______, _______,
-        _______, _______, _______,                            _______,                            _______, _______, _______, _______, _______, _______
+        _______,          _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          _______, RGB_VAI, _______,
+        _______, _______, _______,                            _______,                            _______, _______, _______, RGB_RMOD,RGB_VAD, RGB_MOD
     ),
 
     [2] = LAYOUT(
@@ -78,7 +78,7 @@ bool encoder_update_user(uint8_t index, bool clockwise) {
 void rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
     // caps lock cyan
     if (host_keyboard_led_state().caps_lock) {
-        RGB_MATRIX_INDICATOR_SET_COLOR(3, 0, 128, 128);
+        RGB_MATRIX_INDICATOR_SET_COLOR(3, 255, 0, 0);
     } else {
         RGB_MATRIX_INDICATOR_SET_COLOR(3, 0, 0, 0);
     }
@@ -89,17 +89,17 @@ void rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
             RGB_MATRIX_INDICATOR_SET_COLOR(0, 0, 0, 0);
             break;
         case 1:
-            RGB_MATRIX_INDICATOR_SET_COLOR(0, 128, 0, 0);
+            RGB_MATRIX_INDICATOR_SET_COLOR(0, 255, 0, 0);
             break;
         case 2:
-            RGB_MATRIX_INDICATOR_SET_COLOR(0, 0, 128, 0);
+            RGB_MATRIX_INDICATOR_SET_COLOR(0, 0, 255, 0);
             break;
         case 3:
-            RGB_MATRIX_INDICATOR_SET_COLOR(0, 0, 0, 128);
+            RGB_MATRIX_INDICATOR_SET_COLOR(0, 0, 0, 255);
             break;
         default:
             // white
-            RGB_MATRIX_INDICATOR_SET_COLOR(0, 128, 128, 128);
+            RGB_MATRIX_INDICATOR_SET_COLOR(0, 255, 255, 255);
             break;
     }
 }
