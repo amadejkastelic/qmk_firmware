@@ -78,16 +78,14 @@ bool encoder_update_user(uint8_t index, bool clockwise) {
 void rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
     // caps lock cyan
     if (host_keyboard_led_state().caps_lock) {
-        RGB_MATRIX_INDICATOR_SET_COLOR(3, 255, 0, 0);
-    } else {
-        RGB_MATRIX_INDICATOR_SET_COLOR(3, 0, 0, 0);
+        RGB_MATRIX_INDICATOR_SET_COLOR(72, 0, 255, 0);
+        RGB_MATRIX_INDICATOR_SET_COLOR(75, 0, 255, 0);
+        RGB_MATRIX_INDICATOR_SET_COLOR(86, 0, 255, 0);
+        RGB_MATRIX_INDICATOR_SET_COLOR(82, 0, 255, 0);
     }
 
     // layer state
     switch (get_highest_layer(layer_state)) {
-        case 0:
-            RGB_MATRIX_INDICATOR_SET_COLOR(0, 0, 0, 0);
-            break;
         case 1:
             RGB_MATRIX_INDICATOR_SET_COLOR(0, 255, 0, 0);
             break;
@@ -96,10 +94,6 @@ void rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
             break;
         case 3:
             RGB_MATRIX_INDICATOR_SET_COLOR(0, 0, 0, 255);
-            break;
-        default:
-            // white
-            RGB_MATRIX_INDICATOR_SET_COLOR(0, 255, 255, 255);
             break;
     }
 }
