@@ -27,19 +27,19 @@
 #ifndef ENC_SCALE
 #    define ENC_SCALE 1  // Multiplier for wheel
 #endif
-#ifndef PLOOPY_DPI_OPTIONS
-#    define PLOOPY_DPI_OPTIONS \
+#ifndef DPI_OPTIONS
+#    define DPI_OPTIONS \
         { 1200, 1600, 2400 }
-#    ifndef PLOOPY_DPI_DEFAULT
-#        define PLOOPY_DPI_DEFAULT 1
+#    ifndef DPI_DEFAULT
+#        define DPI_DEFAULT 1
 #    endif
 #endif
-#ifndef PLOOPY_DPI_DEFAULT
-#    define PLOOPY_DPI_DEFAULT 0
+#ifndef DPI_DEFAULT
+#    define DPI_DEFAULT 0
 #endif
 
 keyboard_config_t keyboard_config;
-uint16_t          dpi_array[] = PLOOPY_DPI_OPTIONS;
+uint16_t          dpi_array[] = DPI_OPTIONS;
 #define DPI_OPTION_SIZE (sizeof(dpi_array) / sizeof(uint16_t))
 
 // TODO: Implement libinput profiles
@@ -74,24 +74,12 @@ bool encoder_update_kb(uint8_t index, bool clockwise) {
 
     lastScroll  = timer_read();
 
-    // need to handle scroll with normal encoder
-
     if (!encoder_update_user(index, clockwise)) {
         return false;
     }
-#ifdef MOUSEKEY_ENABLE
+    // MOUSE_ENABLE must be enabled
     tap_code(clockwise ? KC_WH_U : KC_WH_D);
-#else
-    // mouse_report_t mouse_report = pointing_device_get_report();
-    // mouse_report.v = clockwise ? 1 : -1;
-    // pointing_device_set_report(mouse_report);
-    // pointing_device_send();
-#endif
     return true;
-}
-
-__attribute__((weak)) report_mouse_t pointing_device_task_kb(report_mouse_t mouse_report) {
-    return pointing_device_task_user(mouse_report);
 }
 
 bool process_record_kb(uint16_t keycode, keyrecord_t* record) {
