@@ -21,8 +21,6 @@
 #include "quantum.h"
 #include "analog.h"
 
-void process_wheel(void);
-
 #define LAYOUT(BL, BM, BR, BF, BB) \
     { {BL, BM, BR, BF, BB}, }
 

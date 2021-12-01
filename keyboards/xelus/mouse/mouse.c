@@ -58,25 +58,7 @@ bool     debug_encoder     = false;
 __attribute__((weak)) bool encoder_update_user(uint8_t index, bool clockwise) { return true; }
 
 bool encoder_update_kb(uint8_t index, bool clockwise) {
-    if (!encoder_update_user(index, clockwise)) {
-        return false;
-    }
-#ifdef MOUSEKEY_ENABLE
-    tap_code(clockwise ? KC_WH_U : KC_WH_D);
-#else
-    mouse_report_t mouse_report = pointing_device_get_report();
-    mouse_report.v = clockwise ? 1 : -1;
-    pointing_device_set_report(mouse_report);
-    pointing_device_send();
-#endif
-    return true;
-}
-
-void process_wheel(void) {
-    // Lovingly ripped from the Ploopy Source
-
-    // If the mouse wheel was just released, do not scroll.
-    if (timer_elapsed(lastMidClick) < SCROLL_BUTT_DEBOUNCE) {
+     if (timer_elapsed(lastMidClick) < SCROLL_BUTT_DEBOUNCE) {
         return;
     }
 
@@ -93,12 +75,22 @@ void process_wheel(void) {
     lastScroll  = timer_read();
 
     // need to handle scroll with normal encoder
-    encoder_read();
+
+    if (!encoder_update_user(index, clockwise)) {
+        return false;
+    }
+#ifdef MOUSEKEY_ENABLE
+    tap_code(clockwise ? KC_WH_U : KC_WH_D);
+#else
+    // mouse_report_t mouse_report = pointing_device_get_report();
+    // mouse_report.v = clockwise ? 1 : -1;
+    // pointing_device_set_report(mouse_report);
+    // pointing_device_send();
+#endif
+    return true;
 }
 
 __attribute__((weak)) report_mouse_t pointing_device_task_kb(report_mouse_t mouse_report) {
-    process_wheel();
-
     return pointing_device_task_user(mouse_report);
 }
 
@@ -138,8 +130,6 @@ void keyboard_pre_init_kb(void) {
 
 void pointing_device_init_kb(void) {
     pointing_device_set_cpi(dpi_array[keyboard_config.dpi_config]);
-    // initialize the scroll wheel's optical encoder
-    // opt_encoder_init();
 }
 
 void eeconfig_init_kb(void) {
