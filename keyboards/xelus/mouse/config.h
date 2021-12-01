@@ -106,7 +106,11 @@
 #define PMW3360_CS_PIN          A4
 #define PMW3360_CLOCK_SPEED     2000000
 #define PMW3360_SPI_LSBFIRST 	false
-#define PMW3360_SPI_DIVISOR     64
+#define PMW3360_SPI_DIVISOR     32
+
+// Encoder
+#define ENCODERS_PAD_A { B12 }
+#define ENCODERS_PAD_B { B13 }
 
 // F411 16MHz HSE
 #define STM32_HSECLK 16000000

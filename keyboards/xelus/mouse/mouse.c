@@ -55,16 +55,24 @@ uint16_t lastScroll        = 0;      // Previous confirmed wheel event
 uint16_t lastMidClick      = 0;      // Stops scrollwheel from being read if it was pressed
 bool     debug_encoder     = false;
 
-#ifndef ENCODER_DIRECTION_FLIP
-#    define ENCODER_CLOCKWISE true
-#    define ENCODER_COUNTER_CLOCKWISE false
-#else
-#    define ENCODER_CLOCKWISE false
-#    define ENCODER_COUNTER_CLOCKWISE true
-#endif
-//static int8_t encoder_LUT[] = {0, -1, 1, 0, 1, 0, 0, -1, -1, 0, 0, 1, 0, 1, -1, 0};
+__attribute__((weak)) bool encoder_update_user(uint8_t index, bool clockwise) { return true; }
 
-void process_wheel(report_mouse_t* mouse_report) {
+bool encoder_update_kb(uint8_t index, bool clockwise) {
+    if (!encoder_update_user(index, clockwise)) {
+        return false;
+    }
+#ifdef MOUSEKEY_ENABLE
+    tap_code(clockwise ? KC_WH_U : KC_WH_D);
+#else
+    mouse_report_t mouse_report = pointing_device_get_report();
+    mouse_report.v = clockwise ? 1 : -1;
+    pointing_device_set_report(mouse_report);
+    pointing_device_send();
+#endif
+    return true;
+}
+
+void process_wheel(void) {
     // Lovingly ripped from the Ploopy Source
 
     // If the mouse wheel was just released, do not scroll.
@@ -85,17 +93,11 @@ void process_wheel(report_mouse_t* mouse_report) {
     lastScroll  = timer_read();
 
     // need to handle scroll with normal encoder
-
-    // if (debug_encoder) dprintf("OPT1: %d, OPT2: %d\n", p1, p2);
-
-    // int dir = opt_encoder_handler(p1, p2);
-
-    // if (dir == 0) return;
-    // mouse_report->v = (int8_t)(dir * ENC_SCALE);
+    encoder_read();
 }
 
 __attribute__((weak)) report_mouse_t pointing_device_task_kb(report_mouse_t mouse_report) {
-    process_wheel(&mouse_report);
+    process_wheel();
 
     return pointing_device_task_user(mouse_report);
 }
@@ -130,9 +132,6 @@ void keyboard_pre_init_kb(void) {
     // debug_matrix  = true;
     // debug_mouse   = true;
     // debug_encoder = true;
-
-    setPinInput(ENC_PAD_A);
-    setPinInput(ENC_PAD_B);
 
     keyboard_pre_init_user();
 }

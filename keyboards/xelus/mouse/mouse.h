@@ -21,20 +21,16 @@
 #include "quantum.h"
 #include "analog.h"
 
-// Sensor defs
-#define ENC_PAD_A B13
-#define ENC_PAD_B B12
-
-void process_wheel(report_mouse_t* mouse_report);
+void process_wheel(void);
 
 #define LAYOUT(BL, BM, BR, BF, BB) \
     { {BL, BM, BR, BF, BB}, }
 
 typedef union {
-  uint32_t raw;
-  struct {
-    uint8_t    dpi_config;
-  };
+    uint32_t raw;
+    struct {
+        uint8_t    dpi_config;
+    };
 } keyboard_config_t;
 
 extern keyboard_config_t keyboard_config;
@@ -46,10 +42,7 @@ enum ploopy_keycodes {
 #else
     DPI_CONFIG = SAFE_RANGE,
 #endif
-    DRAG_SCROLL,
-#ifdef VIA_ENABLE
-    PLOOPY_SAFE_RANGE = SAFE_RANGE,
-#else
-    PLOOPY_SAFE_RANGE,
-#endif
 };
+
+bool encoder_update_user(uint8_t index, bool clockwise);
+bool encoder_update_kb(uint8_t index, bool clockwise);
