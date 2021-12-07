@@ -103,6 +103,7 @@
 // Encoder
 #define ENCODERS_PAD_A { B13 }
 #define ENCODERS_PAD_B { B12 }
+#define ENCODER_RESOLUTION 2
 
 // F411 16MHz HSE
 #define STM32_HSECLK 16000000
