@@ -35,5 +35,5 @@ OPT_DEFS += -DCORTEX_ENABLE_WFI_IDLE=TRUE
 # save hid interface
 KEYBOARD_SHARED_EP = yes
 
-# LTO_ENABLE = yes
-# OPT = 2
+LTO_ENABLE = yes
+OPT = 2
