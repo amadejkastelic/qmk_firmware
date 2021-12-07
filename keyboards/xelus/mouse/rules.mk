@@ -1,6 +1,9 @@
 # MCU name
 MCU = STM32F411
 
+# Bootloader selection
+BOOTLOADER = stm32-dfu
+
 # Build Options
 #   change yes to no to disable
 #
@@ -26,14 +29,11 @@ ENCODER_ENABLE = yes
 
 WS2812_DRIVER = pwm
 
-EEPROM_DRIVER = i2c
-
 # Enter lower-power sleep mode when on the ChibiOS idle thread
 OPT_DEFS += -DCORTEX_ENABLE_WFI_IDLE=TRUE
-STM32_BOOTLOADER_ADDRESS = 0x1FFF0000
 
 # save hid interface
 KEYBOARD_SHARED_EP = yes
 
-LTO_ENABLE = yes
-OPT = 2
+# LTO_ENABLE = yes
+# OPT = 2

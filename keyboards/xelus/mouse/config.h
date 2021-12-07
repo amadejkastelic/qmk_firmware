@@ -40,7 +40,7 @@
     }
 
 /* Debounce reduces chatter (unintended double-presses) - set 0 if debouncing is not needed */
-#define DEBOUNCE 1
+#define DEBOUNCE 5
 
 /* Much more so than a keyboard, speed matters for a mouse. So we'll go for as high
    a polling rate as possible. */
@@ -53,10 +53,6 @@
 #define NO_ACTION_ONESHOT
 #define NO_ACTION_MACRO
 #define NO_ACTION_FUNCTION
-
-/* Bootmagic Lite key configuration */
-#define BOOTMAGIC_LITE_ROW 0
-#define BOOTMAGIC_LITE_COLUMN 1
 
 // I2C eeprom
 // #define EEPROM_I2C_24LC64
@@ -71,11 +67,8 @@
 #define I2C1_SDA            7
 #define I2C1_SCL_PAL_MODE   4
 #define I2C1_SDA_PAL_MODE   4
-#define I2C1_TIMINGR_PRESC  0U
-#define I2C1_TIMINGR_SCLDEL 11U
-#define I2C1_TIMINGR_SDADEL 0U
-#define I2C1_TIMINGR_SCLH   14U
-#define I2C1_TIMINGR_SCLL   42U
+#define I2C1_CLOCK_SPEED    400000
+#define I2C1_DUTY_CYCLE     FAST_DUTY_CYCLE_2
 
 // SPI config
 #define SPI_DRIVER SPID1
@@ -88,18 +81,17 @@
 
 // RGB
 #define RGB_DI_PIN A8
-#define RGBLED_NUM 1
-#define RGBLIGHT_LIMIT_VAL 40
-#define RGBLIGHT_EFFECT_BREATHING
-#define RGBLIGHT_EFFECT_RAINBOW_MOOD
-#define RGBLIGHT_MODE_RGB_TEST
+#define RGBLED_NUM 8
+#define RGBLIGHT_ANIMATIONS
+#define RGBLIGHT_DEFAULT_MODE RGBLIGHT_MODE_RGB_TEST
+#define WS2812_EXTERNAL_PULLUP
 
 // PWM config
 #define WS2812_PWM_DRIVER PWMD1
 #define WS2812_PWM_CHANNEL 1
 #define WS2812_PWM_PAL_MODE 1
 #define WS2812_DMA_STREAM STM32_DMA2_STREAM5
-#define WS2812_DMA_CHANNEL 1
+#define WS2812_DMA_CHANNEL 6
 #define WS2812_DMAMUX_ID STM32_DMAMUX2_TIM1_UP
 
 // PMW3360 config
@@ -109,8 +101,8 @@
 #define PMW3360_SPI_DIVISOR     32
 
 // Encoder
-#define ENCODERS_PAD_A { B12 }
-#define ENCODERS_PAD_B { B13 }
+#define ENCODERS_PAD_A { B13 }
+#define ENCODERS_PAD_B { B12 }
 
 // F411 16MHz HSE
 #define STM32_HSECLK 16000000

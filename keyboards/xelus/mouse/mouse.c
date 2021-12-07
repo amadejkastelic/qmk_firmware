@@ -29,13 +29,13 @@
 #endif
 #ifndef DPI_OPTIONS
 #    define DPI_OPTIONS \
-        { 1200, 1600, 2400 }
+        { 1600, 2400, 3200 }
 #    ifndef DPI_DEFAULT
-#        define DPI_DEFAULT 1
+#        define DPI_DEFAULT 2
 #    endif
 #endif
 #ifndef DPI_DEFAULT
-#    define DPI_DEFAULT 0
+#    define DPI_DEFAULT 2
 #endif
 
 keyboard_config_t keyboard_config;
@@ -59,17 +59,17 @@ __attribute__((weak)) bool encoder_update_user(uint8_t index, bool clockwise) { 
 
 bool encoder_update_kb(uint8_t index, bool clockwise) {
      if (timer_elapsed(lastMidClick) < SCROLL_BUTT_DEBOUNCE) {
-        return;
+        return false;
     }
 
     // Limit the number of scrolls per unit time.
     if (timer_elapsed(lastScroll) < ENC_DEBOUNCE) {
-        return;
+        return false;
     }
 
     // Don't scroll if the middle button is depressed.
     if (is_scroll_clicked) {
-        return;
+        return false;
     }
 
     lastScroll  = timer_read();
@@ -108,10 +108,10 @@ bool process_record_kb(uint16_t keycode, keyrecord_t* record) {
 
 // Hardware Setup
 void keyboard_pre_init_kb(void) {
-    // debug_enable  = true;
-    // debug_matrix  = true;
-    // debug_mouse   = true;
-    // debug_encoder = true;
+    debug_enable  = true;
+    debug_matrix  = true;
+    debug_mouse   = true;
+    debug_encoder = true;
 
     keyboard_pre_init_user();
 }
@@ -121,7 +121,7 @@ void pointing_device_init_kb(void) {
 }
 
 void eeconfig_init_kb(void) {
-    keyboard_config.dpi_config = PLOOPY_DPI_DEFAULT;
+    keyboard_config.dpi_config = DPI_DEFAULT;
     eeconfig_update_kb(keyboard_config.raw);
     eeconfig_init_user();
 }
