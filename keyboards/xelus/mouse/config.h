@@ -95,10 +95,9 @@
 #define WS2812_DMAMUX_ID STM32_DMAMUX2_TIM1_UP
 
 // PMW3360 config
-#define PMW3360_CS_PIN          A4
-#define PMW3360_CLOCK_SPEED     2000000
-#define PMW3360_SPI_LSBFIRST 	false
-#define PMW3360_SPI_DIVISOR     32
+#define PMW3360_CS_PIN           A4
+#define PMW3360_SPI_DIVISOR      32
+#define PMW3360_LIFTOFF_DISTANCE 0x27
 
 // Encoder
 #define ENCODERS_PAD_A { B13 }
