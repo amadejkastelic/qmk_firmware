@@ -21,3 +21,7 @@ WS2812_DRIVER = pwm
 
 # Enter lower-power sleep mode when on the ChibiOS idle thread
 OPT_DEFS += -DCORTEX_ENABLE_WFI_IDLE=TRUE
+
+DEBOUNCE_TYPE = asym_eager_defer_pk
+UNICODE_ENABLE = yes
+OPT = 2
