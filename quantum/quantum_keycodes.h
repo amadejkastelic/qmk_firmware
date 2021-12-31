@@ -594,6 +594,7 @@ enum quantum_keycodes {
     MACRO_31,
 
     MAGIC_TOGGLE_CONTROL_CAPSLOCK,
+    AUTOCORRECT_TOGGLE,
 
     // Start of custom keycode range for keyboards and keymaps - always leave at the end
     SAFE_RANGE
@@ -777,6 +778,8 @@ enum quantum_keycodes {
 
 #define EH_LEFT MAGIC_EE_HANDS_LEFT
 #define EH_RGHT MAGIC_EE_HANDS_RIGHT
+
+#define AUTOCRT AUTOCORRECT_ENABLE
 
 // GOTO layer - 16 layers max
 // when:

@@ -6,9 +6,6 @@
 #ifdef CAPS_WORD_ENABLE
 #    include "caps_word.h"
 #endif
-#ifdef AUTOCORRECTION_ENABLE
-#    include "autocorrection/autocorrection.h"
-#endif
 #ifdef __AVR__
 #    include <avr/wdt.h>
 #endif
@@ -60,9 +57,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 #endif
 #ifdef CAPS_WORD_ENABLE
           && process_caps_word(keycode, record)
-#endif
-#ifdef AUTOCORRECTION_ENABLE
-          && process_autocorrection(keycode, record)
 #endif
           && true)) {
         return false;

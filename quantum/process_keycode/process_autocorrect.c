@@ -1,21 +1,18 @@
 // Copyright 2021 Google LLC
 // Copyright 2021 @filterpaper
 // SPDX-License-Identifier: Apache-2.0
-// Original source: https://getreuer.info/posts/keyboards/autocorrection
+// Original source: https://getreuer.info/posts/keyboards/autocorrect
 
-#include "autocorrection.h"
+#include "process_autocorrect.h"
 #include <string.h>
+#include "keycode_config.h"
 
-#if __has_include("autocorrection_data.h")
-#    pragma GCC push_options
-#    pragma GCC optimize("O0")
-#    include "autocorrection_data.h"
-#    if AUTOCORRECTION_MIN_LENGTH < 4
-#        error Minimum Length is too short and may cause overflows
-#    endif
-#    if DICTIONARY_SIZE > SIZE_MAX
-#        error Dictionary size excees maximum size permitted
-#    endif
+#if __has_include("autocorrect_data.h")
+#    include "autocorrect_data.h"
+#else
+#    pragma message "Warning! Autocorrect is using the default library!"
+#    include "autocorrect_data_default.h"
+#endif
 
 /**
  * @brief Process handler for autocorrect feature
@@ -29,16 +26,20 @@ bool process_autocorrection(uint16_t keycode, keyrecord_t* record) {
     static uint8_t typo_buffer[AUTOCORRECTION_MAX_LENGTH] = {KC_SPC};
     static uint8_t typo_buffer_size                       = 1;
 
-    if (keycode == AUTO_CTN) {
+bool process_autocorrect(uint16_t keycode, keyrecord_t* record) {
+    static uint8_t typo_buffer[AUTOCORRECT_MAX_LENGTH] = {KC_SPC};
+    static uint8_t typo_buffer_size                    = 1;
+
+    if (keycode == AUTOCRT) {
         if (record->event.pressed) {
             typo_buffer_size = 0;
-            userspace_config.autocorrection ^= 1;
-            eeconfig_update_user(userspace_config.raw);
+            keymap_config.autocorrect_enable ^= 1;
+            eeconfig_update_keymap(keymap_config.raw);
         }
         return false;
     }
 
-    if (!userspace_config.autocorrection) {
+    if (!keymap_config.autocorrect_enable) {
         typo_buffer_size = 0;
         return true;
     }
@@ -47,14 +48,14 @@ bool process_autocorrection(uint16_t keycode, keyrecord_t* record) {
         case KC_LSFT:
         case KC_RSFT:
             return true;
-#    ifndef NO_ACTION_TAPPING
+#ifndef NO_ACTION_TAPPING
         case QK_MOD_TAP ... QK_MOD_TAP_MAX:
             if (((keycode >> 8) & 0xF) == MOD_LSFT) {
                 return true;
             }
-#        ifndef NO_ACTION_LAYER
+#    ifndef NO_ACTION_LAYER
         case QK_LAYER_TAP ... QK_LAYER_TAP_MAX:
-#        endif
+#    endif
             if (record->event.pressed || !record->tap.count) {
                 return true;
             }
@@ -70,13 +71,15 @@ bool process_autocorrection(uint16_t keycode, keyrecord_t* record) {
             break;
 #    endif
 #    ifndef NO_ACTION_ONESHOT
+#endif
+#ifndef NO_ACTION_ONESHOT
         case QK_ONE_SHOT_MOD ... QK_ONE_SHOT_MOD_MAX:
             if ((keycode & 0xF) == MOD_LSFT) {
                 return true;
             }
-#    endif
+#endif
         default:
-            // Disable autocorrection while a mod other than shift is active.
+            // Disable autocorrect while a mod other than shift is active.
             if (((get_mods() | get_oneshot_mods()) & ~MOD_MASK_SHIFT) != 0) {
                 typo_buffer_size = 0;
                 return true;
@@ -110,46 +113,46 @@ bool process_autocorrection(uint16_t keycode, keyrecord_t* record) {
     }
 
     // Rotate oldest character if buffer is full.
-    if (typo_buffer_size >= AUTOCORRECTION_MAX_LENGTH) {
-        memmove(typo_buffer, typo_buffer + 1, AUTOCORRECTION_MAX_LENGTH - 1);
-        typo_buffer_size = AUTOCORRECTION_MAX_LENGTH - 1;
+    if (typo_buffer_size >= AUTOCORRECT_MAX_LENGTH) {
+        memmove(typo_buffer, typo_buffer + 1, AUTOCORRECT_MAX_LENGTH - 1);
+        typo_buffer_size = AUTOCORRECT_MAX_LENGTH - 1;
     }
 
     // Append `keycode` to buffer.
     typo_buffer[typo_buffer_size++] = keycode;
     // Return if buffer is smaller than the shortest word.
-    if (typo_buffer_size < AUTOCORRECTION_MIN_LENGTH) {
+    if (typo_buffer_size < AUTOCORRECT_MIN_LENGTH) {
         return true;
     }
 
-    // Check for typo in buffer using a trie stored in `autocorrection_data`.
+    // Check for typo in buffer using a trie stored in `autocorrect_data`.
     uint16_t state = 0;
-    uint8_t  code  = pgm_read_byte(autocorrection_data + state);
+    uint8_t  code  = pgm_read_byte(autocorrect_data + state);
     for (uint8_t i = typo_buffer_size - 1; i >= 0; --i) {
         uint8_t const key_i = typo_buffer[i];
 
         if (code & 64) {  // Check for match in node with multiple children.
             code &= 63;
-            for (; code != key_i; code = pgm_read_byte(autocorrection_data + (state += 3))) {
+            for (; code != key_i; code = pgm_read_byte(autocorrect_data + (state += 3))) {
                 if (!code) return true;
             }
             // Follow link to child node.
-            state = (pgm_read_byte(autocorrection_data + state + 1) | pgm_read_byte(autocorrection_data + state + 2) << 8);
+            state = (pgm_read_byte(autocorrect_data + state + 1) | pgm_read_byte(autocorrect_data + state + 2) << 8);
             // Check for match in node with single child.
         } else if (code != key_i) {
             return true;
-        } else if (!(code = pgm_read_byte(autocorrection_data + (++state)))) {
+        } else if (!(code = pgm_read_byte(autocorrect_data + (++state)))) {
             ++state;
         }
 
-        code = pgm_read_byte(autocorrection_data + state);
+        code = pgm_read_byte(autocorrect_data + state);
 
-        if (code & 128) {  // A typo was found! Apply autocorrection.
+        if (code & 128) {  // A typo was found! Apply autocorrect.
             const uint8_t backspaces = code & 63;
             for (uint8_t i = 0; i < backspaces; ++i) {
                 tap_code(KC_BSPC);
             }
-            send_string_P((char const*)(autocorrection_data + state + 1));
+            send_string_P((char const*)(autocorrect_data + state + 1));
 
             if (keycode == KC_SPC) {
                 typo_buffer[0]   = KC_SPC;
@@ -163,8 +166,3 @@ bool process_autocorrection(uint16_t keycode, keyrecord_t* record) {
     }
     return true;
 }
-#    pragma GCC pop_options
-#else
-#    pragma message "Warning!!! Autocorrect is not corretly setup!"
-bool process_autocorrection(uint16_t keycode, keyrecord_t* record) { return true; }
-#endif

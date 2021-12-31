@@ -5,6 +5,6 @@
 
 #pragma once
 
-#include "drashna.h"
+#include "quantum.h"
 
-bool process_autocorrection(uint16_t keycode, keyrecord_t* record);
+bool process_autocorrect(uint16_t keycode, keyrecord_t* record);
