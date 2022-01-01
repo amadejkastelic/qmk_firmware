@@ -41,14 +41,17 @@ from milc import cli
 
 import qmk.path
 from qmk.keyboard import keyboard_completer, keyboard_folder, rules_mk
-from qmk.keymap import keymap_completer
+from qmk.keymap import keymap_completer, locate_keymap
 
 try:
     from english_words import english_words_lower_alpha_set as CORRECT_WORDS
 except ImportError:
-    cli.log.info('Autocorrection will falsely trigger when a typo is a substring of a ' 'correctly spelled word. To check for this, install the english_words ' 'package and rerun this script:\n\n  python3 -m pip install english_words\n')
+    cli.log.info('Autocorrection will falsely trigger when a typo is a substring of a '
+            'correctly spelled word. To check for this, install the english_words '
+            'package and rerun this script:\n\n  {fg_cyan}python3 -m pip install english_words\n')
     # Use a minimal word list as a fallback.
-    CORRECT_WORDS = ('information', 'available', 'international', 'language', 'loosest', 'reference', 'wealthier', 'entertainment', 'association', 'provides', 'technology', 'statehood')
+    CORRECT_WORDS = ('information', 'available', 'international', 'language', 'loosest', 'reference',
+            'wealthier', 'entertainment', 'association', 'provides', 'technology', 'statehood')
 
 KC_A = 4
 KC_SPC = 0x2c
@@ -76,7 +79,7 @@ def parse_file(file_name: str) -> List[Tuple[str, str]]:
             # Parse syntax "typo -> correction", using strip to ignore indenting.
             tokens = [token.strip() for token in line.split('->', 1)]
             if len(tokens) != 2 or not tokens[0]:
-                cli.log.error(f'Error:%d: Invalid syntax: "%s"', line_number, line)
+                cli.log.error('{fg_red}Error:%d:{fg_reset} Invalid syntax: "{fg_cyan}%s{fg_reset}"', line_number, line)
                 sys.exit(1)
 
             typo, correction = tokens
@@ -84,35 +87,35 @@ def parse_file(file_name: str) -> List[Tuple[str, str]]:
             typo = typo.replace(' ', ':')
 
             if typo in typos:
-                cli.log.warning(f'Warning:%d: Ignoring duplicate typo: "%s"', line_number, typo)
+                cli.log.warning('{fg_cyan}Warning:%d:{fg_reset} Ignoring duplicate typo: "{fg_cyan}%s{fg_reset}"', line_number, typo)
                 continue
 
             # Check that `typo` is valid.
             if not (all([ord('a') <= ord(c) <= ord('z') or c == ':' for c in typo])):
-                cli.log.error(f'Error:%d: Typo "%s" has ' 'characters other than a-z and :.', line_number, typo)
+                cli.log.error('{fg_red}Error:%d: Typo "{fg_cyan}%s{fg_reset}" has characters other than a-z and :.', line_number, typo)
                 sys.exit(1)
             for other_typo in typos:
                 if typo in other_typo or other_typo in typo:
-                    cli.log.error(f'Error:%d: Typos may not be substrings of one ' f'another, otherwise the longer typo would never trigger: ' f'"%s" vs. "%s".', line_number, typo, other_typo)
+                    cli.log.error('{fg_red}Error:%d:{fg_reset} Typos may not be substrings of one another, otherwise the longer typo would never trigger: "{fg_cyan}%s{fg_reset}" vs. "{fg_cyan}%s{fg_reset}".', line_number, typo, other_typo)
                     sys.exit(1)
             if len(typo) < 5:
-                cli.log.warning(f'Warning:%d: It is suggested that typos are at ' f'least 5 characters long to avoid false triggers: "%s"', line_number, typo)
+                cli.log.warning('{fg_yellow}Warning:%d:{fg_reset} It is suggested that typos are at least 5 characters long to avoid false triggers: "{fg_cyan}%s{fg_reset}"', line_number, typo)
 
             if typo.startswith(':') and typo.endswith(':'):
                 if typo[1:-1] in CORRECT_WORDS:
-                    cli.log.warning(f'Warning:%d: Typo "%s" is a correctly spelled ' 'dictionary word.', line_number, typo)
+                    cli.log.warning('{fg_yellow}Warning:%d:{fg_reset} Typo "{fg_cyan}%s{fg_reset}" is a correctly spelled dictionary word.', line_number, typo)
             elif typo.startswith(':') and not typo.endswith(':'):
                 for word in CORRECT_WORDS:
                     if word.startswith(typo[1:]):
-                        cli.log.warning(f'Warning:%d: Typo "%s" would falsely trigger ' f'on correctly spelled word "%s".', line_number, typo, word)
+                        cli.log.warning('{fg_yellow}Warning:%d: {fg_reset}Typo "{fg_cyan}%s{fg_reset}" would falsely trigger on correctly spelled word "{fg_cyan}%s{fg_reset}".', line_number, typo, word)
             elif not typo.startswith(':') and typo.endswith(':'):
                 for word in CORRECT_WORDS:
                     if word.endswith(typo[:-1]):
-                        cli.log.warning(f'Warning:%d: Typo "%s" would falsely trigger ' f'on correctly spelled word "%s".', line_number, typo, word)
+                        cli.log.warning('{fg_yellow}Warning:%d:{fg_reset} Typo "{fg_cyan}%s{fg_reset}" would falsely trigger on correctly spelled word "{fg_cyan}%s{fg_reset}".', line_number, typo, word)
             elif not typo.startswith(':') and not typo.endswith(':'):
                 for word in CORRECT_WORDS:
                     if typo in word:
-                        cli.log.warning(f'Warning:%d: Typo "%s" would falsely trigger ' f'on correctly spelled word "%s".', line_number, typo, word)
+                        cli.log.warning('{fg_yellow}Warning:%d:{fg_reset} Typo "{fg_cyan}%s{fg_reset}" would falsely trigger on correctly spelled word "{fg_cyan}%s{fg_reset}".', line_number, typo, word)
 
             autocorrections.append((typo, correction))
             typos.add(typo)
@@ -233,46 +236,6 @@ def write_generated_code(autocorrections: List[Tuple[str, str]], data: List[int]
     with open(file_name, 'wt') as f:
         f.write(generated_code)
 
-
-def locate_keymap_folder(keyboard, keymap):
-    """Returns the path to a keymap for a specific keyboard.
-    """
-    if not qmk.path.is_keyboard(keyboard):
-        raise KeyError('Invalid keyboard: ' + repr(keyboard))
-
-    # Check the keyboard folder first, last match wins
-    checked_dirs = ''
-    keymap_path = ''
-
-    for dir in keyboard.split('/'):
-        if checked_dirs:
-            checked_dirs = '/'.join((checked_dirs, dir))
-        else:
-            checked_dirs = dir
-
-        keymap_dir = Path('keyboards') / checked_dirs / 'keymaps'
-
-        if (keymap_dir / keymap / 'keymap.c').exists():
-            keymap_path = keymap_dir / keymap / 'autocorrect_data.h'
-        if (keymap_dir / keymap / 'keymap.json').exists():
-            keymap_path = keymap_dir / keymap / 'autocorrect_data.h'
-
-    if keymap_path:
-        return keymap_path
-
-    # Check community layouts as a fallback
-    rules = rules_mk(keyboard)
-
-    if "LAYOUTS" in rules:
-        for layout in rules["LAYOUTS"].split():
-            community_layout = Path('layouts/community') / layout / keymap
-            if community_layout.exists():
-                if (community_layout / 'keymap.json').exists():
-                    return community_layout / 'autocorrect_data.h'
-                if (community_layout / 'keymap.c').exists():
-                    return community_layout / 'autocorrect_data.h'
-
-
 @cli.argument('filename', default='autocorrect_dict.txt', help='The autocorrection database file')
 @cli.argument('-kb', '--keyboard', type=keyboard_folder, completer=keyboard_completer, help='The keyboard to build a firmware for. Ignored when a configurator export is supplied.')
 @cli.argument('-km', '--keymap', completer=keymap_completer, help='The keymap to build a firmware for. Ignored when a configurator export is supplied.')
@@ -281,15 +244,16 @@ def generate_autocorrect_data(cli):
     autocorrections = parse_file(cli.args.filename)
     trie = make_trie(autocorrections)
     data = serialize_trie(autocorrections, trie)
-    cli.log.info(f'Processed %d autocorrection entries to table with %d bytes.', len(autocorrections), len(data))
 
     current_keyboard = cli.args.keyboard or cli.config.user.keyboard or cli.config.generate_autocorrect_data.keyboard
     current_keymap = cli.args.keymap or cli.config.user.keymap or cli.config.generate_autocorrect_data.keymap
 
     if current_keyboard and current_keymap:
-        filename = locate_keymap_folder(current_keyboard, current_keymap)
-        cli.log.info(f'Creating autocorrect_data.h at %s', filename)
+        filename = locate_keymap(current_keyboard, current_keymap).parent / 'autocorrect_data.h'
+        cli.log.info('Creating autocorrect database at {fg_cyan}%s', filename)
         write_generated_code(autocorrections, data, filename)
 
     else:
         write_generated_code(autocorrections, data, 'autocorrect_data.h')
+
+    cli.log.info(f'Processed %d autocorrection entries to table with %d bytes.', len(autocorrections), len(data))
