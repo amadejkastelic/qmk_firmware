@@ -239,21 +239,31 @@ def write_generated_code(autocorrections: List[Tuple[str, str]], data: List[int]
 @cli.argument('filename', default='autocorrect_dict.txt', help='The autocorrection database file')
 @cli.argument('-kb', '--keyboard', type=keyboard_folder, completer=keyboard_completer, help='The keyboard to build a firmware for. Ignored when a configurator export is supplied.')
 @cli.argument('-km', '--keymap', completer=keymap_completer, help='The keymap to build a firmware for. Ignored when a configurator export is supplied.')
+@cli.argument('-o', '--output', arg_only=True, type=qmk.path.normpath, help='File to write to')
 @cli.subcommand('Generate the autocorrection data file from a dictionary file.')
 def generate_autocorrect_data(cli):
     autocorrections = parse_file(cli.args.filename)
     trie = make_trie(autocorrections)
     data = serialize_trie(autocorrections, trie)
+    # Environment processing
+    if cli.args.output == ('-'):
+        cli.args.output = None
 
-    current_keyboard = cli.args.keyboard or cli.config.user.keyboard or cli.config.generate_autocorrect_data.keyboard
-    current_keymap = cli.args.keymap or cli.config.user.keymap or cli.config.generate_autocorrect_data.keymap
-
-    if current_keyboard and current_keymap:
-        filename = locate_keymap(current_keyboard, current_keymap).parent / 'autocorrect_data.h'
-        cli.log.info('Creating autocorrect database at {fg_cyan}%s', filename)
-        write_generated_code(autocorrections, data, filename)
+    if cli.args.output:
+        cli.args.output.parent.mkdir(parents=True, exist_ok=True)
+        cli.log.info('Creating autocorrect database at {fg_cyan}%s', cli.args.output)
+        write_generated_code(autocorrections, data, cli.args.output)
 
     else:
-        write_generated_code(autocorrections, data, 'autocorrect_data.h')
+        current_keyboard = cli.args.keyboard or cli.config.user.keyboard or cli.config.generate_autocorrect_data.keyboard
+        current_keymap = cli.args.keymap or cli.config.user.keymap or cli.config.generate_autocorrect_data.keymap
+
+        if current_keyboard and current_keymap:
+            filename = locate_keymap(current_keyboard, current_keymap).parent / 'autocorrect_data.h'
+            cli.log.info('Creating autocorrect database at {fg_cyan}%s', filename)
+            write_generated_code(autocorrections, data, filename)
+
+        else:
+            write_generated_code(autocorrections, data, 'autocorrect_data.h')
 
     cli.log.info(f'Processed %d autocorrection entries to table with %d bytes.', len(autocorrections), len(data))
