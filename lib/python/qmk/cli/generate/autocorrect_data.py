@@ -32,10 +32,16 @@ https://getreuer.info/posts/keyboards/autocorrection
 """
 
 import sys
+from pathlib import Path
 import textwrap
 from typing import Any, Dict, List, Tuple
 
+from argcomplete.completers import FilesCompleter
 from milc import cli
+
+import qmk.path
+from qmk.keyboard import keyboard_completer, keyboard_folder, rules_mk
+from qmk.keymap import keymap_completer
 
 try:
     from english_words import english_words_lower_alpha_set as CORRECT_WORDS
@@ -228,7 +234,48 @@ def write_generated_code(autocorrections: List[Tuple[str, str]], data: List[int]
         f.write(generated_code)
 
 
+def locate_keymap_folder(keyboard, keymap):
+    """Returns the path to a keymap for a specific keyboard.
+    """
+    if not qmk.path.is_keyboard(keyboard):
+        raise KeyError('Invalid keyboard: ' + repr(keyboard))
+
+    # Check the keyboard folder first, last match wins
+    checked_dirs = ''
+    keymap_path = ''
+
+    for dir in keyboard.split('/'):
+        if checked_dirs:
+            checked_dirs = '/'.join((checked_dirs, dir))
+        else:
+            checked_dirs = dir
+
+        keymap_dir = Path('keyboards') / checked_dirs / 'keymaps'
+
+        if (keymap_dir / keymap / 'keymap.c').exists():
+            keymap_path = keymap_dir / keymap / 'autocorrect_data.h'
+        if (keymap_dir / keymap / 'keymap.json').exists():
+            keymap_path = keymap_dir / keymap / 'autocorrect_data.h'
+
+    if keymap_path:
+        return keymap_path
+
+    # Check community layouts as a fallback
+    rules = rules_mk(keyboard)
+
+    if "LAYOUTS" in rules:
+        for layout in rules["LAYOUTS"].split():
+            community_layout = Path('layouts/community') / layout / keymap
+            if community_layout.exists():
+                if (community_layout / 'keymap.json').exists():
+                    return community_layout / 'autocorrect_data.h'
+                if (community_layout / 'keymap.c').exists():
+                    return community_layout / 'autocorrect_data.h'
+
+
 @cli.argument('filename', default='autocorrect_dict.txt', help='The autocorrection database file')
+@cli.argument('-kb', '--keyboard', type=keyboard_folder, completer=keyboard_completer, help='The keyboard to build a firmware for. Ignored when a configurator export is supplied.')
+@cli.argument('-km', '--keymap', completer=keymap_completer, help='The keymap to build a firmware for. Ignored when a configurator export is supplied.')
 @cli.subcommand('Generate the autocorrection data file from a dictionary file.')
 def generate_autocorrect_data(cli):
     autocorrections = parse_file(cli.args.filename)
@@ -236,4 +283,13 @@ def generate_autocorrect_data(cli):
     data = serialize_trie(autocorrections, trie)
     cli.log.info(f'Processed %d autocorrection entries to table with %d bytes.', len(autocorrections), len(data))
 
-    write_generated_code(autocorrections, data, 'autocorrect_data.h')
+    current_keyboard = cli.args.keyboard or cli.config.user.keyboard or cli.config.generate_autocorrect_data.keyboard
+    current_keymap = cli.args.keymap or cli.config.user.keymap or cli.config.generate_autocorrect_data.keymap
+
+    if current_keyboard and current_keymap:
+        filename = locate_keymap_folder(current_keyboard, current_keymap)
+        cli.log.info(f'Creating autocorrect_data.h at %s', filename)
+        write_generated_code(autocorrections, data, filename)
+
+    else:
+        write_generated_code(autocorrections, data, 'autocorrect_data.h')
