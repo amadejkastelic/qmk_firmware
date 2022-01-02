@@ -46,7 +46,7 @@ try:
 except ImportError:
     cli.log.info('Autocorrection will falsely trigger when a typo is a substring of a correctly spelled word. To check for this, install the english_words package and rerun this script:\n\n  {fg_cyan}python3 -m pip install english_words\n')
     # Use a minimal word list as a fallback.
-    correct_words  = ('information', 'available', 'international', 'language', 'loosest', 'reference', 'wealthier', 'entertainment', 'association', 'provides', 'technology', 'statehood')
+    correct_words = ('information', 'available', 'international', 'language', 'loosest', 'reference', 'wealthier', 'entertainment', 'association', 'provides', 'technology', 'statehood')
 
 KC_A = 4
 KC_SPC = 0x2c
