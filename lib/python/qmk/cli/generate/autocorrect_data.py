@@ -97,18 +97,18 @@ def parse_file(file_name: str) -> List[Tuple[str, str]]:
                 cli.log.warning('{fg_yellow}Warning:%d:{fg_reset} It is suggested that typos are at least 5 characters long to avoid false triggers: "{fg_cyan}%s{fg_reset}"', line_number, typo)
 
             if typo.startswith(':') and typo.endswith(':'):
-                if typo[1:-1] in CORRECT_WORDS:
+                if typo[1:-1] in correct_words:
                     cli.log.warning('{fg_yellow}Warning:%d:{fg_reset} Typo "{fg_cyan}%s{fg_reset}" is a correctly spelled dictionary word.', line_number, typo)
             elif typo.startswith(':') and not typo.endswith(':'):
-                for word in CORRECT_WORDS:
+                for word in correct_words:
                     if word.startswith(typo[1:]):
                         cli.log.warning('{fg_yellow}Warning:%d: {fg_reset}Typo "{fg_cyan}%s{fg_reset}" would falsely trigger on correctly spelled word "{fg_cyan}%s{fg_reset}".', line_number, typo, word)
             elif not typo.startswith(':') and typo.endswith(':'):
-                for word in CORRECT_WORDS:
+                for word in correct_words:
                     if word.endswith(typo[:-1]):
                         cli.log.warning('{fg_yellow}Warning:%d:{fg_reset} Typo "{fg_cyan}%s{fg_reset}" would falsely trigger on correctly spelled word "{fg_cyan}%s{fg_reset}".', line_number, typo, word)
             elif not typo.startswith(':') and not typo.endswith(':'):
-                for word in CORRECT_WORDS:
+                for word in correct_words:
                     if typo in word:
                         cli.log.warning('{fg_yellow}Warning:%d:{fg_reset} Typo "{fg_cyan}%s{fg_reset}" would falsely trigger on correctly spelled word "{fg_cyan}%s{fg_reset}".', line_number, typo, word)
 
@@ -195,7 +195,7 @@ def serialize_trie(autocorrections: List[Tuple[str, str]], trie: Dict[str, Any])
         if not e['links']:  # Handle a leaf table entry.
             return e['data']
         elif len(e['links']) == 1:  # Handle a chain table entry.
-            return list(map(kc_code, e['chars'])) + [0]  #+ encode_link(e['links'][0]))
+            return list(map(kc_code, e['chars'])) + [0]  # + encode_link(e['links'][0]))
         else:  # Handle a branch table entry.
             data = []
             for c, link in zip(e['chars'], e['links']):
@@ -262,4 +262,4 @@ def generate_autocorrect_data(cli):
         else:
             write_generated_code(autocorrections, data, 'autocorrect_data.h')
 
-    cli.log.info(f'Processed %d autocorrection entries to table with %d bytes.', len(autocorrections), len(data))
+    cli.log.info('Processed %d autocorrection entries to table with %d bytes.', len(autocorrections), len(data))
