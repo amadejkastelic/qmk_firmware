@@ -242,7 +242,7 @@ def generate_autocorrect_data(cli):
     trie = make_trie(autocorrections)
     data = serialize_trie(autocorrections, trie)
     # Environment processing
-    if cli.args.output == ('-'):
+    if cli.args.output == '-':
         cli.args.output = None
 
     if cli.args.output:
