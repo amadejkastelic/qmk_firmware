@@ -46,12 +46,9 @@ from qmk.keymap import keymap_completer, locate_keymap
 try:
     from english_words import english_words_lower_alpha_set as CORRECT_WORDS
 except ImportError:
-    cli.log.info('Autocorrection will falsely trigger when a typo is a substring of a '
-            'correctly spelled word. To check for this, install the english_words '
-            'package and rerun this script:\n\n  {fg_cyan}python3 -m pip install english_words\n')
+    cli.log.info('Autocorrection will falsely trigger when a typo is a substring of a correctly spelled word. To check for this, install the english_words package and rerun this script:\n\n  {fg_cyan}python3 -m pip install english_words\n')
     # Use a minimal word list as a fallback.
-    CORRECT_WORDS = ('information', 'available', 'international', 'language', 'loosest', 'reference',
-            'wealthier', 'entertainment', 'association', 'provides', 'technology', 'statehood')
+    CORRECT_WORDS = ('information', 'available', 'international', 'language', 'loosest', 'reference', 'wealthier', 'entertainment', 'association', 'provides', 'technology', 'statehood')
 
 KC_A = 4
 KC_SPC = 0x2c
@@ -235,6 +232,7 @@ def write_generated_code(autocorrections: List[Tuple[str, str]], data: List[int]
 
     with open(file_name, 'wt') as f:
         f.write(generated_code)
+
 
 @cli.argument('filename', default='autocorrect_dict.txt', help='The autocorrection database file')
 @cli.argument('-kb', '--keyboard', type=keyboard_folder, completer=keyboard_completer, help='The keyboard to build a firmware for. Ignored when a configurator export is supplied.')
