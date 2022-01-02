@@ -779,7 +779,7 @@ enum quantum_keycodes {
 #define EH_LEFT MAGIC_EE_HANDS_LEFT
 #define EH_RGHT MAGIC_EE_HANDS_RIGHT
 
-#define AUTOCRT AUTOCORRECT_ENABLE
+#define AUTOCRT AUTOCORRECT_TOGGLE
 
 // GOTO layer - 16 layers max
 // when:
