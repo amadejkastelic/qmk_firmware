@@ -11,13 +11,13 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""Python program to make autocorrection_data.h.
-This program reads "autocorrection_dict.txt" and generates a C source file
-"autocorrection_data.h" with a serialized trie embedded as an array. Run this
+"""Python program to make autocorrect_data.h.
+This program reads "autocorrect_dict.txt" and generates a C source file
+"autocorrect_data.h" with a serialized trie embedded as an array. Run this
 program without arguments like
-$ python3 make_autocorrection_data.py
+$ python3 make_autocorrect_data.py
 Or to read from a different typo dict file, pass it as the first argument like
-$ python3 make_autocorrection_data.py dict.txt
+$ python3 make_autocorrect_data.py dict.txt
 Each line of the dict file defines one typo and its correction with the syntax
 "typo -> correction". Blank lines or lines starting with '#' are ignored.
 Example:
@@ -26,7 +26,7 @@ Example:
   lenght        -> length
   ouput         -> output
   widht         -> width
-See autocorrection_dict_extra.txt for a larger example.
+See autocorrect_dict_extra.txt for a larger example.
 For full documentation, see
 https://getreuer.info/posts/keyboards/autocorrection
 """
