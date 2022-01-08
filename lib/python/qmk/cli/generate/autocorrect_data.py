@@ -157,7 +157,7 @@ def serialize_trie(autocorrections: List[Tuple[str, str]], trie: Dict[str, Any])
             backspaces = len(typo) - i - 1 + word_boundary_ending
             assert 0 <= backspaces <= 63
             correction = correction[i:]
-            data = [backspaces+128] + list(bytes(correction, 'ascii')) + [0]
+            data = [backspaces + 128] + list(bytes(correction, 'ascii')) + [0]
 
             entry = {'data': data, 'links': [], 'byte_offset': 0}
             table.append(entry)
