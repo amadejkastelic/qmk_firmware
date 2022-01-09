@@ -85,7 +85,7 @@ def parse_file(file_name: str) -> List[Tuple[str, str]]:
         if len(typo) < 5:
             cli.log.warning('{fg_yellow}Warning:%d:{fg_reset} It is suggested that typos are at least 5 characters long to avoid false triggers: "{fg_cyan}%s{fg_reset}"', line_number, typo)
 
-        check_typo_against_dictionary(typo)
+        check_typo_against_dictionary(typo, line_number)
 
         autocorrections.append((typo, correction))
         typos.add(typo)
@@ -131,7 +131,7 @@ def parse_file_lines(file_name: str) -> Iterator[Tuple[int, str, str]]:
             yield line_number, typo, correction
 
 
-def check_typo_against_dictionary(typo: str) -> None:
+def check_typo_against_dictionary(typo: str, line_number: int) -> None:
     """Checks `typo` against English dictionary words."""
 
     if typo.startswith(':') and typo.endswith(':'):
