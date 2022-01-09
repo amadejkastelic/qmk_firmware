@@ -33,7 +33,7 @@ https://getreuer.info/posts/keyboards/autocorrection
 
 import sys
 import textwrap
-from typing import Any, Dict, List, Tuple
+from typing import Any, Dict, Iterator, List, Tuple
 
 from milc import cli
 
@@ -41,37 +41,9 @@ import qmk.path
 from qmk.keyboard import keyboard_completer, keyboard_folder
 from qmk.keymap import keymap_completer, locate_keymap
 
-try:
-    from english_words import english_words_lower_alpha_set as correct_words
-except ImportError:
-    cli.echo('Autocorrection will falsely trigger when a typo is a substring of a correctly spelled word.')
-    cli.echo('To check for this, install the english_words package and rerun this script:')
-    cli.echo('  {fg_cyan}python3 -m pip install english_words')
-    # Use a minimal word list as a fallback.
-    correct_words = ('information', 'available', 'international', 'language', 'loosest', 'reference', 'wealthier', 'entertainment', 'association', 'provides', 'technology', 'statehood')
-
 KC_A = 4
 KC_SPC = 0x2c
-
-
-def check_typo_against_dictionary(typo: str, line_number: int) -> None:
-    """Checks `typo` against English dictionary words."""
-
-    if typo.startswith(':') and typo.endswith(':'):
-        if typo[1:-1] in correct_words:
-            cli.log.warning('{fg_yellow}Warning:%d:{fg_reset} Typo "{fg_cyan}%s{fg_reset}" is a correctly spelled dictionary word.', line_number, typo)
-    elif typo.startswith(':') and not typo.endswith(':'):
-        for word in correct_words:
-            if word.startswith(typo[1:]):
-                cli.log.warning('{fg_yellow}Warning:%d: {fg_reset}Typo "{fg_cyan}%s{fg_reset}" would falsely trigger on correctly spelled word "{fg_cyan}%s{fg_reset}".', line_number, typo, word)
-    elif not typo.startswith(':') and typo.endswith(':'):
-        for word in correct_words:
-            if word.endswith(typo[:-1]):
-                cli.log.warning('{fg_yellow}Warning:%d:{fg_reset} Typo "{fg_cyan}%s{fg_reset}" would falsely trigger on correctly spelled word "{fg_cyan}%s{fg_reset}".', line_number, typo, word)
-    elif not typo.startswith(':') and not typo.endswith(':'):
-        for word in correct_words:
-            if typo in word:
-                cli.log.warning('{fg_yellow}Warning:%d:{fg_reset} Typo "{fg_cyan}%s{fg_reset}" would falsely trigger on correctly spelled word "{fg_cyan}%s{fg_reset}".', line_number, typo, word)
+correct_words = []
 
 
 def parse_file(file_name: str) -> List[Tuple[str, str]]:
@@ -86,42 +58,37 @@ def parse_file(file_name: str) -> List[Tuple[str, str]]:
     List of (typo, correction) tuples.
   """
 
+    try:
+        from english_words import english_words_lower_alpha_set as correct_words
+    except ImportError:
+        cli.echo('Autocorrection will falsely trigger when a typo is a substring of a correctly spelled word.')
+        cli.echo('To check for this, install the english_words package and rerun this script:')
+        cli.echo('  {fg_cyan}python3 -m pip install english_words')
+        # Use a minimal word list as a fallback.
+        correct_words = ('information', 'available', 'international', 'language', 'loosest', 'reference', 'wealthier', 'entertainment', 'association', 'provides', 'technology', 'statehood')
+
     autocorrections = []
     typos = set()
-    line_number = 0
-    for line in open(file_name, 'rt'):
-        line_number += 1
-        line = line.strip()
-        if line and line[0] != '#':
-            # Parse syntax "typo -> correction", using strip to ignore indenting.
-            tokens = [token.strip() for token in line.split('->', 1)]
-            if len(tokens) != 2 or not tokens[0]:
-                cli.log.error('{fg_red}Error:%d:{fg_reset} Invalid syntax: "{fg_cyan}%s{fg_reset}"', line_number, line)
+    for line_number, typo, correction in parse_file_lines(file_name):
+        if typo in typos:
+            cli.log.warning('{fg_red}Error:%d:{fg_reset} Ignoring duplicate typo: "{fg_cyan}%s{fg_reset}"', line_number, typo)
+            continue
+
+        # Check that `typo` is valid.
+        if not (all([ord('a') <= ord(c) <= ord('z') or c == ':' for c in typo])):
+            cli.log.error('{fg_red}Error:%d: Typo "{fg_cyan}%s{fg_reset}" has characters other than a-z and :.', line_number, typo)
+            sys.exit(1)
+        for other_typo in typos:
+            if typo in other_typo or other_typo in typo:
+                cli.log.error('{fg_red}Error:%d:{fg_reset} Typos may not be substrings of one another, otherwise the longer typo would never trigger: "{fg_cyan}%s{fg_reset}" vs. "{fg_cyan}%s{fg_reset}".', line_number, typo, other_typo)
                 sys.exit(1)
+        if len(typo) < 5:
+            cli.log.warning('{fg_yellow}Warning:%d:{fg_reset} It is suggested that typos are at least 5 characters long to avoid false triggers: "{fg_cyan}%s{fg_reset}"', line_number, typo)
 
-            typo, correction = tokens
-            typo = typo.lower()  # Force typos to lowercase.
-            typo = typo.replace(' ', ':')
+        check_typo_against_dictionary(typo)
 
-            if typo in typos:
-                cli.log.warning('{fg_cyan}Warning:%d:{fg_reset} Ignoring duplicate typo: "{fg_cyan}%s{fg_reset}"', line_number, typo)
-                continue
-
-            # Check that `typo` is valid.
-            if not (all([ord('a') <= ord(c) <= ord('z') or c == ':' for c in typo])):
-                cli.log.error('{fg_red}Error:%d: Typo "{fg_cyan}%s{fg_reset}" has characters other than a-z and :.', line_number, typo)
-                sys.exit(1)
-            for other_typo in typos:
-                if typo in other_typo or other_typo in typo:
-                    cli.log.error('{fg_red}Error:%d:{fg_reset} Typos may not be substrings of one another, otherwise the longer typo would never trigger: "{fg_cyan}%s{fg_reset}" vs. "{fg_cyan}%s{fg_reset}".', line_number, typo, other_typo)
-                    sys.exit(1)
-            if len(typo) < 5:
-                cli.log.warning('{fg_yellow}Warning:%d:{fg_reset} It is suggested that typos are at least 5 characters long to avoid false triggers: "{fg_cyan}%s{fg_reset}"', line_number, typo)
-
-            check_typo_against_dictionary(typo, line_number)
-
-            autocorrections.append((typo, correction))
-            typos.add(typo)
+        autocorrections.append((typo, correction))
+        typos.add(typo)
 
     return autocorrections
 
@@ -141,6 +108,47 @@ def make_trie(autocorrections: List[Tuple[str, str]]) -> Dict[str, Any]:
         node['LEAF'] = (typo, correction)
 
     return trie
+
+
+def parse_file_lines(file_name: str) -> Iterator[Tuple[int, str, str]]:
+    """Parses lines read from `file_name` into typo-correction pairs."""
+
+    line_number = 0
+    for line in open(file_name, 'rt'):
+        line_number += 1
+        line = line.strip()
+        if line and line[0] != '#':
+            # Parse syntax "typo -> correction", using strip to ignore indenting.
+            tokens = [token.strip() for token in line.split('->', 1)]
+            if len(tokens) != 2 or not tokens[0]:
+                print(f'Error:{line_number}: Invalid syntax: "{line}"')
+                sys.exit(1)
+
+            typo, correction = tokens
+            typo = typo.lower()  # Force typos to lowercase.
+            typo = typo.replace(' ', ':')
+
+            yield line_number, typo, correction
+
+
+def check_typo_against_dictionary(typo: str) -> None:
+    """Checks `typo` against English dictionary words."""
+
+    if typo.startswith(':') and typo.endswith(':'):
+        if typo[1:-1] in correct_words:
+            cli.log.warning('{fg_yellow}Warning:%d:{fg_reset} Typo "{fg_cyan}%s{fg_reset}" is a correctly spelled dictionary word.', line_number, typo)
+    elif typo.startswith(':') and not typo.endswith(':'):
+        for word in correct_words:
+            if word.startswith(typo[1:]):
+                cli.log.warning('{fg_yellow}Warning:%d: {fg_reset}Typo "{fg_cyan}%s{fg_reset}" would falsely trigger on correctly spelled word "{fg_cyan}%s{fg_reset}".', line_number, typo, word)
+    elif not typo.startswith(':') and typo.endswith(':'):
+        for word in correct_words:
+            if word.endswith(typo[:-1]):
+                cli.log.warning('{fg_yellow}Warning:%d:{fg_reset} Typo "{fg_cyan}%s{fg_reset}" would falsely trigger on correctly spelled word "{fg_cyan}%s{fg_reset}".', line_number, typo, word)
+    elif not typo.startswith(':') and not typo.endswith(':'):
+        for word in correct_words:
+            if typo in word:
+                cli.log.warning('{fg_yellow}Warning:%d:{fg_reset} Typo "{fg_cyan}%s{fg_reset}" would falsely trigger on correctly spelled word "{fg_cyan}%s{fg_reset}".', line_number, typo, word)
 
 
 def serialize_trie(autocorrections: List[Tuple[str, str]], trie: Dict[str, Any]) -> List[int]:
@@ -199,9 +207,6 @@ def serialize_trie(autocorrections: List[Tuple[str, str]], trie: Dict[str, Any])
             else:
                 raise ValueError(f'Invalid character: {c}')
 
-        def encode_link(link):
-            return [link['byte_offset'] & 255, link['byte_offset'] >> 8]
-
         if not e['links']:  # Handle a leaf table entry.
             return e['data']
         elif len(e['links']) == 1:  # Handle a chain table entry.
@@ -219,6 +224,15 @@ def serialize_trie(autocorrections: List[Tuple[str, str]], trie: Dict[str, Any])
         assert 0 <= byte_offset <= 0xffff
 
     return [b for e in table for b in serialize(e)]  # Serialize final table.
+
+
+def encode_link(link: Dict[str, Any]) -> List[int]:
+    """Encodes a node link as two bytes."""
+    byte_offset = link['byte_offset']
+    if not (0 <= byte_offset <= 0xffff):
+        cli.log.error('{fg_red}Error:{fg_reset} The autocorrection table is too large, a node link exceeds 64KB limit. Try reducing the autocorrection dict to fewer entries.')
+        sys.exit(1)
+    return [byte_offset & 255, byte_offset >> 8]
 
 
 def write_generated_code(autocorrections: List[Tuple[str, str]], data: List[int], file_name: str) -> None:
