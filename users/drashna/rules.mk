@@ -116,3 +116,7 @@ ifeq ($(strip $(CAPS_WORD_ENABLE)), yes)
     SRC += $(USER_PATH)/keyrecords/caps_word.c
     OPT_DEFS += -DCAPS_WORD_ENABLE
 endif
+
+ifeq ($(strip $(AUTOCORRECTION_ENABLE)), yes)
+    AUTOCORRECT_ENABLE := yes
+endif

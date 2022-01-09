@@ -1,6 +1,6 @@
 # Autocorrect
 
-There are a lot of words that are prone to being typed incorrectly, due to habit, sequence or just user error.  This feature leverages your firmware to automatically correct these errors, to help reduce typos.,,
+There are a lot of words that are prone to being typed incorrectly, due to habit, sequence or just user error.  This feature leverages your firmware to automatically correct these errors, to help reduce typos.
 
 ## How does it work? :id=how-does-it-work
 
@@ -156,3 +156,8 @@ This format is by design decodable with fairly simple logic. A 16-bit variable s
 * 00 ⇒ **chain node**: If the node’s byte matches the keycode, increment state by one to go to the next byte. If the next byte is zero, increment again to go to the following node.
 * 01 ⇒ **branching node**: Search the branches for one that matches the keycode, and follow its node link.
 * 10 ⇒ **leaf node**: a typo has been found! We read its first byte for the number of backspaces to type, then pass its following bytes to send_string_P to type the correction.
+
+
+## Credits
+
+Credit goes to [getreuer](https://github.com/getreuer) for originally implementing this [here](https://getreuer.info/posts/keyboards/autocorrection/#how-does-it-work).  As well as to [filterpaper](https://github.com/filterpaper) for converting the code to use PROGMEM, and additional improvements.
