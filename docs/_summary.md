@@ -79,6 +79,7 @@
 
   * Software Features
     * [Auto Shift](feature_auto_shift.md)
+    * [Autocorrect](feature_autocorrect.md)
     * [Combos](feature_combo.md)
     * [Debounce API](feature_debounce_type.md)
     * [Key Lock](feature_key_lock.md)
