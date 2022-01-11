@@ -1,0 +1,2 @@
+MCU = STM32F411
+BOOTLOADER = stm32-dfu
