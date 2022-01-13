@@ -50,9 +50,10 @@ bool process_autocorrect(uint16_t keycode, keyrecord_t* record) {
             return true;
 #ifndef NO_ACTION_TAPPING
         case QK_MOD_TAP ... QK_MOD_TAP_MAX:
-            if (((keycode >> 8) & 0xF) == MOD_LSFT) {
+            if (((keycode >> 8) & 0xF) == MOD_LSFT && !record->tap.count) {
                 return true;
             }
+            // fall through intentionally
 #    ifndef NO_ACTION_LAYER
         case QK_LAYER_TAP ... QK_LAYER_TAP_MAX:
 #    endif
@@ -74,7 +75,8 @@ bool process_autocorrect(uint16_t keycode, keyrecord_t* record) {
 #endif
 #ifdef SWAP_HANDS_ENABLE
         case QK_SWAP_HANDS ... QK_SWAP_HANDS_MAX:
-            if (keycode >= 0x56F0 || record->event.pressed || !record->tap.count) {
+            // process SH_T(kc) keycodes (0x5600-0x56F0, 0x56F0-0x56FF are special oneshot functions)
+            if (keycode > 0x56F0 || record->event.pressed || !record->tap.count) {
                 return true;
             }
             keycode &= 0xFF;
@@ -85,6 +87,7 @@ bool process_autocorrect(uint16_t keycode, keyrecord_t* record) {
             if ((keycode & 0xF) == MOD_LSFT) {
                 return true;
             }
+            // fall through intentionally
 #endif
         default:
             // Disable autocorrect while a mod other than shift is active.
