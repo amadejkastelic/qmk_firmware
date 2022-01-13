@@ -22,6 +22,8 @@ AUTOCORRECT_ENABLE = yes
 
 Additionally, you will need a library for autocorrection.  A small sample library is included by default, so that you can get up and running right away, but you can provide a customized library.   
 
+By default, autocorrect is disabled.  To enable it, you need to use the `AUTOCORRECT_TOGGLE` keycode to enable it. The status is stored in persistent memory, so you shouldn't need to enabled it again.
+
 
 ### Customizing autocorrect library :id=customizing-autocorrect-library
 

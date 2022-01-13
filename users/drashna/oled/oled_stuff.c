@@ -425,8 +425,8 @@ void render_bootmagic_status(void) {
     oled_write_P(PSTR(" "), false);
     oled_write_P(PSTR(OLED_RENDER_BOOTMAGIC_NKRO), keymap_config.nkro);
     oled_write_P(PSTR(" "), false);
-#ifdef AUTOCORRECTION_ENABLE
-    oled_write_P(PSTR("CRCT"), userspace_config.autocorrection);
+#ifdef AUTOCORRECT_ENABLE
+    oled_write_P(PSTR("CRCT"), keymap_config.autocorrect_enable);
     oled_write_P(PSTR(" "), false);
 #else
     oled_write_P(PSTR(OLED_RENDER_BOOTMAGIC_NOGUI), keymap_config.no_gui);
