@@ -1,12 +1,10 @@
 # Keychron K8
 
-K8 Optical ISO RGB
-
-# HAS NOT BEEN TESTED
+K8 ISO RGB
 
 Make example for this keyboard (after setting up your build environment):
 
-    make keychron/k8/optical_iso:iso
+    make keychron/k8/iso:iso
 
 * * *
 For more info and detailed flashing instructions, please visit https://github.com/alex-dinh/keychron-k8
