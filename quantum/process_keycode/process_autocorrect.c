@@ -22,9 +22,6 @@
  * @return true Continue processing keycodes, and send to host
  * @return false Stop processing keycodes, and don't send to host
  */
-bool process_autocorrection(uint16_t keycode, keyrecord_t* record) {
-    static uint8_t typo_buffer[AUTOCORRECTION_MAX_LENGTH] = {KC_SPC};
-    static uint8_t typo_buffer_size                       = 1;
 
 bool process_autocorrect(uint16_t keycode, keyrecord_t* record) {
     static uint8_t typo_buffer[AUTOCORRECT_MAX_LENGTH] = {KC_SPC};
@@ -62,21 +59,10 @@ bool process_autocorrect(uint16_t keycode, keyrecord_t* record) {
             }
             keycode &= 0xFF;
             break;
-#    endif
-#    ifdef SWAP_HANDS_ENABLE
-        case QK_SWAP_HANDS ... QK_SWAP_HANDS_MAX:
-            if (keycode >= 0x56F0 || record->event.pressed || !record->tap.count) {
-                return true;
-            }
-            keycode &= 0xFF;
-            break;
-#    endif
-#    ifndef NO_ACTION_ONESHOT
 #endif
 #ifdef SWAP_HANDS_ENABLE
         case QK_SWAP_HANDS ... QK_SWAP_HANDS_MAX:
-            // process SH_T(kc) keycodes (0x5600-0x56F0, 0x56F0-0x56FF are special oneshot functions)
-            if (keycode > 0x56F0 || record->event.pressed || !record->tap.count) {
+            if (keycode >= 0x56F0 || record->event.pressed || !record->tap.count) {
                 return true;
             }
             keycode &= 0xFF;
