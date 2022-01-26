@@ -145,7 +145,7 @@ bool process_autocorrect(uint16_t keycode, keyrecord_t* record) {
         code = pgm_read_byte(autocorrect_data + state);
 
         if (code & 128) {  // A typo was found! Apply autocorrect.
-            const uint8_t backspaces = code & 63;
+            const uint8_t backspaces = (code & 63) + !record->event.pressed;
             for (uint8_t i = 0; i < backspaces; ++i) {
                 tap_code(KC_BSPC);
             }
