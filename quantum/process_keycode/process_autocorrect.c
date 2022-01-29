@@ -47,15 +47,11 @@ bool process_autocorrect(uint16_t keycode, keyrecord_t* record) {
             return true;
 #ifndef NO_ACTION_TAPPING
         case QK_MOD_TAP ... QK_MOD_TAP_MAX:
-            if (((keycode >> 8) & 0xF) == MOD_LSFT && !record->tap.count) {
-                return true;
-            }
-            // fall through intentionally
 #    ifndef NO_ACTION_LAYER
         case QK_LAYER_TAP ... QK_LAYER_TAP_MAX:
 #    endif
-            if (record->event.pressed || !record->tap.count) {
-                return true;
+            if (!record->tap.count) {
+                return true;  // Early return if tap-hold key is not being tapped.
             }
             keycode &= 0xFF;
             break;
