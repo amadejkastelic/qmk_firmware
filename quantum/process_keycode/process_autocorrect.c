@@ -41,6 +41,10 @@ bool process_autocorrect(uint16_t keycode, keyrecord_t* record) {
         return true;
     }
 
+    if (!record->event.pressed) {
+        return true;
+    }
+
     switch (keycode) {
         case KC_LSFT:
         case KC_RSFT:
@@ -58,7 +62,7 @@ bool process_autocorrect(uint16_t keycode, keyrecord_t* record) {
 #endif
 #ifdef SWAP_HANDS_ENABLE
         case QK_SWAP_HANDS ... QK_SWAP_HANDS_MAX:
-            if (keycode >= 0x56F0 || record->event.pressed || !record->tap.count) {
+            if (keycode >= 0x56F0 || !record->tap.count) {
                 return true;
             }
             keycode &= 0xFF;
@@ -75,9 +79,6 @@ bool process_autocorrect(uint16_t keycode, keyrecord_t* record) {
             // Disable autocorrect while a mod other than shift is active.
             if (((get_mods() | get_oneshot_mods()) & ~MOD_MASK_SHIFT) != 0) {
                 typo_buffer_size = 0;
-                return true;
-            }
-            if (!record->event.pressed) {
                 return true;
             }
     }
