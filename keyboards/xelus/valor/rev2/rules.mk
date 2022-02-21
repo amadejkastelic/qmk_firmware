@@ -22,7 +22,4 @@ RGB_MATRIX_CUSTOM_KB = yes
 WS2812_DRIVER = pwm
 EEPROM_DRIVER = i2c
 
-OPT = 2
-LTO_ENABLE = yes
-
 LAYOUTS = alice_split_bs
