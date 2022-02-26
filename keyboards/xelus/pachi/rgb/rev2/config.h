@@ -35,6 +35,9 @@
 /* COL2ROW or ROW2COL */
 #define DIODE_DIRECTION COL2ROW
 
+#define BOOTMAGIC_LITE_COLUMN 0
+#define BOOTMAGIC_LITE_ROW 1
+
 /* Set 0 if debouncing isn't needed */
 #define DEBOUNCE 5
 
