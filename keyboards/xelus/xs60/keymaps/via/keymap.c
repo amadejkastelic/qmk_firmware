@@ -86,22 +86,20 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 
 
-// Light LEDs 6 to 9 and 12 to 15 red when caps lock is active. Hard to ignore!
 const rgblight_segment_t PROGMEM my_capslock_layer[] = RGBLIGHT_LAYER_SEGMENTS(
-    {1, 1, HSV_RED},       // Light 4 LEDs, starting with LED 6
-    {1, 1, HSV_RED}       // Light 4 LEDs, starting with LED 12
+    {0, 1, HSV_ORANGE}      // Light 4 LEDs, starting with LED 6
 );
-// Light LEDs 9 & 10 in cyan when keyboard layer 1 is active
+
 const rgblight_segment_t PROGMEM my_layer1_layer[] = RGBLIGHT_LAYER_SEGMENTS(
-    {1, 1, HSV_CYAN}
+    {0, 1, HSV_CYAN}
 );
-// Light LEDs 11 & 12 in purple when keyboard layer 2 is active
+
 const rgblight_segment_t PROGMEM my_layer2_layer[] = RGBLIGHT_LAYER_SEGMENTS(
-    {1, 1, HSV_PURPLE}
+    {0, 1, HSV_PURPLE}
 );
-// Light LEDs 13 & 14 in green when keyboard layer 3 is active
+
 const rgblight_segment_t PROGMEM my_layer3_layer[] = RGBLIGHT_LAYER_SEGMENTS(
-    {1, 1, HSV_GREEN}
+    {0, 1, HSV_GREEN}
 );
 
 // Now define the array of layers. Later layers take precedence
@@ -122,12 +120,8 @@ bool led_update_user(led_t led_state) {
     return true;
 }
 
-layer_state_t default_layer_state_set_user(layer_state_t state) {
-    rgblight_set_layer_state(1, layer_state_cmp(state, 1));
-    return state;
-}
-
 layer_state_t layer_state_set_user(layer_state_t state) {
+    rgblight_set_layer_state(1, layer_state_cmp(state, 1));
     rgblight_set_layer_state(2, layer_state_cmp(state, 2));
     rgblight_set_layer_state(3, layer_state_cmp(state, 3));
     return state;
