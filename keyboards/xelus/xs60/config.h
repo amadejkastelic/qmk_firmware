@@ -61,11 +61,10 @@
 
 // RGBLIGHT
 #define RGB_DI_PIN A10
-#define RGBLED_NUM 1
+#define RGBLED_NUM 8            // actually only has 1
 #define RGBLIGHT_LAYERS
 #define WS2812_EXTERNAL_PULLUP
 
-#define RGBLIGHT_DEFAULT_VAL 0
 #define RGBLIGHT_LAYERS_OVERRIDE_RGB_OFF
 
 // PWM RGB Underglow Defines
