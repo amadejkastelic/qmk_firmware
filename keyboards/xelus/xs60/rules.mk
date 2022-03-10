@@ -17,7 +17,7 @@ BACKLIGHT_ENABLE = no       # Enable keyboard backlight functionality
 AUDIO_ENABLE = no           # Audio output
 
 RGBLIGHT_ENABLE = yes
-WS2812_DRIVER = pwm
+WS2812_DRIVER = bitbang
 
 EEPROM_DRIVER = i2c
 
