@@ -50,35 +50,31 @@
 #define I2C1_TIMINGR_PRESC  0U
 #define I2C1_TIMINGR_SCLDEL 7U
 #define I2C1_TIMINGR_SDADEL 0U
-#define I2C1_TIMINGR_SCLH   41U
-#define I2C1_TIMINGR_SCLL   145U
+#define I2C1_TIMINGR_SCLH   45U
+#define I2C1_TIMINGR_SCLL   149U
 
 // I2C EEPROM Chip
 #define EEPROM_I2C_24LC256
 
 // Dynamic Keymap
-#define DYNAMIC_KEYMAP_EEPROM_MAX_ADDR  65535
+#define DYNAMIC_KEYMAP_EEPROM_MAX_ADDR  (32768 - 1)
 
-// // PWM RGB Underglow Defines
-// #define WS2812_PWM_DRIVER PWMD3
-// #define WS2812_PWM_CHANNEL 2
-// #define WS2812_PWM_PAL_MODE 1
-// #define WS2812_DMA_STREAM STM32_DMA1_STREAM3
-// #define WS2812_DMA_CHANNEL 3
-// #define WS2812_EXTERNAL_PULLUP
-
-// SPI RGB Underglow Defines
+// WS2812 Driver Defines
 #define WS2812_SPI SPID3 // default: SPID1
 #define WS2812_SPI_MOSI_PAL_MODE 6 // Pin "alternate function", see the respective datasheet for the appropriate values for your MCU. default: 5
+#define WS2812_SPI_SCK_PIN B3
+#define WS2812_SPI_SCK_PAL_MODE 6
+#define WS2812_SPI_USE_CIRCULAR_BUFFER
 #define WS2812_EXTERNAL_PULLUP
-#define RGBLIGHT_ANIMATIONS
-#define RGBLIGHT_LIMIT_VAL 200
-//#define WS2812_SPI_SYNC
+// #define WS2812_SPI_SYNC
 #define NOP_FUDGE 0.4
 
 //RGB Underglow defines
 #define RGB_DI_PIN B5
-#define WS2812_LED_TOTAL 20
+#define RGBLED_NUM 20
+#define WS2812_LED_TOTAL RGBLED_NUM
+#define RGBLIGHT_ANIMATIONS
+#define RGBLIGHT_LIMIT_VAL 150
 
 //RGB Matrix defines
 #define DRIVER_ADDR_1 0x74
@@ -91,15 +87,15 @@
 #define ISSI_DRIVER_TOTAL (DRIVER_1_LED_TOTAL + DRIVER_2_LED_TOTAL)
 #define DRIVER_LED_TOTAL (DRIVER_1_LED_TOTAL + DRIVER_2_LED_TOTAL + WS2812_LED_TOTAL)
 
+// RGB Matrix Settings
 #define RGB_MATRIX_STARTUP_VAL 40
 #define RGB_MATRIX_KEYPRESSES
 #define RGB_MATRIX_FRAMEBUFFER_EFFECTS
 #define RGB_DISABLE_WHEN_USB_SUSPENDED  // turn off effects when suspended
 #define RGB_MATRIX_STARTUP_MODE RGB_MATRIX_CUSTOM_test_mode
 
-#define DEBUG_MATRIX_SCAN_RATE
 #define FORCE_NKRO
+#define DEBUG_EEPROM_OUTPUT
 
-#define USB_POLLING_INTERVAL_MS 1
-#define QMK_KEYS_PER_SCAN 4
-#define MOUSEKEY_INTERVAL 1
+//Light Layers
+#define RGBLIGHT_LAYERS

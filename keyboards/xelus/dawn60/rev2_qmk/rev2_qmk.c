@@ -17,15 +17,15 @@
 #include <quantum.h>
 #include <i2c_master.h>
 #include <led_tables.h>
-#include <rgb_matrix.h>
 #include "drivers/led/issi/is31fl3731.h"
 #include "ws2812.h"
 #include "rev2_qmk.h"
 
 #ifdef RGB_MATRIX_ENABLE
+#include <rgb_matrix.h>
 LED_TYPE rgb_matrix_ws2812_array[WS2812_LED_TOTAL];
 
-const is31_led __flash g_is31_leds[DRIVER_LED_TOTAL] = {
+const is31_led PROGMEM g_is31_leds[DRIVER_LED_TOTAL] = {
 /* Refer to IS31 manual for these locations
  *   driver
  *   |  R location
@@ -230,56 +230,12 @@ const rgb_matrix_driver_t rgb_matrix_driver = {
 
 #endif
 
-static const pin_t row_pins[MATRIX_ROWS] = MATRIX_ROW_PINS;
-static const pin_t col_pins[MATRIX_COLS] = MATRIX_COL_PINS;
+// void keyboard_post_init_user(void) {
+//     wait_ms(5000);
+//   Customise these values to desired behaviour
+//   debug_enable=true;
+//   debug_matrix=true;
+//   debug_keyboard=true;
+//   debug_mouse=true;
+// }
 
-void matrix_init_pins(void) {
-    for (size_t i = 0; i < MATRIX_COLS; i++) {
-        setPinInputHigh(col_pins[i]);
-    }
-    for (size_t i = 0; i < MATRIX_ROWS; i++) {
-        setPinOutput(row_pins[i]);
-        writePinHigh(row_pins[i]);
-    }
-}
-
-void matrix_read_cols_on_row(matrix_row_t current_matrix[], uint8_t current_row) {
-    /* Drive row pin low. */
-    writePinLow(row_pins[current_row]);
-    while (readPin(row_pins[current_row]) != 0)
-        ;
-
-    uint16_t porta = palReadPort(GPIOA);
-    uint16_t portb = palReadPort(GPIOB);
-
-    /* Drive row pin high again. */
-    writePinHigh(row_pins[current_row]);
-
-    matrix_row_t cols = ~(
-                          ((porta & (0x1 <<  8)) >>  8) // A8
-                        | ((porta & (0x1 <<  2)) >>  1) // A2
-                        | ((porta & (0x1 <<  1)) <<  1) // A1
-                        | ((porta & (0x1 <<  0)) <<  3) // A0
-                        | ((portb & (0x1 << 11)) >>  7) // B11
-                        | ((portb & (0x1 << 10)) >>  5) // B10
-                        | ((portb & (0x1 <<  2)) <<  4) // B2
-                        | ((portb & (0x1 <<  1)) <<  6) // B1
-                        | ((portb & (0x1 <<  0)) <<  8) // B0
-                        | ((porta & (0x1 <<  7)) <<  2) // A7
-                        | ((porta & (0x1 <<  6)) <<  4) // A6
-                        | ((porta & (0x1 <<  5)) <<  6) // A5
-                        | ((porta & (0x1 <<  4)) <<  8) // A4
-                        | ((porta & (0x1 <<  3)) <<  10) // A3
-                         );
-    current_matrix[current_row] = cols;
-
-    /* Wait until col pins are high again or 'timer' expired. */
-    // Taken from karlk90/yaemk
-    size_t counter = 0xFF;
-    while (
-        ((palReadGroup(GPIOA, 0b0000000111111111, 0) != 0b0000000111111111)
-        || ((palReadGroup(GPIOB, 0b0000110000000111, 0) != 0b0000110000000111)
-        )) && counter != 0) {
-        counter--;
-    }
-}
