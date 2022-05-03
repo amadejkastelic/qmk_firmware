@@ -18,7 +18,7 @@
 
 /* USB Device descriptor parameter */
 #define VENDOR_ID       0x5845 // "XE"
-#define PRODUCT_ID      0x5053 // "PR" + 1
+#define PRODUCT_ID      0x5054 // "PR" + 1
 #define DEVICE_VER      0x0002
 #define MANUFACTURER    Xelus
 #define PRODUCT         Xelus Pachi RGB Rev 2
@@ -45,15 +45,16 @@
 #define LOCKING_RESYNC_ENABLE
 
 // I2C setup
-#define I2C1_SCL            6
-#define I2C1_SDA            7
+#define I2C_DRIVER          I2CD1
+#define I2C1_SCL_PIN        B6
+#define I2C1_SDA_PIN        B7
 #define I2C1_SCL_PAL_MODE   4
 #define I2C1_SDA_PAL_MODE   4
 #define I2C1_TIMINGR_PRESC  0U
-#define I2C1_TIMINGR_SCLDEL 7U
+#define I2C1_TIMINGR_SCLDEL 11U
 #define I2C1_TIMINGR_SDADEL 0U
-#define I2C1_TIMINGR_SCLH   45U
-#define I2C1_TIMINGR_SCLL   149U
+#define I2C1_TIMINGR_SCLH   14U
+#define I2C1_TIMINGR_SCLL   42U
 
 // I2C EEPROM
 #define EEPROM_I2C_24LC64
@@ -116,6 +117,5 @@
 #define ENABLE_RGB_MATRIX_MULTISPLASH
 #define ENABLE_RGB_MATRIX_SOLID_SPLASH
 #define ENABLE_RGB_MATRIX_SOLID_MULTISPLASH
-
 
 #define FORCE_NKRO

@@ -40,3 +40,6 @@
     { K1000, K1001, _____, _____, _____, K1005, K1006, K1007, K1008 }, \
     { K1100, _____, K1102, _____, _____, _____, K1106, K1107, _____ }  \
 }
+
+enum { KC_CONFIG = SAFE_RANGE, KC_LOWER, KC_RAISE, KC_ADJUST, KC_NOMODE, KC_REGIONAL, KC_AUSSIE, KC_SBOB, KC_REDACTED };
+enum { LAYER_BASE, LAYER_LOWER, LAYER_RAISE, LAYER_ADJUST };

@@ -20,6 +20,6 @@
 #define DYNAMIC_KEYMAP_LAYER_COUNT 3
 
 // Enable RGB Matrix
-#define VIA_QMK_RGBLIGHT_ENABLE
+// #define VIA_QMK_RGBLIGHT_ENABLE
 
 #define QMK_KEYS_PER_SCAN 4

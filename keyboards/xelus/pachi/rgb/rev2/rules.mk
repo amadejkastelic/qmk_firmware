@@ -24,5 +24,6 @@ RGB_MATRIX_DRIVER = custom
 COMMON_VPATH += $(DRIVER_PATH)/issi
 SRC += drivers/led/issi/is31fl3741.c
 
-LTO_ENABLE = yes
+DEBOUNCE_TYPE = asym_eager_defer_pk
+UNICODE_ENABLE = yes
 OPT = 2
