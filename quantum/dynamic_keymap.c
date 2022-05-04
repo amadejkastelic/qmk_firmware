@@ -34,24 +34,17 @@
 #    define DYNAMIC_KEYMAP_MACRO_COUNT 16
 #endif
 
-#ifndef DYNAMIC_KEYMAP_MACRO_COUNT
-#    define DYNAMIC_KEYMAP_MACRO_COUNT 16
+#ifndef TOTAL_EEPROM_BYTE_COUNT
+#    error Unknown total EEPROM size. Cannot derive maximum for dynamic keymaps.
 #endif
 
-// This is the default EEPROM max address to use for dynamic keymaps.
-// The default is the ATmega32u4 EEPROM max address.
-// Explicitly override it if the keyboard uses a microcontroller with
-// more EEPROM *and* it makes sense to increase it.
 #ifndef DYNAMIC_KEYMAP_EEPROM_MAX_ADDR
-#    if defined(__AVR_AT90USB646__) || defined(__AVR_AT90USB647__)
-#        define DYNAMIC_KEYMAP_EEPROM_MAX_ADDR 2047
-#    elif defined(__AVR_AT90USB1286__) || defined(__AVR_AT90USB1287__)
-#        define DYNAMIC_KEYMAP_EEPROM_MAX_ADDR 4095
-#    elif defined(__AVR_ATmega16U2__) || defined(__AVR_ATmega16U4__) || defined(__AVR_AT90USB162__) || defined(__AVR_ATtiny85__)
-#        define DYNAMIC_KEYMAP_EEPROM_MAX_ADDR 511
-#    else
-#        define DYNAMIC_KEYMAP_EEPROM_MAX_ADDR 1023
-#    endif
+#    define DYNAMIC_KEYMAP_EEPROM_MAX_ADDR (TOTAL_EEPROM_BYTE_COUNT - 1)
+#endif
+
+#if DYNAMIC_KEYMAP_EEPROM_MAX_ADDR > (TOTAL_EEPROM_BYTE_COUNT - 1)
+#    pragma message STR(DYNAMIC_KEYMAP_EEPROM_MAX_ADDR) " > " STR((TOTAL_EEPROM_BYTE_COUNT - 1))
+#    error DYNAMIC_KEYMAP_EEPROM_MAX_ADDR is configured to use more space than what is available for the selected EEPROM driver
 #endif
 
 // Due to usage of uint16_t check for max 65535
@@ -432,6 +425,7 @@ void dynamic_keymap_set_buffer(uint16_t offset, uint16_t size, uint8_t *data) {
 extern uint16_t g_vial_magic_keycode_override;
 
 // This overrides the one in quantum/keymap_common.c
+#ifndef OVERRIDE_KEYMAP_KEY_TO_KEYCODE
 uint16_t keymap_key_to_keycode(uint8_t layer, keypos_t key) {
 #ifdef VIAL_ENABLE
     /* Disable any keycode processing while unlocking */
@@ -448,6 +442,7 @@ uint16_t keymap_key_to_keycode(uint8_t layer, keypos_t key) {
         return KC_NO;
     }
 }
+#endif
 
 uint8_t dynamic_keymap_macro_get_count(void) {
     return DYNAMIC_KEYMAP_MACRO_COUNT;

@@ -48,7 +48,7 @@
 #define RGB_MATRIX_MAXIMUM_BRIGHTNESS (28 * 8)  // 8 = RGB_MATRIX_VAL_STEP
 
 /* We have 2KB EEPROM size on STM32L432 */
-#define DYNAMIC_KEYMAP_EEPROM_MAX_ADDR 2043
+// #define DYNAMIC_KEYMAP_EEPROM_MAX_ADDR 2043 // Automatically gets defined
 
 /* Encoder Configuration */
 #define ENCODERS_PAD_A { A10 }
