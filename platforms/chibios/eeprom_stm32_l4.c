@@ -124,50 +124,8 @@
 /* Flash double word value after erase */
 #define FEE_EMPTY_DWORD ((uint64_t)0xFFFFFFFFFFFFFFFF)
 
-/* Size of combined compacted eeprom and write log pages */
-#define FEE_DENSITY_MAX_SIZE (FEE_PAGE_COUNT * FEE_PAGE_SIZE)
-
-#ifndef FEE_MCU_FLASH_SIZE_IGNORE_CHECK /* *TODO: Get rid of this check */
-#    if FEE_DENSITY_MAX_SIZE > (FEE_MCU_FLASH_SIZE * 1024)
-#        pragma message STR(FEE_DENSITY_MAX_SIZE) " > " STR(FEE_MCU_FLASH_SIZE * 1024)
-#        error emulated eeprom: FEE_DENSITY_MAX_SIZE is greater than available flash size
-#    endif
-#endif
-
-/* Size of emulated eeprom */
-#ifdef FEE_DENSITY_BYTES
-#    if (FEE_DENSITY_BYTES > FEE_DENSITY_MAX_SIZE)
-#        pragma message STR(FEE_DENSITY_BYTES) " > " STR(FEE_DENSITY_MAX_SIZE)
-#        error emulated eeprom: FEE_DENSITY_BYTES exceeds FEE_DENSITY_MAX_SIZE
-#    endif
-#    if (FEE_DENSITY_BYTES == FEE_DENSITY_MAX_SIZE)
-#        pragma message STR(FEE_DENSITY_BYTES) " == " STR(FEE_DENSITY_MAX_SIZE)
-#        warning emulated eeprom: FEE_DENSITY_BYTES leaves no room for a write log.  This will greatly increase the flash wear rate!
-#    endif
-#    if FEE_DENSITY_BYTES > FEE_ADDRESS_MAX_SIZE
-#        pragma message STR(FEE_DENSITY_BYTES) " > " STR(FEE_ADDRESS_MAX_SIZE)
-#        error emulated eeprom: FEE_DENSITY_BYTES is greater than FEE_ADDRESS_MAX_SIZE allows
-#    endif
-#    if ((FEE_DENSITY_BYTES) % 8) != 0
-#        error emulated eeprom: FEE_DENSITY_BYTES must be a multiple of 8
-#    endif
-#else
-/* Default to one page of allocated space used for emulated eeprom, 3 pages for write log */
-#    define FEE_DENSITY_BYTES FEE_PAGE_SIZE
-#endif
-
-/* Size of write log */
-#ifdef FEE_WRITE_LOG_BYTES
-#    if ((FEE_DENSITY_BYTES + FEE_WRITE_LOG_BYTES) > FEE_DENSITY_MAX_SIZE)
-#        pragma message STR(FEE_DENSITY_BYTES) " + " STR(FEE_WRITE_LOG_BYTES) " > " STR(FEE_DENSITY_MAX_SIZE)
-#        error emulated eeprom: FEE_WRITE_LOG_BYTES exceeds remaining FEE_DENSITY_MAX_SIZE
-#    endif
-#    if ((FEE_WRITE_LOG_BYTES) % 8) != 0
-#        error emulated eeprom: FEE_WRITE_LOG_BYTES must be a multiple of 8
-#    endif
-#else
-/* Default to use all remaining space */
-#    define FEE_WRITE_LOG_BYTES (FEE_PAGE_COUNT * FEE_PAGE_SIZE - FEE_DENSITY_BYTES)
+#if !defined(FEE_PAGE_SIZE) || !defined(FEE_PAGE_COUNT) || !defined(FEE_MCU_FLASH_SIZE) || !defined(FEE_PAGE_BASE_ADDRESS)
+#    error "not implemented."
 #endif
 
 /* In-memory contents of emulated eeprom for faster access */
@@ -177,15 +135,6 @@ static uint8_t *DataBuf = (uint8_t *)DWordBuf;
 
 /* Pointer to the first available slot within the write log */
 static uint32_t *empty_slot;
-
-/* Start of the emulated eeprom compacted flash area */
-#define FEE_COMPACTED_BASE_ADDRESS FEE_PAGE_BASE_ADDRESS
-/* End of the emulated eeprom compacted flash area */
-#define FEE_COMPACTED_LAST_ADDRESS (FEE_COMPACTED_BASE_ADDRESS + FEE_DENSITY_BYTES)
-/* Start of the emulated eeprom write log */
-#define FEE_WRITE_LOG_BASE_ADDRESS FEE_COMPACTED_LAST_ADDRESS
-/* End of the emulated eeprom write log */
-#define FEE_WRITE_LOG_LAST_ADDRESS (FEE_WRITE_LOG_BASE_ADDRESS + FEE_WRITE_LOG_BYTES)
 
 uint16_t EEPROM_Init(void) {
     /* Load emulated eeprom contents from compacted flash into memory */
