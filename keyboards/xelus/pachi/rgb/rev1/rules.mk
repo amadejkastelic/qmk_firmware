@@ -19,6 +19,9 @@ FAUXCLICKY_ENABLE = no      # Use buzzer to emulate clicky switches
 
 EEPROM_DRIVER = i2c
 
+CUSTOM_MATRIX = yes
+SRC += matrix.c
+
 RGB_MATRIX_ENABLE = yes
 RGB_MATRIX_DRIVER = custom
 
