@@ -7,6 +7,8 @@
 #define VIAL_UNLOCK_COMBO_ROWS { 0, 3 }
 #define VIAL_UNLOCK_COMBO_COLS { 0, 13 }
 
+#define VIAL_ENCODER_DEFAULT { KC_VOLU, KC_VOLD, KC_TRNS, KC_TRNS, KC_VOLU, KC_VOLD, KC_TRNS, KC_TRNS }
+
 /* Total size of the EEPROM storage in bytes */
 // #define TRANSIENT_EEPROM_SIZE 1024 // Not required with EEPROM emulation
 
