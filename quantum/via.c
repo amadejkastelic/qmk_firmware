@@ -454,6 +454,12 @@ void raw_hid_receive(uint8_t *data, uint8_t length) {
             break;
         }
 #endif
+#ifdef RAW_HID_CMD
+        case RAW_HID_CMD: {
+            raw_hid_receive_kb(data, length);
+            return;
+        }
+#endif
         default: {
             // The command ID is not known let the keyboard implement it
             raw_hid_receive_kb(data, length);

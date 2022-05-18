@@ -425,7 +425,6 @@ void dynamic_keymap_set_buffer(uint16_t offset, uint16_t size, uint8_t *data) {
 extern uint16_t g_vial_magic_keycode_override;
 
 // This overrides the one in quantum/keymap_common.c
-#ifndef OVERRIDE_KEYMAP_KEY_TO_KEYCODE
 uint16_t keymap_key_to_keycode(uint8_t layer, keypos_t key) {
 #ifdef VIAL_ENABLE
     /* Disable any keycode processing while unlocking */
@@ -442,7 +441,6 @@ uint16_t keymap_key_to_keycode(uint8_t layer, keypos_t key) {
         return KC_NO;
     }
 }
-#endif
 
 uint8_t dynamic_keymap_macro_get_count(void) {
     return DYNAMIC_KEYMAP_MACRO_COUNT;
@@ -487,12 +485,14 @@ void dynamic_keymap_macro_reset(void) {
     }
 }
 
+#ifdef VIAL_ENABLE
 static uint16_t decode_keycode(uint16_t kc) {
     /* map 0xFF01 => 0x0100; 0xFF02 => 0x0200, etc */
     if (kc > 0xFF00)
         return (kc & 0xFF) << 8;
     return kc;
 }
+#endif
 
 void dynamic_keymap_macro_send(uint8_t id) {
     if (id >= DYNAMIC_KEYMAP_MACRO_COUNT) {
@@ -548,7 +548,9 @@ void dynamic_keymap_macro_send(uint8_t id) {
                 data[2] = eeprom_read_byte(p++);
                 if (data[2] != 0)
                     send_string(data);
-            } else if (data[1] == VIAL_MACRO_EXT_TAP || data[1] == VIAL_MACRO_EXT_DOWN || data[1] == VIAL_MACRO_EXT_UP) {
+            }
+        #ifdef VIAL_ENABLE
+            else if (data[1] == VIAL_MACRO_EXT_TAP || data[1] == VIAL_MACRO_EXT_DOWN || data[1] == VIAL_MACRO_EXT_UP) {
                 data[2] = eeprom_read_byte(p++);
                 if (data[2] != 0) {
                     data[3] = eeprom_read_byte(p++);
@@ -569,7 +571,9 @@ void dynamic_keymap_macro_send(uint8_t id) {
                         }
                     }
                 }
-            } else if (data[1] == SS_DELAY_CODE) {
+            }
+        #endif
+            else if (data[1] == SS_DELAY_CODE) {
                 // For delay, decode the delay and wait_ms for that amount
                 uint8_t d0 = eeprom_read_byte(p++);
                 uint8_t d1 = eeprom_read_byte(p++);
