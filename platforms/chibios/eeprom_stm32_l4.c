@@ -106,9 +106,6 @@
  */
 
 #include "eeprom_stm32_defs.h"
-#if !defined(FEE_PAGE_SIZE) || !defined(FEE_PAGE_COUNT) || !defined(FEE_MCU_FLASH_SIZE) || !defined(FEE_PAGE_BASE_ADDRESS)
-#    error "not implemented."
-#endif
 
 /* These bits indicate that the length of data which was wrote to log space */
 #define FEE_BYTE_FLAG 0x00010000
@@ -484,7 +481,7 @@ void eeprom_write_block(const void *buf, void *addr, size_t len) {
             write_len = 2;
         } else {
             /* Write the unaligned or single byte */
-            EEPROM_WriteDataByte((uintptr_t)dest++, *src++);
+            EEPROM_WriteDataByte((uintptr_t)dest, *src);
             write_len = 1;
         }
 
