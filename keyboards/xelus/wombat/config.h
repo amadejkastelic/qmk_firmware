@@ -1,4 +1,4 @@
-/* Copyright 2021 Harrison Chan (Xelus)
+/* Copyright 2022 Harrison Chan (Xelus)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -28,7 +28,7 @@
 #define MATRIX_COLS 14
 
 #define MATRIX_COL_PINS { C11, C12, D0, D1, B10, E15, E14, E13, E12, E11, A13, A1,  C5, C4 }
-#define MATRIX_ROW_PINS { B6,  B5,  B3, B4, D6,  D7,  D4,  D5,  D2,  D3,  A15, C10, A3, A2, B1, B0, B2, E17 }
+#define MATRIX_ROW_PINS { B6,  B5,  B3, B4, D6,  D7,  D4,  D5,  D2,  D3,  A15, C10, A3, A2, B1, B0, B2, E7 }
 #define DIODE_DIRECTION COL2ROW
 
 /* Set 0 if debouncing isn't needed */
@@ -55,13 +55,21 @@
 
 // SPI EEPROM Defines
 #define EXTERNAL_EEPROM_SPI_SLAVE_SELECT_PIN A4
-#define EXTERNAL_EEPROM_SPI_CLOCK_DIVISOR    16
+#define EXTERNAL_EEPROM_SPI_CLOCK_DIVISOR    64
 #define EXTERNAL_EEPROM_BYTE_COUNT           65535
 #define EXTERNAL_EEPROM_PAGE_SIZE            256
 #define EXTERNAL_EEPROM_ADDRESS_SIZE         3
 
 // Dynamic EEPROM
-#define DYNAMIC_KEYMAP_EEPROM_MAX_ADDR 65535
+#define DYNAMIC_KEYMAP_EEPROM_MAX_ADDR 2047
+
+#define VIA_EEPROM_CUSTOM_CONFIG_SIZE 1
 
 // Force NKRO
 #define FORCE_NKRO
+
+// Bootmagic
+#define BOOTMAGIC_LITE_ROW 2
+#define BOOTMAGIC_LITE_COLUMN 0
+
+#define MATRIX_UNSELECT_DRIVE_HIGH

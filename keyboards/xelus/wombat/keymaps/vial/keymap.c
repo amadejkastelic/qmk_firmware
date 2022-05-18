@@ -18,10 +18,10 @@
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
       [0] = LAYOUT_all(
-        KC_MUTE, KC_VOLD, KC_VOLU, KC_MNXT,   KC_MPRV, KC_MSTP, KC_MPLY,   KC_MSEL, KC_EJCT, KC_MAIL, KC_CALC, KC_MYCM, KC_WSCH, KC_WHOM, KC_WBAK, KC_WFWD, KC_WSTP, KC_WREF, KC_WFAV, KC_MFFD,
+        DEBUG,   EEP_RST, KC_MUTE, KC_MUTE,   KC_MUTE, KC_MUTE, KC_MUTE,   KC_MUTE, KC_MUTE, KC_MUTE, KC_MUTE, KC_MUTE, KC_MUTE, KC_MUTE, KC_MUTE, KC_MUTE, KC_MUTE, KC_MUTE, KC_MUTE, KC_MUTE,
 
-        KC_F1,   KC_F2,   KC_F3,   KC_F4,     KC_F5,   KC_F6,   KC_F7,     KC_F8,   KC_F9,   KC_F10,  KC_F11,  KC_F12,  KC_F13,  KC_F14,  KC_F15,  KC_F16,  KC_F17,  KC_F18,  KC_F19,  KC_F20,  KC_F21,            KC_F22,  KC_F23,  KC_F24,    KC_MNXT, KC_MPRV, KC_MPLY, KC_MUTE,
-        KC_F1,   KC_F2,   KC_F3,   KC_F4,     KC_F5,   KC_F6,   KC_F7,     KC_F8,   KC_F9,   KC_F10,  KC_F11,  KC_F12,  KC_F13,  KC_F14,  KC_F15,  KC_F16,  KC_F17,  KC_F18,  KC_F19,  KC_F20,  KC_F21,            KC_F22,  KC_F23,  KC_F24,    KC_MNXT, KC_MPRV, KC_MPLY, KC_MUTE,
+        KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,   KC_TRNS, KC_TRNS, KC_TRNS,   KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,           KC_TRNS, KC_TRNS, KC_TRNS,   KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
+        KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,   KC_TRNS, KC_TRNS, KC_TRNS,   KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,           KC_TRNS, KC_TRNS, KC_TRNS,   KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
 
         KC_MUTE, KC_VOLD, KC_VOLU, KC_TRNS,   KC_PSCR, KC_SLCK, KC_PAUS,   KC_ESC,  KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11,  KC_F12,  KC_F13,            KC_PSCR, KC_SLCK, KC_PAUS,   KC_MUTE, KC_VOLD, KC_VOLU, KC_TRNS,
         KC_NLCK, KC_PSLS, KC_PAST, KC_PMNS,   KC_INS,  KC_HOME, KC_PGUP,   KC_GRV,  KC_1,    KC_2,    KC_3,    KC_4,    KC_5,    KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_MINS, KC_EQL,  KC_BSPC, KC_BSPC,  KC_INS,  KC_HOME, KC_PGUP,   KC_NLCK, KC_PSLS, KC_PAST, KC_PMNS,
@@ -44,150 +44,157 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,   KC_TRNS, KC_TRNS, KC_TRNS,   KC_TRNS, KC_TRNS, KC_TRNS,                            KC_TRNS,                   KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,                    KC_TRNS, KC_TRNS, KC_TRNS,   KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS)
 };
 
-#ifdef ENCODER_ENABLE
-bool encoder_update_user(uint8_t index, bool clockwise) {
-    switch(index) {
-        case 0:
-            if (clockwise) {
-                tap_code(KC_PGDN);
-            } else {
-                tap_code(KC_PGUP);
-            }
-            break;
-        case 1:
-            if (clockwise) {
-                tap_code(KC_PGDN);
-            } else {
-                tap_code(KC_PGUP);
-            }
-            break;
-        case 2:
-            if (clockwise) {
-                tap_code(KC_PGDN);
-            } else {
-                tap_code(KC_PGUP);
-            }
-            break;
-        case 3:
-            if (clockwise) {
-                tap_code(KC_PGDN);
-            } else {
-                tap_code(KC_PGUP);
-            }
-            break;
-        case 4:
-            if (clockwise) {
-                tap_code(KC_PGDN);
-            } else {
-                tap_code(KC_PGUP);
-            }
-            break;
-        case 5:
-            if (clockwise) {
-                tap_code(KC_PGDN);
-            } else {
-                tap_code(KC_PGUP);
-            }
-            break;
-        case 6:
-            if (clockwise) {
-                tap_code(KC_PGDN);
-            } else {
-                tap_code(KC_PGUP);
-            }
-            break;
-        case 7:
-            if (clockwise) {
-                tap_code(KC_PGDN);
-            } else {
-                tap_code(KC_PGUP);
-            }
-            break;
-        case 8:
-            if (clockwise) {
-                tap_code(KC_PGDN);
-            } else {
-                tap_code(KC_PGUP);
-            }
-            break;
-        case 9:
-            if (clockwise) {
-                tap_code(KC_PGDN);
-            } else {
-                tap_code(KC_PGUP);
-            }
-            break;
-        case 10:
-            if (clockwise) {
-                tap_code(KC_PGDN);
-            } else {
-                tap_code(KC_PGUP);
-            }
-            break;
-        case 11:
-            if (clockwise) {
-                tap_code(KC_PGDN);
-            } else {
-                tap_code(KC_PGUP);
-            }
-            break;
-        case 12:
-            if (clockwise) {
-                tap_code(KC_PGDN);
-            } else {
-                tap_code(KC_PGUP);
-            }
-            break;
-        case 13:
-            if (clockwise) {
-                tap_code(KC_PGDN);
-            } else {
-                tap_code(KC_PGUP);
-            }
-            break;
-        case 14:
-            if (clockwise) {
-                tap_code(KC_PGDN);
-            } else {
-                tap_code(KC_PGUP);
-            }
-            break;
-        case 15:
-            if (clockwise) {
-                tap_code(KC_PGDN);
-            } else {
-                tap_code(KC_PGUP);
-            }
-            break;
-        case 16:
-            if (clockwise) {
-                tap_code(KC_PGDN);
-            } else {
-                tap_code(KC_PGUP);
-            }
-            break;
-        case 17:
-            if (clockwise) {
-                tap_code(KC_PGDN);
-            } else {
-                tap_code(KC_PGUP);
-            }
-            break;
-        case 18:
-            if (clockwise) {
-                tap_code(KC_PGDN);
-            } else {
-                tap_code(KC_PGUP);
-            }
-            break;
-        case 19:
-            if (clockwise) {
-                tap_code(KC_PGDN);
-            } else {
-                tap_code(KC_PGUP);
-            }
-            break;
-    }
-    return false;
+// #ifdef ENCODER_ENABLE
+// bool encoder_update_user(uint8_t index, bool clockwise) {
+//     switch(index) {
+//         case 0:
+//             if (clockwise) {
+//                 tap_code(KC_VOLU);
+//             } else {
+//                 tap_code(KC_VOLD);
+//             }
+//             break;
+//         case 1:
+//             if (clockwise) {
+//                 tap_code(KC_VOLU);
+//             } else {
+//                 tap_code(KC_VOLD);
+//             }
+//             break;
+//         case 2:
+//             if (clockwise) {
+//                 tap_code(KC_VOLU);
+//             } else {
+//                 tap_code(KC_VOLD);
+//             }
+//             break;
+//         case 3:
+//             if (clockwise) {
+//                 tap_code(KC_VOLU);
+//             } else {
+//                 tap_code(KC_VOLD);
+//             }
+//             break;
+//         case 4:
+//             if (clockwise) {
+//                 tap_code(KC_VOLU);
+//             } else {
+//                 tap_code(KC_VOLD);
+//             }
+//             break;
+//         case 5:
+//             if (clockwise) {
+//                 tap_code(KC_VOLU);
+//             } else {
+//                 tap_code(KC_VOLD);
+//             }
+//             break;
+//         case 6:
+//             if (clockwise) {
+//                 tap_code(KC_VOLU);
+//             } else {
+//                 tap_code(KC_VOLD);
+//             }
+//             break;
+//         case 7:
+//             if (clockwise) {
+//                 tap_code(KC_VOLU);
+//             } else {
+//                 tap_code(KC_VOLD);
+//             }
+//             break;
+//         case 8:
+//             if (clockwise) {
+//                 tap_code(KC_VOLU);
+//             } else {
+//                 tap_code(KC_VOLD);
+//             }
+//             break;
+//         case 9:
+//             if (clockwise) {
+//                 tap_code(KC_VOLU);
+//             } else {
+//                 tap_code(KC_VOLD);
+//             }
+//             break;
+//         case 10:
+//             if (clockwise) {
+//                 tap_code(KC_VOLU);
+//             } else {
+//                 tap_code(KC_VOLD);
+//             }
+//             break;
+//         case 11:
+//             if (clockwise) {
+//                 tap_code(KC_VOLU);
+//             } else {
+//                 tap_code(KC_VOLD);
+//             }
+//             break;
+//         case 12:
+//             if (clockwise) {
+//                 tap_code(KC_VOLU);
+//             } else {
+//                 tap_code(KC_VOLD);
+//             }
+//             break;
+//         case 13:
+//             if (clockwise) {
+//                 tap_code(KC_VOLU);
+//             } else {
+//                 tap_code(KC_VOLD);
+//             }
+//             break;
+//         case 14:
+//             if (clockwise) {
+//                 tap_code(KC_VOLU);
+//             } else {
+//                 tap_code(KC_VOLD);
+//             }
+//             break;
+//         case 15:
+//             if (clockwise) {
+//                 tap_code(KC_VOLU);
+//             } else {
+//                 tap_code(KC_VOLD);
+//             }
+//             break;
+//         case 16:
+//             if (clockwise) {
+//                 tap_code(KC_VOLU);
+//             } else {
+//                 tap_code(KC_VOLD);
+//             }
+//             break;
+//         case 17:
+//             if (clockwise) {
+//                 tap_code(KC_VOLU);
+//             } else {
+//                 tap_code(KC_VOLD);
+//             }
+//             break;
+//         case 18:
+//             if (clockwise) {
+//                 tap_code(KC_VOLU);
+//             } else {
+//                 tap_code(KC_VOLD);
+//             }
+//             break;
+//         case 19:
+//             if (clockwise) {
+//                 tap_code(KC_VOLU);
+//             } else {
+//                 tap_code(KC_VOLD);
+//             }
+//             break;
+//     }
+//     return false;
+// }
+// #endif
+void keyboard_post_init_user(void) {
+  // Customise these values to desired behaviour
+  debug_enable=true;
+  debug_matrix=true;
+  //debug_keyboard=true;
+  //debug_mouse=true;
 }
-#endif

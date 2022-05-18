@@ -1,4 +1,4 @@
-/* Copyright 2021 Harrison Chan (Xelus)
+/* Copyright 2022 Harrison Chan (Xelus)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,5 +15,3 @@
  */
 
 #include "wombat.h"
-
-void matrix_io_delay(void) { __asm__ volatile("nop\nnop\nnop\n"); }
