@@ -43,6 +43,9 @@ QMK は十分な容量のフラッシュメモリを備えた USB 対応 AVR ま
 * [STM32L433](https://www.st.com/en/microcontrollers-microprocessors/stm32l4x3.html)
 * [STM32L443](https://www.st.com/en/microcontrollers-microprocessors/stm32l4x3.html)
 
+### Artery (AT32)
+* [AT32F403A](https://www.arterychip.com/en/product/AT32F403A.jsp)
+
 ### NXP (Kinetis)
 
 * [MKL26Z64](https://www.nxp.com/products/processors-and-microcontrollers/arm-microcontrollers/general-purpose-mcus/kl-series-cortex-m0-plus/kinetis-kl2x-72-96-mhz-usb-ultra-low-power-microcontrollers-mcus-based-on-arm-cortex-m0-plus-core:KL2x)
