@@ -827,8 +827,8 @@ ifneq ($(findstring AT32F403A, $(MCU)),)
   #   <chibios[-contrib]>/os/hal/ports/$(MCU_PORT_NAME)/$(MCU_SERIES)
   #   OR
   #   <chibios[-contrib]>/os/hal/ports/$(MCU_FAMILY)/$(MCU_SERIES)
-  MCU_FAMILY = STM32
-  MCU_SERIES = STM32F1xx
+  MCU_FAMILY = AT32
+  MCU_SERIES = AT32F403Axx
 
   # Linker script to use
   # - it should exist either in <chibios>/os/common/startup/ARMCMx/compilers/GCC/ld/
@@ -837,7 +837,7 @@ ifneq ($(findstring AT32F403A, $(MCU)),)
 
   # Startup code to use
   #  - it should exist in <chibios>/os/common/startup/ARMCMx/compilers/GCC/mk/
-  MCU_STARTUP ?= stm32f1xx
+  MCU_STARTUP ?= at32f403axx
 
   # Board: it should exist either in <chibios>/os/hal/boards/,
   # <keyboard_dir>/boards/, or drivers/boards/

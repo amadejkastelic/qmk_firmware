@@ -1,8 +1,8 @@
 # List of all the board related files.
-BOARDSRC = $(BOARD_PATH)/board/board.c
+BOARDSRC = ${CHIBIOS_CONTRIB}/os/hal/boards/BLACKPILL_AT32F403A/board.c
 
 # Required include directories
-BOARDINC = $(BOARD_PATH)/board
+BOARDINC = ${CHIBIOS_CONTRIB}/os/hal/boards/BLACKPILL_AT32F403A
 
 # Shared variables
 ALLCSRC += $(BOARDSRC)
