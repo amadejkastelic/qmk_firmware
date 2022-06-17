@@ -93,6 +93,7 @@
                 "caterina",
                 "custom",
                 "gd32v-dfu",
+                "at32-dfu",
                 "halfkay",
                 "kiibohd",
                 "lufa-dfu",

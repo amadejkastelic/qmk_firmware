@@ -45,6 +45,7 @@ MCU2BOOTLOADER = {
     "GD32VF103": "gd32v-dfu",
     "WB32F3G71": "wb32-dfu",
     "WB32FQ95": "wb32-dfu",
+    "AT32F403A": "at32-dfu",
     "atmega16u2": "atmel-dfu",
     "atmega32u2": "atmel-dfu",
     "atmega16u4": "atmel-dfu",
