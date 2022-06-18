@@ -17,8 +17,8 @@
 
 // USB Device descriptor parameter
 #define VENDOR_ID       0x5845 // XE
-#define PRODUCT_ID      0x5253 // RS60
-#define DEVICE_VER      0x0002
+#define PRODUCT_ID      0x4A47 // JG60
+#define DEVICE_VER      0x0001
 #define MANUFACTURER    Xelus
 #define PRODUCT         Janglad60
 
