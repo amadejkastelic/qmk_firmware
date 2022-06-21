@@ -833,7 +833,7 @@ ifneq ($(findstring AT32F403A, $(MCU)),)
   # Linker script to use
   # - it should exist either in <chibios>/os/common/startup/ARMCMx/compilers/GCC/ld/
   #   or <keyboard_dir>/ld/
-  MCU_LDSCRIPT ?= AT32F403AxG_bootloader
+  MCU_LDSCRIPT ?= AT32F403AxG
 
   # Startup code to use
   #  - it should exist in <chibios>/os/common/startup/ARMCMx/compilers/GCC/mk/
