@@ -157,7 +157,7 @@ ifeq ($(strip $(BOOTLOADER)), stm32-dfu)
 endif
 ifeq ($(strip $(BOOTLOADER)), at32-dfu)
     OPT_DEFS += -DBOOTLOADER_AT32_DFU
-    BOOTLOADER_TYPE = at32-dfu
+    BOOTLOADER_TYPE = at32_dfu
 
     # Options to pass to dfu-util when flashing
     DFU_ARGS ?= -d 2E3C:DF11 -a 0 -s 0x08000000:leave

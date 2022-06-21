@@ -18,7 +18,6 @@
 
 #include <ch.h>
 #include <hal.h>
-#include "wait.h"
 
 extern uint32_t __ram0_end__;
 

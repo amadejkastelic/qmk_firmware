@@ -45,7 +45,7 @@
 #define AT32_SW                            AT32_SW_PLL
 #define AT32_PLLSRC                        AT32_PLLSRC_HSI
 #define AT32_PLLXTPRE                      AT32_PLLXTPRE_DIV1
-#define AT32_PLLMUL_VALUE                  60
+#define AT32_PLLMUL_VALUE                  48
 #define AT32_HPRE                          AT32_HPRE_DIV1
 #define AT32_PPRE1                         AT32_PPRE1_DIV2
 #define AT32_PPRE2                         AT32_PPRE2_DIV2
