@@ -1,5 +1,6 @@
 # MCU name
 MCU = AT32F403A
+BOARD = BLACKPILL_AT32F403A
 
 # Bootloader selection
 BOOTLOADER = at32-dfu

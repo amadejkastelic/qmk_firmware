@@ -817,7 +817,7 @@ endif
 
 ifneq ($(findstring AT32F403A, $(MCU)),)
   # Cortex version
-  MCU = cortex-m3
+  MCU = cortex-m4
 
   # ARM version, CORTEX-M0/M1 are 6, CORTEX-M3/M4/M7 are 7
   ARMV = 7
@@ -833,7 +833,7 @@ ifneq ($(findstring AT32F403A, $(MCU)),)
   # Linker script to use
   # - it should exist either in <chibios>/os/common/startup/ARMCMx/compilers/GCC/ld/
   #   or <keyboard_dir>/ld/
-  MCU_LDSCRIPT ?= AT32F403AxC_bootloader
+  MCU_LDSCRIPT ?= AT32F403AxG_bootloader
 
   # Startup code to use
   #  - it should exist in <chibios>/os/common/startup/ARMCMx/compilers/GCC/mk/
@@ -841,7 +841,7 @@ ifneq ($(findstring AT32F403A, $(MCU)),)
 
   # Board: it should exist either in <chibios>/os/hal/boards/,
   # <keyboard_dir>/boards/, or drivers/boards/
-  BOARD ?= GENERIC_AT32_F403AXC
+  BOARD ?= BLACKPILL_AT32F403A
 
   USE_FPU ?= no
 
