@@ -846,7 +846,7 @@ ifneq ($(findstring AT32F403A, $(MCU)),)
   USE_FPU ?= no
 
   # Bootloader address for AT32 DFU
-  STM32_BOOTLOADER_ADDRESS ?= 0x1FFFB000
+  AT32_BOOTLOADER_ADDRESS ?= 0x1FFFB000
 endif
 
 ifneq (,$(filter $(MCU),at90usb162 atmega16u2 atmega32u2 atmega16u4 atmega32u4 at90usb646 at90usb647 at90usb1286 at90usb1287))
