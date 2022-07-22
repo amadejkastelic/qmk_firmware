@@ -23,7 +23,7 @@
 #define PRODUCT_ID      0x5652 // Valor "VR"
 #define DEVICE_VER      0x0001
 #define MANUFACTURER    Xelus
-#define PRODUCT         Xelus Valor
+#define PRODUCT         Xelus Valor Rev3
 
 /* key matrix size */
 #define MATRIX_ROWS 5
@@ -38,6 +38,7 @@
 #define RGB_DI_PIN B0
 #define RGBLED_NUM 32
 #define RGBLIGHT_ANIMATIONS
+#define RGBLIGHT_DEFAULT_MODE (RGBLIGHT_MODE_RAINBOW_SWIRL + 2)
 #define RGBLIGHT_LIMIT_VAL 200
 
 /* COL2ROW or ROW2COL */

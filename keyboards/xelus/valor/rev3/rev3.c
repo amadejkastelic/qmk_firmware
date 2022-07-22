@@ -17,3 +17,5 @@
 // Nothing to see here, move along... ;-)
 
 #include "rev3.h"
+
+void matrix_io_delay(void) { __asm__ volatile("nop\nnop\nnop\n"); }
