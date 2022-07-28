@@ -16,6 +16,7 @@
 
 #include "la_plus.h"
 #include "print.h"
+#include "rgb_matrix.h"
 
 #define _____ NO_LED
 
@@ -75,6 +76,9 @@ void keyboard_post_init_kb(void) {
     // debug_enable=true;
 
     keyboard_config.raw = eeconfig_read_kb();
+
+    // zero so that it will always start at the animation
+    g_rgb_timer = 0;
     if (keyboard_config.startup_animation_dots) {
         rgb_matrix_mode_noeeprom(RGB_MATRIX_CUSTOM_startup_animation_dots);
     } else {
