@@ -17,5 +17,6 @@ BACKLIGHT_ENABLE = no       # Enable keyboard backlight functionality
 RGBLIGHT_ENABLE = yes       # Enable keyboard RGB underglow
 AUDIO_ENABLE = no           # Audio output
 LTO_ENABLE = yes
-
+OPT = 3
+DEBOUNCE_TYPE = asym_eager_defer_pk
 LAYOUTS = alice_split_bs
