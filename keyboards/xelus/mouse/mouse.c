@@ -108,10 +108,10 @@ bool process_record_kb(uint16_t keycode, keyrecord_t* record) {
 
 // Hardware Setup
 void keyboard_pre_init_kb(void) {
-    debug_enable  = true;
-    debug_matrix  = true;
-    debug_mouse   = true;
-    debug_encoder = true;
+    debug_enable  = false;
+    debug_matrix  = false;
+    debug_mouse   = false;
+    debug_encoder = false;
 
     keyboard_pre_init_user();
 }
@@ -135,3 +135,5 @@ void matrix_init_kb(void) {
     }
     matrix_init_user();
 }
+
+void matrix_io_delay(void) { __asm__ volatile("nop\nnop\nnop\n"); }

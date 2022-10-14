@@ -17,22 +17,13 @@
  */
 
 #pragma once
-#include "config_common.h"
 
 /* key matrix size */
 #define MATRIX_ROWS 1
 #define MATRIX_COLS 5
 
-#define LAYER_STATE_8BIT
-
-// left, middle, right, side1, side2
-#define DIRECT_PINS                        \
-    {                                      \
-        { B14, A3, A2, A14, A15 }          \
-    }
-
 /* Debounce reduces chatter (unintended double-presses) - set 0 if debouncing is not needed */
-#define DEBOUNCE 5
+#define DEBOUNCE 2
 
 #define USB_MAX_POWER_CONSUMPTION 100
 
@@ -90,7 +81,14 @@
 // PMW3360 config
 #define PMW33XX_CS_PIN           A4
 #define PMW33XX_SPI_DIVISOR      32
-#define PMW33XX_LIFTOFF_DISTANCE 0x27
+//#define PMW33XX_LIFTOFF_DISTANCE 0x27
+#define PMW33XX_LIFTOFF_DISTANCE 0x02
+#define PMW33XX_CPI              3200
+#define POINTING_DEVICE_MOTION_PIN B0
+//#define POINTING_DEVICE_TASK_THROTTLE_MS 1
+
+//mouse configs
+#define MOUSE_EXTENDED_REPORT
 
 // Encoder
 #define ENCODERS_PAD_A { B13 }
