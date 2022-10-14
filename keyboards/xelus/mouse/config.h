@@ -17,15 +17,7 @@
  */
 
 #pragma once
-
 #include "config_common.h"
-
-/* USB Device descriptor parameter */
-#define VENDOR_ID 0x5043
-#define PRODUCT_ID 0x4D6F
-#define DEVICE_VER 0x0001
-#define MANUFACTURER Xelus
-#define PRODUCT Xelus Mouse 1
 
 /* key matrix size */
 #define MATRIX_ROWS 1
@@ -42,17 +34,12 @@
 /* Debounce reduces chatter (unintended double-presses) - set 0 if debouncing is not needed */
 #define DEBOUNCE 5
 
-/* Much more so than a keyboard, speed matters for a mouse. So we'll go for as high
-   a polling rate as possible. */
-#define USB_POLLING_INTERVAL_MS 1
 #define USB_MAX_POWER_CONSUMPTION 100
 
 /* disable action features */
 #define NO_ACTION_LAYER
 #define NO_ACTION_TAPPING
 #define NO_ACTION_ONESHOT
-#define NO_ACTION_MACRO
-#define NO_ACTION_FUNCTION
 
 // I2C eeprom
 // #define EEPROM_I2C_24LC64
@@ -80,30 +67,30 @@
 #define SPI_MOSI_PAL_MODE 5
 
 // RGB
-#define RGB_DI_PIN A8
-#define RGBLED_NUM 8
-#define WS2812_EXTERNAL_PULLUP
-#define RGBLIGHT_DEFAULT_VAL 128
+// #define RGB_DI_PIN A8
+// #define RGBLED_NUM 8
+// #define WS2812_EXTERNAL_PULLUP
+// #define RGBLIGHT_DEFAULT_VAL 128
 
 // RGB Animations
-#define RGBLIGHT_EFFECT_RAINBOW_MOOD
-#define RGBLIGHT_EFFECT_BREATHING
+// #define RGBLIGHT_EFFECT_RAINBOW_MOOD
+// #define RGBLIGHT_EFFECT_BREATHING
 
 // default startup
-#define RGBLIGHT_DEFAULT_MODE RGBLIGHT_MODE_RAINBOW_MOOD
+// #define RGBLIGHT_DEFAULT_MODE RGBLIGHT_MODE_RAINBOW_MOOD
 
 // PWM config
-#define WS2812_PWM_DRIVER PWMD1
-#define WS2812_PWM_CHANNEL 1
-#define WS2812_PWM_PAL_MODE 1
-#define WS2812_DMA_STREAM STM32_DMA2_STREAM5
-#define WS2812_DMA_CHANNEL 6
-#define WS2812_DMAMUX_ID STM32_DMAMUX2_TIM1_UP
+// #define WS2812_PWM_DRIVER PWMD1
+// #define WS2812_PWM_CHANNEL 1
+// #define WS2812_PWM_PAL_MODE 1
+// #define WS2812_DMA_STREAM STM32_DMA2_STREAM5
+// #define WS2812_DMA_CHANNEL 6
+// #define WS2812_DMAMUX_ID STM32_DMAMUX2_TIM1_UP
 
 // PMW3360 config
-#define PMW3360_CS_PIN           A4
-#define PMW3360_SPI_DIVISOR      32
-#define PMW3360_LIFTOFF_DISTANCE 0x27
+#define PMW33XX_CS_PIN           A4
+#define PMW33XX_SPI_DIVISOR      32
+#define PMW33XX_LIFTOFF_DISTANCE 0x27
 
 // Encoder
 #define ENCODERS_PAD_A { B13 }

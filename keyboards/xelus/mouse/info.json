@@ -1,0 +1,33 @@
+{
+    "keyboard_name": "MOUSE",
+    "manufacturer": "Xelus",
+    "url": "",
+    "maintainer": "Xelus22",
+    "usb": {
+        "vid": "0x5845",
+        "pid": "0x4D6F",
+        "device_version": "0.0.1"
+    },
+    "features": {
+        "bootmagic": true,
+        "mousekey": true,
+        "extrakey": true,
+        "console": true,
+        "command": false,
+        "nkro": false,
+        "backlight": false,
+        "rgblight": false,
+        "audio": false
+    },
+    "layouts": {
+        "LAYOUT": {
+            "layout": [
+                {"label":"BTN1", "x":0, "y":0},
+                {"label":"BTN3", "x":1, "y":0},
+                {"label":"BTN2", "x":2, "y":0},
+                {"label":"BTN4", "x":3, "y":0},
+                {"label":"BTN5", "x":4, "y":0}
+            ]
+        }
+    }
+}
