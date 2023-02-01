@@ -15,7 +15,7 @@
  */
 
 #include <qp.h>
-#include "kris.qgf.h"
+#include "kris_qgf.h"
 
 painter_device_t qp_display;
 painter_image_handle_t my_image;
@@ -27,7 +27,7 @@ void keyboard_post_init_kb(void) {
 
     my_image = qp_load_image_mem(gfx_kris);
     if (my_image != NULL) {
-        qp_drawimage(qp_display, (239 - my_image->width), (319 - my_image->height), my_image);
+        qp_drawimage(qp_display, 0, 0, my_image);
     }
 
     for (int i = 0; i < 320; ++i) {

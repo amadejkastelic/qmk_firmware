@@ -7,4 +7,4 @@ QUANTUM_PAINTER_DRIVERS += ili9341_spi
 
 LTO_ENABLE = yes
 
-SRC += kris.qgf.c
+SRC += kris_qgf.c
