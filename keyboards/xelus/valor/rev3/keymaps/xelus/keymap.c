@@ -22,7 +22,7 @@
 enum { KC_CONFIG = SAFE_RANGE, KC_LOWER, KC_RAISE, KC_ADJUST, KC_NOMODE, KC_REGIONAL, KC_AUSSIE, KC_SBOB, KC_REDACTED };
 enum { LAYER_BASE, LAYER_LOWER, LAYER_RAISE, LAYER_ADJUST };
 
-void matrix_io_delay(void) { __asm__ volatile("nop\nnop\nnop\n"); }
+void matrix_io_delay(void) { __asm__ volatile("nop\nnop\nnop\nnop\nnop\n"); }
 
 uint16_t repeat_mode;
 uint8_t prev_upper;
@@ -61,7 +61,7 @@ void keyboard_post_init_user(void) {
 }
 
 void eeconfig_init_user(void) {
-    set_unicode_input_mode(UC_LNX);
+    set_unicode_input_mode(UNICODE_MODE_WINDOWS);
     eeconfig_update_user(0);
 }
 
@@ -185,9 +185,9 @@ bool process_record_aussie(uint16_t keycode, keyrecord_t *record) {
         tap_code16_nomods(KC_HOME);
         return false;
     } else if (record->event.pressed && keycode == KC_BSPC) {
-        tap_code16_nomods(KC_DELT);
+        tap_code16_nomods(KC_DEL);
         return false;
-    } else if (record->event.pressed && keycode == KC_DELT) {
+    } else if (record->event.pressed && keycode == KC_DEL) {
         tap_code16_nomods(KC_BSPC);
         return false;
     } else if (record->event.pressed && keycode == KC_QUOT) {
@@ -347,7 +347,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   ),
 
   [1] = LAYOUT_all(
-    RESET,   KC_GRV,  KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11,  KC_F12,  KC_TRNS, KC_PSCR,
+    QK_BOOT, KC_GRV,  KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11,  KC_F12,  KC_TRNS, KC_PSCR,
     KC_MPRV, KC_CAPS, KC_MS_BTN1, KC_UP, KC_MS_BTN2, KC_REDACTED, KC_TRNS, KC_TRNS, KC_TRNS, KC_MPRV, KC_MPLY, KC_MNXT, KC_VOLD, KC_VOLU, KC_MUTE,
     KC_MNXT, KC_TRNS, KC_LEFT, KC_DOWN, KC_RGHT, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_HOME, KC_END, KC_TRNS, KC_TRNS, KC_TRNS,
              KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_NOMODE, KC_AUSSIE, KC_REGIONAL, KC_SBOB, KC_TRNS,KC_TRNS,

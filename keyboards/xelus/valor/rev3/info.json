@@ -2,6 +2,12 @@
     "keyboard_name": "Xelus Valor rev3",
     "url": "",
     "maintainer": "Xelus22",
+    "manufacturer": "Xelus",
+    "usb": {
+        "vid": "0x5845",
+        "pid": "0x5652",
+        "device_version": "0.0.1"
+    },
     "layouts": {
         "LAYOUT_alice_split_bs": {
             "layout": [
