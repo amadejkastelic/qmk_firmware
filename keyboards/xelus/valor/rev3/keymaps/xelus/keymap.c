@@ -22,7 +22,7 @@
 enum { KC_CONFIG = SAFE_RANGE, KC_LOWER, KC_RAISE, KC_ADJUST, KC_NOMODE, KC_REGIONAL, KC_AUSSIE, KC_SBOB, KC_REDACTED };
 enum { LAYER_BASE, LAYER_LOWER, LAYER_RAISE, LAYER_ADJUST };
 
-void matrix_io_delay(void) { __asm__ volatile("nop\nnop\nnop\nnop\nnop\n"); }
+// void matrix_io_delay(void) { __asm__ volatile("nop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\nnop\n"); }
 
 uint16_t repeat_mode;
 uint8_t prev_upper;

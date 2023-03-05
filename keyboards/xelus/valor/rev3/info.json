@@ -8,6 +8,29 @@
         "pid": "0x5652",
         "device_version": "0.0.1"
     },
+    "features": {
+        "rgblight": true
+    },
+    "rgblight": {
+        "led_count": 32,
+        "pin": "B0",
+        "hue_steps": 10,
+        "saturation_steps": 17,
+        "brightness_steps": 17,
+        "max_brightness": 200,
+        "animations": {
+            "alternating": true,
+            "breathing": true,
+            "christmas": true,
+            "knight": true,
+            "rainbow_mood": true,
+            "rainbow_swirl": true,
+            "rgb_test": true,
+            "snake": true,
+            "static_gradient": true,
+            "twinkle": true
+        }
+    },
     "layouts": {
         "LAYOUT_alice_split_bs": {
             "layout": [
