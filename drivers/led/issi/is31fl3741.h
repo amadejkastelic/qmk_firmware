@@ -35,6 +35,7 @@ extern const is31_led PROGMEM g_is31_leds[RGB_MATRIX_LED_COUNT];
 void IS31FL3741_init(uint8_t addr);
 void IS31FL3741_write_register(uint8_t addr, uint8_t reg, uint8_t data);
 bool IS31FL3741_write_pwm_buffer(uint8_t addr, uint8_t *pwm_buffer);
+bool IS31FL3741_write_pwm_buffer_range(uint8_t addr, uint8_t *pwm_buffer, uint16_t start, uint16_t end);
 
 void IS31FL3741_set_color(int index, uint8_t red, uint8_t green, uint8_t blue);
 void IS31FL3741_set_color_all(uint8_t red, uint8_t green, uint8_t blue);
@@ -46,6 +47,7 @@ void IS31FL3741_set_led_control_register(uint8_t index, bool red, bool green, bo
 // Call this while idle (in between matrix scans).
 // If the buffer is dirty, it will update the driver with the buffer.
 void IS31FL3741_update_pwm_buffers(uint8_t addr, uint8_t index);
+void IS31FL3741_update_pwm_buffers_range(uint8_t addr, uint8_t index, uint16_t start, uint16_t end);
 void IS31FL3741_update_led_control_registers(uint8_t addr, uint8_t index);
 void IS31FL3741_set_scaling_registers(const is31_led *pled, uint8_t red, uint8_t green, uint8_t blue);
 

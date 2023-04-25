@@ -18,6 +18,7 @@
  */
 
 #include "wait.h"
+#include "print.h"
 
 #include "is31fl3741.h"
 #include <string.h>
@@ -150,6 +151,54 @@ bool IS31FL3741_write_pwm_buffer(uint8_t addr, uint8_t *pwm_buffer) {
     return true;
 }
 
+bool IS31FL3741_write_pwm_buffer_range(uint8_t addr, uint8_t *pwm_buffer, uint16_t start, uint16_t end) {
+#define BYTES_LENGTH 18
+    if (start < 180) {
+        // unlock the command register and select PG2
+        IS31FL3741_write_register(addr, ISSI_COMMANDREGISTER_WRITELOCK, 0xC5);
+        IS31FL3741_write_register(addr, ISSI_COMMANDREGISTER, ISSI_PAGE_PWM0);
+
+        for (int i = start; i <= end && i < 180; i += BYTES_LENGTH) {
+            g_twi_transfer_buffer[0] = i;
+            memcpy(g_twi_transfer_buffer + 1, pwm_buffer + i, BYTES_LENGTH);
+#if ISSI_PERSISTENCE > 0
+            for (uint8_t i = 0; i < ISSI_PERSISTENCE; i++) {
+                if (i2c_transmit(addr << 1, g_twi_transfer_buffer, BYTES_LENGTH + 1, ISSI_TIMEOUT) != 0) {
+                    return false;
+                }
+            }
+#else
+            if (i2c_transmit(addr << 1, g_twi_transfer_buffer, BYTES_LENGTH + 1, ISSI_TIMEOUT) != 0) {
+                return false;
+            }
+#endif
+        }
+        start = 180;
+    }
+
+    if (end >= 180) {
+        IS31FL3741_write_register(addr, ISSI_COMMANDREGISTER_WRITELOCK, 0xC5);
+        IS31FL3741_write_register(addr, ISSI_COMMANDREGISTER, ISSI_PAGE_PWM1);
+        for (int i = start; i < end; i += BYTES_LENGTH) {
+            g_twi_transfer_buffer[0] = i % 180;
+            memcpy(g_twi_transfer_buffer + 1, pwm_buffer + i, BYTES_LENGTH);
+#if ISSI_PERSISTENCE > 0
+            for (uint8_t i = 0; i < ISSI_PERSISTENCE; i++) {
+                if (i2c_transmit(addr << 1, g_twi_transfer_buffer, BYTES_LENGTH + 1, ISSI_TIMEOUT) != 0) {
+                    return false;
+                }
+            }
+#else
+            if (i2c_transmit(addr << 1, g_twi_transfer_buffer, BYTES_LENGTH + 1, ISSI_TIMEOUT) != 0) {
+                return false;
+            }
+#endif
+        }
+    }
+
+    return true;
+}
+
 void IS31FL3741_init(uint8_t addr) {
     // In order to avoid the LEDs being driven with garbage data
     // in the LED driver's PWM registers, shutdown is enabled last.
@@ -223,6 +272,14 @@ void IS31FL3741_set_led_control_register(uint8_t index, bool red, bool green, bo
 void IS31FL3741_update_pwm_buffers(uint8_t addr, uint8_t index) {
     if (g_pwm_buffer_update_required[index]) {
         IS31FL3741_write_pwm_buffer(addr, g_pwm_buffer[index]);
+    }
+
+    g_pwm_buffer_update_required[index] = false;
+}
+
+void IS31FL3741_update_pwm_buffers_range(uint8_t addr, uint8_t index, uint16_t start, uint16_t end) {
+    if (g_pwm_buffer_update_required[index]) {
+        IS31FL3741_write_pwm_buffer_range(addr, g_pwm_buffer[index], start, end);
     }
 
     g_pwm_buffer_update_required[index] = false;

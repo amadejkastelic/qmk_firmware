@@ -119,9 +119,8 @@ bool IS31FL3733_write_pwm_buffer(uint8_t addr, uint8_t *pwm_buffer) {
         // Copy the data from i to i+15.
         // Device will auto-increment register for data after the first byte
         // Thus this sets registers 0x00-0x0F, 0x10-0x1F, etc. in one transfer.
-        for (int j = 0; j < 16; j++) {
-            g_twi_transfer_buffer[1 + j] = pwm_buffer[i + j];
-        }
+        g_twi_transfer_buffer[0] = i;
+        memcpy(g_twi_transfer_buffer + 1, pwm_buffer + i, 16);
 
 #if ISSI_PERSISTENCE > 0
         for (uint8_t i = 0; i < ISSI_PERSISTENCE; i++) {
@@ -135,6 +134,31 @@ bool IS31FL3733_write_pwm_buffer(uint8_t addr, uint8_t *pwm_buffer) {
         }
 #endif
     }
+    return true;
+}
+
+bool IS31FL3733_write_pwm_buffer_range(uint8_t addr, uint8_t *pwm_buffer, uint16_t start, uint16_t end) {
+#define BYTES_LENGTH 18
+    // unlock the command register and select PG2
+    IS31FL3733_write_register(addr, ISSI_COMMANDREGISTER_WRITELOCK, 0xC5);
+    IS31FL3733_write_register(addr, ISSI_COMMANDREGISTER, ISSI_PAGE_PWM);
+
+    for (int i = start; i <= end; i += BYTES_LENGTH) {
+        g_twi_transfer_buffer[0] = i;
+        memcpy(g_twi_transfer_buffer + 1, pwm_buffer + i, BYTES_LENGTH);
+#if ISSI_PERSISTENCE > 0
+        for (uint8_t i = 0; i < ISSI_PERSISTENCE; i++) {
+            if (i2c_transmit(addr << 1, g_twi_transfer_buffer, BYTES_LENGTH + 1, ISSI_TIMEOUT) != 0) {
+                return false;
+            }
+        }
+#else
+        if (i2c_transmit(addr << 1, g_twi_transfer_buffer, BYTES_LENGTH + 1, ISSI_TIMEOUT) != 0) {
+            return false;
+        }
+#endif
+    }
+
     return true;
 }
 
@@ -244,6 +268,14 @@ void IS31FL3733_update_pwm_buffers(uint8_t addr, uint8_t index) {
             g_led_control_registers_update_required[index] = true;
         }
     }
+    g_pwm_buffer_update_required[index] = false;
+}
+
+void IS31FL3733_update_pwm_buffers_range(uint8_t addr, uint8_t index, uint16_t start, uint16_t end) {
+    if (g_pwm_buffer_update_required[index]) {
+        IS31FL3733_write_pwm_buffer_range(addr, g_pwm_buffer[index], start, end);
+    }
+
     g_pwm_buffer_update_required[index] = false;
 }
 
