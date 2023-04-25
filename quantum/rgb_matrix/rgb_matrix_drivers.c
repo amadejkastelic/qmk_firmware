@@ -23,6 +23,16 @@
  * be here if shared between boards.
  */
 
+#if defined(RGB_MATRIX_PARTIAL_FLUSH)
+static bool check_16_in_range(uint8_t start, uint8_t end) {
+    if (start == 0) start = 1;
+    if (start % 16 == 0 || end % 16 == 0 || (start >> 4) != (end >> 4)) {
+        return true;
+    }
+    return false;
+}
+#endif
+
 #if defined(IS31FL3731) || defined(IS31FL3733) || defined(IS31FL3737) || defined(IS31FL3741) || defined(IS31FLCOMMON) || defined(CKLED2001)
 #    include "i2c_master.h"
 
@@ -201,7 +211,7 @@ static void init(void) {
 }
 
 #    if defined(IS31FL3731)
-static void flush(void) {
+static void flush_all(void) {
     IS31FL3731_update_pwm_buffers(DRIVER_ADDR_1, 0);
 #        if defined(DRIVER_ADDR_2)
     IS31FL3731_update_pwm_buffers(DRIVER_ADDR_2, 1);
@@ -215,14 +225,17 @@ static void flush(void) {
 }
 
 const rgb_matrix_driver_t rgb_matrix_driver = {
-    .init          = init,
-    .flush         = flush,
+    .init = init,
+#        if defined(RGB_MATRIX_PARTIAL_FLUSH)
+    .flush = flush,
+#        endif
+    .flush_all     = flush_all,
     .set_color     = IS31FL3731_set_color,
     .set_color_all = IS31FL3731_set_color_all,
 };
 
 #    elif defined(IS31FL3733)
-static void flush(void) {
+static void flush_all(void) {
     IS31FL3733_update_pwm_buffers(DRIVER_ADDR_1, 0);
 #        if defined(DRIVER_ADDR_2)
     IS31FL3733_update_pwm_buffers(DRIVER_ADDR_2, 1);
@@ -235,15 +248,80 @@ static void flush(void) {
 #        endif
 }
 
+#        if defined(RGB_MATRIX_PARTIAL_FLUSH)
+static void split_update_IS31FL3733_LEDs(uint8_t driver, uint8_t index, uint8_t led_min, uint8_t led_max) {
+    // since the RGB LEDs should be efficiently batch updated by colour
+    if (check_16_in_range(led_min, led_max)) {
+        // cross's the 16 byte boundary
+        uint8_t middle_end = led_max - (led_max % 16);
+        IS31FL3733_update_pwm_buffers_range(driver, index, g_is31_leds[led_min].r, g_is31_leds[middle_end - 1].r);
+        IS31FL3733_update_pwm_buffers_range(driver, index, g_is31_leds[led_min].g, g_is31_leds[middle_end - 1].g);
+        IS31FL3733_update_pwm_buffers_range(driver, index, g_is31_leds[led_min].b, g_is31_leds[middle_end - 1].b);
+
+        IS31FL3733_update_pwm_buffers_range(driver, index, g_is31_leds[middle_end].r, g_is31_leds[led_max].r);
+        IS31FL3733_update_pwm_buffers_range(driver, index, g_is31_leds[middle_end].g, g_is31_leds[led_max].g);
+        IS31FL3733_update_pwm_buffers_range(driver, index, g_is31_leds[middle_end].b, g_is31_leds[led_max].b);
+    } else {
+        IS31FL3733_update_pwm_buffers_range(driver, index, g_is31_leds[led_min].r, g_is31_leds[led_max].r);
+        IS31FL3733_update_pwm_buffers_range(driver, index, g_is31_leds[led_min].g, g_is31_leds[led_max].g);
+        IS31FL3733_update_pwm_buffers_range(driver, index, g_is31_leds[led_min].b, g_is31_leds[led_max].b);
+    }
+}
+
+static void flush(uint8_t start, uint8_t end) {
+    uint16_t led_min = 0;
+    uint16_t led_max = 0;
+    bool finish = false;
+
+    // start is within driver 1
+    if (start < DRIVER_1_LED_TOTAL) {
+        led_min = start;
+        if (DRIVER_1_LED_TOTAL < end) {
+            // ends outside of driver 1
+            led_max = DRIVER_1_LED_TOTAL - 1;
+            // update new start to the start of the next driver
+            start = DRIVER_1_LED_TOTAL;
+        } else {
+            led_max = end;
+            finish = true;
+        }
+
+        // since the RGB LEDs should be efficiently batch updated by colour
+        split_update_IS31FL3733_LEDs(DRIVER_ADDR_1, 0, led_min, led_max);
+        if (finish) return;
+    }
+#            if defined(DRIVER_2_LED_TOTAL)
+    // start is within driver 2
+    if (start < DRIVER_1_LED_TOTAL + DRIVER_2_LED_TOTAL) {
+        led_min = start;
+        if (DRIVER_1_LED_TOTAL + DRIVER_2_LED_TOTAL < end) {
+            // end is outside of driver 2
+            led_max = DRIVER_1_LED_TOTAL + DRIVER_2_LED_TOTAL - 1;
+            start = DRIVER_1_LED_TOTAL + DRIVER_2_LED_TOTAL;
+        } else {
+            led_max = end;
+            finish = true;
+        }
+        // since the RGB LEDs should be efficiently batch updated by colour
+        split_update_IS31FL3733_LEDs(DRIVER_ADDR_2, 1, led_min, led_max);
+        if (finish) return;
+    }
+#            endif
+}
+#        endif
+
 const rgb_matrix_driver_t rgb_matrix_driver = {
     .init = init,
+#        if defined(RGB_MATRIX_PARTIAL_FLUSH)
     .flush = flush,
+#        endif
+    .flush_all = flush_all,
     .set_color = IS31FL3733_set_color,
     .set_color_all = IS31FL3733_set_color_all,
 };
 
 #    elif defined(IS31FL3737)
-static void flush(void) {
+static void flush_all(void) {
     IS31FL3737_update_pwm_buffers(DRIVER_ADDR_1, 0);
 #        if defined(DRIVER_ADDR_2)
     IS31FL3737_update_pwm_buffers(DRIVER_ADDR_2, 1);
@@ -258,28 +336,74 @@ static void flush(void) {
 
 const rgb_matrix_driver_t rgb_matrix_driver = {
     .init = init,
+#        if defined(RGB_MATRIX_PARTIAL_FLUSH)
     .flush = flush,
+#        endif
+    .flush_all = flush_all,
     .set_color = IS31FL3737_set_color,
     .set_color_all = IS31FL3737_set_color_all,
 };
 
 #    elif defined(IS31FL3741)
-static void flush(void) {
+static void flush_all(void) {
     IS31FL3741_update_pwm_buffers(DRIVER_ADDR_1, 0);
 #        if defined(DRIVER_ADDR_2)
     IS31FL3741_update_pwm_buffers(DRIVER_ADDR_2, 1);
 #        endif
 }
 
+#        if defined(RGB_MATRIX_PARTIAL_FLUSH)
+static void flush(uint8_t start, uint8_t end) {
+    uint16_t led_min = 0;
+    uint16_t led_max = 0;
+    bool finish = false;
+
+    // start is within driver 1
+    if (start < DRIVER_1_LED_TOTAL) {
+        led_min = g_is31_leds[start].b;
+        if (DRIVER_1_LED_TOTAL < end) {
+            // ends outside of driver 1
+            led_max = g_is31_leds[DRIVER_1_LED_TOTAL - 1].r;
+            // update new start to the start of the next driver
+            start = DRIVER_1_LED_TOTAL;
+        } else {
+            led_max = g_is31_leds[end].r;
+            finish = true;
+        }
+        IS31FL3741_update_pwm_buffers_range(DRIVER_ADDR_1, 0, led_min, led_max);
+        if (finish) return;
+    }
+#            if defined(DRIVER_2_LED_TOTAL)
+    // start is within driver 2
+    if (start < DRIVER_1_LED_TOTAL + DRIVER_2_LED_TOTAL) {
+        led_min = g_is31_leds[start].b;
+        if (DRIVER_1_LED_TOTAL + DRIVER_2_LED_TOTAL < end) {
+            // end is outside of driver 2
+            led_max = g_is31_leds[DRIVER_1_LED_TOTAL + DRIVER_2_LED_TOTAL - 1].r;
+            start = DRIVER_1_LED_TOTAL + DRIVER_2_LED_TOTAL;
+        } else {
+            led_max = g_is31_leds[end].b;
+            finish = true;
+        }
+        IS31FL3741_update_pwm_buffers_range(DRIVER_ADDR_2, 1, led_min, led_max);
+        if (finish) return;
+    }
+#            endif
+}
+#        endif
+
 const rgb_matrix_driver_t rgb_matrix_driver = {
     .init = init,
+#        if defined(RGB_MATRIX_PARTIAL_FLUSH)
     .flush = flush,
+#        endif
+    .flush_all = flush_all,
     .set_color = IS31FL3741_set_color,
     .set_color_all = IS31FL3741_set_color_all,
 };
 
 #    elif defined(IS31FLCOMMON)
-static void flush(void) {
+static void flush_all(void) {
     IS31FL_common_update_pwm_register(DRIVER_ADDR_1, 0);
 #        if defined(DRIVER_ADDR_2)
     IS31FL_common_update_pwm_register(DRIVER_ADDR_2, 1);
@@ -294,13 +418,16 @@ static void flush(void) {
 
 const rgb_matrix_driver_t rgb_matrix_driver = {
     .init = init,
+#        if defined(RGB_MATRIX_PARTIAL_FLUSH)
     .flush = flush,
+#        endif
+    .flush_all = flush_all,
     .set_color = IS31FL_RGB_set_color,
     .set_color_all = IS31FL_RGB_set_color_all,
 };
 
 #    elif defined(CKLED2001)
-static void flush(void) {
+static void flush_all(void) {
     CKLED2001_update_pwm_buffers(DRIVER_ADDR_1, 0);
 #        if defined(DRIVER_ADDR_2)
     CKLED2001_update_pwm_buffers(DRIVER_ADDR_2, 1);
@@ -315,7 +442,7 @@ static void flush(void) {
 
 const rgb_matrix_driver_t rgb_matrix_driver = {
     .init = init,
-    .flush = flush,
+    .flush_all = flush_all,
     .set_color = CKLED2001_set_color,
     .set_color_all = CKLED2001_set_color_all,
 };
@@ -333,7 +460,7 @@ static void init(void) {
 #    endif
 }
 
-static void flush(void) {
+static void flush_all(void) {
     AW20216_update_pwm_buffers(DRIVER_1_CS, 0);
 #    if defined(DRIVER_2_CS)
     AW20216_update_pwm_buffers(DRIVER_2_CS, 1);
@@ -342,7 +469,7 @@ static void flush(void) {
 
 const rgb_matrix_driver_t rgb_matrix_driver = {
     .init          = init,
-    .flush         = flush,
+    .flush_all     = flush_all,
     .set_color     = AW20216_set_color,
     .set_color_all = AW20216_set_color_all,
 };
@@ -353,12 +480,16 @@ const rgb_matrix_driver_t rgb_matrix_driver = {
 #        pragma message "You need to use a custom driver, or re-implement the WS2812 driver to use a different configuration."
 #    endif
 
+#    if defined(RGB_MATRIX_PARTIAL_FLUSH)
+#        pragma message "Partial Flushing with WS2812 is unsupported."
+#    endif
+
 // LED color buffer
 LED_TYPE rgb_matrix_ws2812_array[RGB_MATRIX_LED_COUNT];
 
 static void init(void) {}
 
-static void flush(void) {
+static void flush_all(void) {
     // Assumes use of RGB_DI_PIN
     ws2812_setleds(rgb_matrix_ws2812_array, RGB_MATRIX_LED_COUNT);
 }

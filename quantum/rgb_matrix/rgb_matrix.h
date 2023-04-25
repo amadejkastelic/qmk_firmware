@@ -50,6 +50,10 @@
 #    define RGB_MATRIX_LED_PROCESS_LIMIT (RGB_MATRIX_LED_COUNT + 4) / 5
 #endif
 
+#ifdef RGB_MATRIX_PARTIAL_FLUSH
+#    define RGB_MATRIX_LED_PROCESS_FRAME_PARTS ((RGB_MATRIX_LED_COUNT + (RGB_MATRIX_LED_PROCESS_LIMIT)-1) / (RGB_MATRIX_LED_PROCESS_LIMIT))
+#endif
+
 #if defined(RGB_MATRIX_LED_PROCESS_LIMIT) && RGB_MATRIX_LED_PROCESS_LIMIT > 0 && RGB_MATRIX_LED_PROCESS_LIMIT < RGB_MATRIX_LED_COUNT
 #    if defined(RGB_MATRIX_SPLIT)
 #        define RGB_MATRIX_USE_LIMITS(min, max)                                                   \
@@ -237,7 +241,11 @@ typedef struct {
     /* Set the colour of all LEDS on the keyboard in the buffer. */
     void (*set_color_all)(uint8_t r, uint8_t g, uint8_t b);
     /* Flush any buffered changes to the hardware. */
-    void (*flush)(void);
+    void (*flush_all)(void);
+#ifdef RGB_MATRIX_PARTIAL_FLUSH
+    /* Flush any buffered changes to the hardware. */
+    void (*flush)(uint8_t start, uint8_t end);
+#endif
 } rgb_matrix_driver_t;
 
 static inline bool rgb_matrix_check_finished_leds(uint8_t led_idx) {
