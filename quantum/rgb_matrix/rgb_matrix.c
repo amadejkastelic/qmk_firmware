@@ -188,7 +188,11 @@ uint8_t rgb_matrix_map_row_column_to_led(uint8_t row, uint8_t column, uint8_t *l
 }
 
 void rgb_matrix_update_pwm_buffers(void) {
-    rgb_matrix_driver.flush();
+    rgb_matrix_driver.flush_all();
+}
+
+void rgb_matrix_update_pwm_buffers_range(uint8_t start, uint8_t end) {
+    rgb_matrix_driver.flush(start, end);
 }
 
 void rgb_matrix_set_color(int index, uint8_t red, uint8_t green, uint8_t blue) {
@@ -384,6 +388,15 @@ static void rgb_task_render(uint8_t effect) {
             return;
     }
 
+#ifdef RGB_MATRIX_PARTIAL_FLUSH
+    // always go to flushing
+    rgb_task_state = FLUSHING;
+
+    if (!rgb_effect_params.init && effect == RGB_MATRIX_NONE && rendering) {
+        // We only need to flush once if we are RGB_MATRIX_NONE
+        rgb_task_state = SYNCING;
+    }
+#else
     rgb_effect_params.iter++;
 
     // next task
@@ -394,6 +407,8 @@ static void rgb_task_render(uint8_t effect) {
             rgb_task_state = SYNCING;
         }
     }
+#endif
+
 }
 
 static void rgb_task_flush(uint8_t effect) {
@@ -401,11 +416,32 @@ static void rgb_task_flush(uint8_t effect) {
     rgb_last_effect = effect;
     rgb_last_enable = rgb_matrix_config.enable;
 
+#ifdef RGB_MATRIX_PARTIAL_FLUSH
     // update pwm buffers
+    if (effect == RGB_MATRIX_NONE) {
+        rgb_matrix_update_pwm_buffers();
+        return;
+    }
+
+    rgb_effect_params.iter++;
+
+    uint8_t led_min = RGB_MATRIX_LED_PROCESS_LIMIT * (rgb_effect_params.iter - 1);
+    uint8_t led_max = led_min + RGB_MATRIX_LED_PROCESS_LIMIT;
+    if (led_max > RGB_MATRIX_LED_COUNT) led_max = RGB_MATRIX_LED_COUNT;
+    rgb_matrix_update_pwm_buffers_range(led_min, led_max - 1);
+
+    // default back to rendering
+    rgb_task_state = RENDERING;
+
+    if (rgb_effect_params.iter >= RGB_MATRIX_LED_PROCESS_FRAME_PARTS) {
+        rgb_task_state = SYNCING;
+    }
+#else
     rgb_matrix_update_pwm_buffers();
 
     // next task
     rgb_task_state = SYNCING;
+#endif
 }
 
 void rgb_matrix_task(void) {
