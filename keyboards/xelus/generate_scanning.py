@@ -55,6 +55,13 @@ def removeDigits(s):
             answer.append(char)
     return ''.join(answer)
 
+def removeChars(s):
+    answer = []
+    for char in s:
+        if char.isdigit():
+            answer.append(char)
+    return ''.join(answer)
+
 # data required
 pins_string = ""
 DIODE_DIRECTION = ""
@@ -66,6 +73,29 @@ json_found = os.path.isfile("./info.json")
 if json_found:
     with open("info.json", "r") as fp:
         json_data = json.load(fp)
+
+# check MCU type
+# stm32, avr or RPI
+# requires info.json
+mcu_type = json_data["processor"].lower()
+if mcu_type == "":
+    print("requires info.json to extract mcu type")
+    exit(0)
+
+if "stm32" in mcu_type:
+    mcu_type = "stm32"
+
+if "atmega32u4" in mcu_type:
+    mcu_type = "avr"
+
+if "rp2040" in mcu_type:
+    mcu_type = "rp2040"
+
+if mcu_type == "":
+    print("unsupported MCU")
+    exit(0)
+
+print("mcu type:", mcu_type)
 
 # find diode direction
 if json_found and "diode_direction" in json_data.keys():
@@ -123,7 +153,7 @@ list_pins = pins_string.split(",")
 for x in range(0,len(list_pins)):
     list_pins[x] = list_pins[x].replace('"',"").strip()
 # debug
-print(list_pins)
+# print(list_pins)
 
 # port pins
 list_ports = []
@@ -136,8 +166,8 @@ list_ports.sort()
 # port bitfield
 port_bitfield = []
 # loop through each port letter
-for x in list_ports:
-    print(x)
+for letter in list_ports:
+    # print(letter)
 
     num_bits = 0
 
@@ -147,35 +177,13 @@ for x in list_ports:
         num_bits = 8
 
     # loop through the entire list
-    bitfield = ["0"] * 8
-    for y in list_pins:
-        print(y)
-        if y[0] == x:
-            bitfield[int(y[1:])] = "1"
+    bitfield = ["0"] * num_bits
+    for pin in list_pins:
+        if removeDigits(pin) == letter:
+            bitfield[int(removeChars(pin))] = "1"
 
     print(bitfield)
     port_bitfield.append(bitfield[::-1])
-
-# check MCU type
-# stm32, avr or RPI
-# requires info.json
-mcu_type = json_data["processor"]
-if mcu_type == "":
-    print("requires info.json to extract mcu type")
-    exit(0)
-
-if "stm32" in mcu_type:
-    mcu_type = "stm32"
-
-if "atmega32u4" in mcu_type:
-    mcu_type = "avr"
-
-if "rp2040" in mcu_type:
-    mcu_type = "rp2040"
-
-if mcu_type == "":
-    print("unsupported MCU")
-    exit(0)
 
 # write to the matrix_scanning file
 with open("matrix_scanning.c", "w") as fp:
@@ -188,10 +196,14 @@ with open("matrix_scanning.c", "w") as fp:
 
     for x in list_ports:
         string = ""
+        GPIO_string = ""
         if mcu_type == "stm32":
-            string = "    uint16_t port" + x.lower() + " = palReadPort(GPIO" + x.upper() + ");\n"
+            GPIO_string = "GPIO" + x.upper()
+            string = "    pin_t port" + x.lower() + " = palReadPort(" + GPIO_string + ");\n"
         elif mcu_type == "avr":
-            string = ""
+            GPIO_string = "PIN" + x.upper() + "_ADDRESS"
+            string = "    pin_t port" + x.lower() + " = PINx_ADDRESS(" + GPIO_string + ");\n"
+
         fp.write(string)
 
 
@@ -223,10 +235,7 @@ with open("matrix_scanning.c", "w") as fp:
         else:
             string += "  "
 
-        if mcu_type == "stm32":
-            string += "((port" + pin_port.lower() + " & (0x1 << "
-        elif mcu_type == "avr":
-            string += "((PORT" + pin_port.upper() + " & (0x1 << "
+        string += "((port" + pin_port.lower() + " & (0x1 << "
 
         if int(pin_number) <= 9:
             string += " " + pin_number
@@ -263,7 +272,7 @@ with open("matrix_scanning.c", "w") as fp:
         if mcu_type == "stm32":
             string += "(palReadGroup(GPIO" + list_ports[x] + ", 0b" + "".join(port_bitfield[x]) + ", 0) != 0b" + "".join(port_bitfield[x]) + ")"
         elif mcu_type == "avr":
-            string += "(PORT" + list_ports[x] + " & 0b" + "".join(port_bitfield[x]) + " != 0b" + "".join(port_bitfield[x]) + ")"
+            string += "((PINx_ADDRESS(PIN" + list_ports[x] + "_ADDRESS) & 0b" + "".join(port_bitfield[x]) + ") != 0b" + "".join(port_bitfield[x]) + ")"
 
         if x != len(list_ports) - 1:
             string += " ||"
