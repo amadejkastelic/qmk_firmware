@@ -199,10 +199,10 @@ with open("matrix_scanning.c", "w") as fp:
         GPIO_string = ""
         if mcu_type == "stm32":
             GPIO_string = "GPIO" + x.upper()
-            string = "    pin_t port" + x.lower() + " = palReadPort(" + GPIO_string + ");\n"
+            string = "    uint16_t port" + x.lower() + " = palReadPort(" + GPIO_string + ");\n"
         elif mcu_type == "avr":
             GPIO_string = "PIN" + x.upper() + "_ADDRESS"
-            string = "    pin_t port" + x.lower() + " = PINx_ADDRESS(" + GPIO_string + ");\n"
+            string = "    uint8_t port" + x.lower() + " = PINx_ADDRESS(" + GPIO_string + ");\n"
 
         fp.write(string)
 
