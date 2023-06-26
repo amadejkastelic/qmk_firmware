@@ -202,7 +202,7 @@ with open("matrix_scanning.c", "w") as fp:
             string = "    uint16_t port" + x.lower() + " = palReadPort(" + GPIO_string + ");\n"
         elif mcu_type == "avr":
             GPIO_string = "PIN" + x.upper() + "_ADDRESS"
-            string = "    uint8_t port" + x.lower() + " = PINx_ADDRESS(" + GPIO_string + ");\n"
+            string = "    uint8_t port" + x.lower() + " = PIN" + x.upper() + ";\n"
 
         fp.write(string)
 
@@ -235,7 +235,7 @@ with open("matrix_scanning.c", "w") as fp:
         else:
             string += "  "
 
-        string += "((port" + pin_port.lower() + " & (0x1 << "
+        string += "(matrix_row_t)((port" + pin_port.lower() + " & (0x1 << "
 
         if int(pin_number) <= 9:
             string += " " + pin_number
@@ -272,7 +272,7 @@ with open("matrix_scanning.c", "w") as fp:
         if mcu_type == "stm32":
             string += "(palReadGroup(GPIO" + list_ports[x] + ", 0b" + "".join(port_bitfield[x]) + ", 0) != 0b" + "".join(port_bitfield[x]) + ")"
         elif mcu_type == "avr":
-            string += "((PINx_ADDRESS(PIN" + list_ports[x] + "_ADDRESS) & 0b" + "".join(port_bitfield[x]) + ") != 0b" + "".join(port_bitfield[x]) + ")"
+            string += "((PIN" + list_ports[x].upper() + " & 0b" + "".join(port_bitfield[x]) + ") != 0b" + "".join(port_bitfield[x]) + ")"
 
         if x != len(list_ports) - 1:
             string += " ||"
