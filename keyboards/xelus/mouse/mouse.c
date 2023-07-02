@@ -17,10 +17,12 @@
 #include "mouse.h"
 
 void board_init(void) {
-    // turn on ULPI
-    setPinOutput(C8);
-    writePinHigh(C8);
     // set high Z usb FS pins
     setPinInput(A11);
     setPinInput(A12);
+}
+void keyboard_pre_init_kb(void){
+    // turn on ULPI
+    setPinOutput(C8);
+    writePinHigh(C8);
 }

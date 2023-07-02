@@ -18,23 +18,26 @@
 
 #include_next <mcuconf.h>
 
-#undef STM32_PLLM_VALUE
-#undef STM32_PLLN_VALUE
-#undef STM32_PLLP_VALUE
-#undef STM32_PLLQ_VALUE
-#undef STM32_PPRE1
-#undef STM32_PPRE2
+// #undef STM32_PLLM_VALUE
+// #undef STM32_PLLN_VALUE
+// #undef STM32_PLLP_VALUE
+// #undef STM32_PLLQ_VALUE
+// #undef STM32_PPRE1
+// #undef STM32_PPRE2
 
 // 64MHz core
-#define STM32_PLLM_VALUE    16
-#define STM32_PLLN_VALUE    336
-#define STM32_PLLP_VALUE    2
-#define STM32_PLLQ_VALUE    7
-#define STM32_PPRE1         STM32_PPRE1_DIV4
-#define STM32_PPRE2         STM32_PPRE2_DIV2
+// #define STM32_PLLM_VALUE    16
+// #define STM32_PLLN_VALUE    336
+// #define STM32_PLLP_VALUE    2
+// #define STM32_PLLQ_VALUE    7
+// #define STM32_PPRE1         STM32_PPRE1_DIV4
+// #define STM32_PPRE2         STM32_PPRE2_DIV2
 
 // #undef STM32_I2C_USE_I2C1
 // #define STM32_I2C_USE_I2C1 TRUE
+
+#undef STM32_HSI_ENABLED
+#define STM32_HSI_ENABLED                   TRUE
 
 #undef STM32_USB_USE_OTG2
 #define STM32_USB_USE_OTG2                  TRUE

@@ -313,7 +313,7 @@
                                      PIN_PUPDR_FLOATING(GPIOB_USB_OTG_HS_D4) |         \
                                      PIN_PUPDR_FLOATING(GPIOB_SWO) |        \
                                      PIN_PUPDR_PULLUP(GPIOB_PIN4) |         \
-                                     PIN_PUPDR_PULLUP(GPIOB_USB_OTG_HS_D7) |         \
+                                     PIN_PUPDR_FLOATING(GPIOB_USB_OTG_HS_D7) |         \
                                      PIN_PUPDR_FLOATING(GPIOB_SCL) |        \
                                      PIN_PUPDR_PULLUP(GPIOB_PIN7) |         \
                                      PIN_PUPDR_PULLUP(GPIOB_PIN8) |         \
