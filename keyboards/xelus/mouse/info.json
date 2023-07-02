@@ -1,0 +1,30 @@
+{
+    "keyboard_name": "MOUSE",
+    "manufacturer": "Xelus",
+    "url": "",
+    "maintainer": "Xelus",
+    "usb": {
+        "vid": "0x5845",
+        "pid": "0x4D6F",
+        "device_version": "0.0.1"
+    },
+    "processor": "STM32F446",
+    "board": "GENERIC_STM32_F446XE",
+    "bootloader": "stm32-dfu",
+    "matrix_pins": {
+        "direct": [
+            ["B14", "A3", "A2", "A14", "A15"]
+        ]
+    },
+    "layouts": {
+        "LAYOUT": {
+            "layout": [
+                {"matrix":[0,0], "x":0, "y":0},
+                {"matrix":[0,1], "x":1, "y":0},
+                {"matrix":[0,2], "x":2, "y":0},
+                {"matrix":[0,3], "x":3, "y":0},
+                {"matrix":[0,4], "x":4, "y":0}
+            ]
+        }
+    }
+}
