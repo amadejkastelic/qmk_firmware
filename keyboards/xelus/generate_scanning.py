@@ -238,9 +238,8 @@ with open("matrix_scanning.c", "w") as fp:
         string += "(matrix_row_t)((port" + pin_port.lower() + " & (0x1 << "
 
         if int(pin_number) <= 9:
-            string += " " + pin_number
-        else:
-            string += pin_number
+            string += " "
+        string += pin_number
         string += ")) "
         if shift_amount >= 0:
             string += ">> "
@@ -248,9 +247,8 @@ with open("matrix_scanning.c", "w") as fp:
             string += "<< "
 
         if shift_amount <= 9:
-            string += " " + str(abs(shift_amount))
-        else:
-            string += str(abs(shift_amount))
+            string += " "
+        string += str(abs(shift_amount))
         string += ") // " + list_pins[x] + "\n"
 
         if x == len(list_pins) - 1:
