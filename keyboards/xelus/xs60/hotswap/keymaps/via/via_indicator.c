@@ -257,7 +257,6 @@ void _get_color(HSV *color, uint8_t *data) {
 // Set the indicators with RGB Matrix subsystem
 bool rgb_matrix_indicators_user() {
     int8_t highest_priority = INT8_MAX;
-    bool bLedSet = false;
     // 0 has the highest priority
     // 5 has the lowest
 
@@ -290,29 +289,29 @@ bool rgb_matrix_indicators_user() {
                                         .s = g_config.caps_lock_indicator.s,
                                         .v = g_config.caps_lock_indicator.v});
         rgb_matrix_set_color(0, rgb_caps.r, rgb_caps.g, rgb_caps.b);
-        bLedSet = true;
+        return true;
     }
 
     // num lock cyan
-    if (host_keyboard_led_state().num_lock && highest_priority == g_config.num_lock_key && !bLedSet) {
+    if (host_keyboard_led_state().num_lock && highest_priority == g_config.num_lock_key) {
         RGB rgb_num = hsv_to_rgb((HSV){.h = g_config.num_lock_indicator.h,
                                        .s = g_config.num_lock_indicator.s,
                                        .v = g_config.num_lock_indicator.v});
         rgb_matrix_set_color(0, rgb_num.r, rgb_num.g, rgb_num.b);
-        bLedSet = true;
+        return true;
     }
 
     // scroll lock cyan
-    if (host_keyboard_led_state().scroll_lock && highest_priority == g_config.scroll_lock_key && !bLedSet) {
+    if (host_keyboard_led_state().scroll_lock && highest_priority == g_config.scroll_lock_key) {
         RGB rgb_scroll = hsv_to_rgb((HSV){.h = g_config.scroll_lock_indicator.h,
                                           .s = g_config.scroll_lock_indicator.s,
                                           .v = g_config.scroll_lock_indicator.v});
         rgb_matrix_set_color(0, rgb_scroll.r, rgb_scroll.g, rgb_scroll.b);
-        bLedSet = true;
+        return true;
     }
 
     // layer state
-    if (highest_priority == g_config.enable_layer_indicator && !bLedSet) {
+    if (highest_priority == g_config.enable_layer_indicator) {
         RGB rgb_layer = hsv_to_rgb((HSV){.h = g_config.layer_indicator.h,
                                          .s = g_config.layer_indicator.s,
                                          .v = g_config.layer_indicator.v});
@@ -321,14 +320,14 @@ bool rgb_matrix_indicators_user() {
                 break;
             case 1:
                 rgb_matrix_set_color(0, rgb_layer.r, rgb_layer.g, rgb_layer.b);
-                bLedSet = true;
+                return true;
                 break;
             default:
                 // white
                 rgb_matrix_set_color(0, 128, 128, 128);
-                bLedSet = true;
+                return true;
                 break;
         }
     }
-    return true;
+    return false;
 }
