@@ -256,7 +256,7 @@ void _get_color(HSV *color, uint8_t *data) {
 
 // Set the indicators with RGB Matrix subsystem
 bool rgb_matrix_indicators_user() {
-    int8_t highest_priority = 5;
+    int8_t highest_priority = INT8_MAX;
     // 0 has the highest priority
     // 5 has the lowest
 
@@ -284,41 +284,50 @@ bool rgb_matrix_indicators_user() {
     }
 
     // caps lock cyan
-    if (highest_priority == g_config.caps_lock_key) {
+    if (host_keyboard_led_state().caps_lock && highest_priority == g_config.caps_lock_key) {
         RGB rgb_caps = hsv_to_rgb((HSV){.h = g_config.caps_lock_indicator.h,
                                         .s = g_config.caps_lock_indicator.s,
                                         .v = g_config.caps_lock_indicator.v});
         rgb_matrix_set_color(0, rgb_caps.r, rgb_caps.g, rgb_caps.b);
+        return true;
     }
 
     // num lock cyan
-    if (highest_priority == g_config.num_lock_key) {
+    if (host_keyboard_led_state().num_lock && highest_priority == g_config.num_lock_key) {
         RGB rgb_num = hsv_to_rgb((HSV){.h = g_config.num_lock_indicator.h,
                                        .s = g_config.num_lock_indicator.s,
                                        .v = g_config.num_lock_indicator.v});
         rgb_matrix_set_color(0, rgb_num.r, rgb_num.g, rgb_num.b);
+        return true;
     }
 
     // scroll lock cyan
-    if (highest_priority == g_config.scroll_lock_key) {
-        RGB rgb_scroll = hsv_to_rgb((HSV){.h = g_config.scroll_lock_indicator.h, .s = g_config.scroll_lock_indicator.s, .v = g_config.scroll_lock_indicator.v});
+    if (host_keyboard_led_state().scroll_lock && highest_priority == g_config.scroll_lock_key) {
+        RGB rgb_scroll = hsv_to_rgb((HSV){.h = g_config.scroll_lock_indicator.h,
+                                          .s = g_config.scroll_lock_indicator.s,
+                                          .v = g_config.scroll_lock_indicator.v});
         rgb_matrix_set_color(0, rgb_scroll.r, rgb_scroll.g, rgb_scroll.b);
+        return true;
     }
 
     // layer state
     if (highest_priority == g_config.enable_layer_indicator) {
-        RGB rgb_layer = hsv_to_rgb((HSV){.h = g_config.layer_indicator.h, .s = g_config.layer_indicator.s, .v = g_config.layer_indicator.v});
+        RGB rgb_layer = hsv_to_rgb((HSV){.h = g_config.layer_indicator.h,
+                                         .s = g_config.layer_indicator.s,
+                                         .v = g_config.layer_indicator.v});
         switch (get_highest_layer(layer_state)) {
             case 0:
                 break;
             case 1:
                 rgb_matrix_set_color(0, rgb_layer.r, rgb_layer.g, rgb_layer.b);
+                return true;
                 break;
             default:
                 // white
                 rgb_matrix_set_color(0, 128, 128, 128);
+                return true;
                 break;
         }
     }
-    return true;
+    return false;
 }
