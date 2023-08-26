@@ -46,10 +46,42 @@
 #    define VIA_EEPROM_LAYOUT_OPTIONS_DEFAULT 0x00000000
 #endif
 
+// EEPROM memory used by VIA indicators
+#define VIA_EEPROM_INDICATORS_CONFIG_ADDR (VIA_EEPROM_LAYOUT_OPTIONS_ADDR + VIA_EEPROM_LAYOUT_OPTIONS_SIZE)
+
+#ifdef VIA_INDICATORS_ENABLE
+#    include "color.h
+"
+typedef struct PACKED {
+    bool    enable_caps_lock : 1;               // |
+    bool    enable_num_lock : 1;                // |
+    bool    enable_scroll_lock : 1;             // |
+    bool    enable_layer_1_indicator : 1;       // |
+    bool    caps_lock_override_animation : 1;   // |
+    bool    num_lock_override_animation : 1;    // |
+    bool    scroll_lock_override_animation : 1; // |
+    bool    layer_1_override_animation : 1;     // 1 byte
+    HSV     caps_lock_indicator;                // 3 bytes
+    HSV     num_lock_indicator;                 // 3 bytes
+    HSV     scroll_lock_indicator;              // 3 bytes
+    HSV     layer_1_indicator;                  // 3 bytes
+    uint8_t caps_lock_key;                      // 1 byte
+    uint8_t num_lock_key;                       // 1 byte
+    uint8_t scroll_lock_key;                    // 1 byte
+    uint8_t layer_1_indicator_key;              // 1 byte
+} via_qmk_indicators_config_t;
+#    define VIA_EEPROM_INDICATORS_SIZE sizeof(via_qmk_indicators_config_t)
+_Static_assert(sizeof(via_qmk_indicators_config_t) == 17, "VIA INDICATORS EECONFIG out of spec.");
+
+// extern via_qmk_indicators_config_t via_qmk_indicators_config;
+#else
+#    define VIA_EEPROM_INDICATORS_SIZE 0
+#endif
+
 // The end of the EEPROM memory used by VIA
 // By default, dynamic keymaps will start at this if there is no
 // custom config
-#define VIA_EEPROM_CUSTOM_CONFIG_ADDR (VIA_EEPROM_LAYOUT_OPTIONS_ADDR + VIA_EEPROM_LAYOUT_OPTIONS_SIZE)
+#define VIA_EEPROM_CUSTOM_CONFIG_ADDR (VIA_EEPROM_INDICATORS_CONFIG_ADDR + VIA_EEPROM_INDICATORS_SIZE)
 
 #ifndef VIA_EEPROM_CUSTOM_CONFIG_SIZE
 #    define VIA_EEPROM_CUSTOM_CONFIG_SIZE 0
@@ -111,6 +143,9 @@ enum via_channel_id {
     id_qmk_rgb_matrix_channel = 3,
     id_qmk_audio_channel      = 4,
     id_qmk_led_matrix_channel = 5,
+#ifdef VIA_INDICATORS_ENABLE
+    id_qmk_indicators_channel = 6
+#endif
 };
 
 enum via_qmk_backlight_value {
@@ -142,6 +177,10 @@ enum via_qmk_audio_value {
     id_qmk_audio_enable        = 1,
     id_qmk_audio_clicky_enable = 2,
 };
+
+#ifdef VIA_INDICATORS_ENABLE
+enum via_qmk_indicator_value { id_qmk_caps_lock_enable = 1, id_qmk_caps_lock_brightness, id_qmk_caps_lock_color, id_qmk_caps_lock_key, id_qmk_caps_lock_override_animation, id_qmk_num_lock_enable, id_qmk_num_lock_brightness, id_qmk_num_lock_color, id_qmk_num_lock_key, id_qmk_num_lock_override_animation, id_qmk_scroll_lock_enable, id_qmk_scroll_lock_brightness, id_qmk_scroll_lock_color, id_qmk_scroll_lock_key, id_qmk_scroll_lock_override_animation, id_qmk_layer_1_indicator_enable, id_qmk_layer_1_indicator_brightness, id_qmk_layer_1_indicator_color, id_qmk_layer_1_indicator_key, id_qmk_layer_1_indicator_override_animation };
+#endif
 
 // Can be called in an overriding via_init_kb() to test if keyboard level code usage of
 // EEPROM is invalid and use/save defaults.
@@ -195,11 +234,80 @@ void via_qmk_led_matrix_command(uint8_t *data, uint8_t length);
 void via_qmk_led_matrix_set_value(uint8_t *data);
 void via_qmk_led_matrix_get_value(uint8_t *data);
 void via_qmk_led_matrix_save(void);
+values_save
 #endif
 
 #if defined(AUDIO_ENABLE)
-void via_qmk_audio_command(uint8_t *data, uint8_t length);
+    void
+     via_qmk_audio_command(uint8_t *data, uint8_t length);
 void via_qmk_audio_set_value(uint8_t *data);
 void via_qmk_audio_get_value(uint8_t *data);
 void via_qmk_audio_save(void);
+#endif
+
+#if defined(VIA_INDICATORS_ENABLE)
+
+// todo make max brightness RGB_MATRIX_MAXIMUM_BRIGHTNESS
+// need to move from rgb_matrix.c to rgb_matrix.h
+#    ifndef VIA_QMK_DEFAULT_CAPS_LOCK_HSV
+#        define VIA_QMK_DEFAULT_CAPS_LOCK_HSV \
+            { 0, 0, 255 }
+#    endif
+#    ifndef VIA_QMK_DEFAULT_NUM_LOCK_HSV
+#        define VIA_QMK_DEFAULT_NUM_LOCK_HSV \
+            { 60, 0, 255 }
+#    endif
+#    ifndef VIA_QMK_DEFAULT_SCROLL_LOCK_HSV
+#        define VIA_QMK_DEFAULT_SCROLL_LOCK_HSV \
+            { 120, 0, 255 }
+#    endif
+#    ifndef VIA_QMK_DEFAULT_LAYER_1_HSV
+#        define VIA_QMK_DEFAULT_LAYER_1_HSV \
+            { 180, 0, 255 }
+#    endif
+#    ifndef VIA_QMK_DEFAULT_CAPS_LOCK_ENABLE
+#        define VIA_QMK_DEFAULT_CAPS_LOCK_ENABLE false
+#    endif
+#    ifndef VIA_QMK_DEFAULT_NUM_LOCK_ENABLE
+#        define VIA_QMK_DEFAULT_NUM_LOCK_ENABLE false
+#    endif
+#    ifndef VIA_QMK_DEFAULT_SCROLL_LOCK_ENABLE
+#        define VIA_QMK_DEFAULT_SCROLL_LOCK_ENABLE false
+#    endif
+#    ifndef VIA_QMK_DEFAULT_LAYER_1_ENABLE
+#        define VIA_QMK_DEFAULT_LAYER_1_ENABLE false
+#    endif
+#    ifndef VIA_QMK_DEFAULT_CAPS_LOCK_KEY
+#        define VIA_QMK_DEFAULT_CAPS_LOCK_KEY 0
+#    endif
+#    ifndef VIA_QMK_DEFAULT_NUM_LOCK_KEY
+#        define VIA_QMK_DEFAULT_NUM_LOCK_KEY 0
+#    endif
+#    ifndef VIA_QMK_DEFAULT_SCROLL_LOCK_KEY
+#        define VIA_QMK_DEFAULT_SCROLL_LOCK_KEY 0
+#    endif
+#    ifndef VIA_QMK_DEFAULT_LAYER_1_KEY
+#        define VIA_QMK_DEFAULT_LAYER_1_KEY 0
+#    endif
+#    ifndef VIA_QMK_DEFAULT_CAPS_LOCK_OVERRIDE_ANIM
+#        define VIA_QMK_DEFAULT_CAPS_LOCK_OVERRIDE_ANIM false
+#    endif
+#    ifndef VIA_QMK_DEFAULT_NUM_LOCK_OVERRIDE_ANIM
+#        define VIA_QMK_DEFAULT_NUM_LOCK_OVERRIDE_ANIM false
+#    endif
+#    ifndef VIA_QMK_DEFAULT_SCROLL_LOCK_OVERRIDE_ANIM
+#        define VIA_QMK_DEFAULT_SCROLL_LOCK_OVERRIDE_ANIM false
+#    endif
+#    ifndef VIA_QMK_DEFAULT_LAYER_1_OVERRIDE_ANIM
+#        define VIA_QMK_DEFAULT_LAYER_1_OVERRIDE_ANIM false
+#    endif
+
+void via_qmk_indicators_command(uint8_t *data, uint8_t length);
+void via_qmk_indicators_set_value(uint8_t *data);
+void via_qmk_indicators_get_value(uint8_t *data);
+void via_qmk_indicators_save(void);
+void via_qmk_indicators_load(void);
+#    if defined(RGB_MATRIX_ENABLE)
+void via_qmk_rgb_matrix_indicators(void);
+#    endif
 #endif

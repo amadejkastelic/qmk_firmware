@@ -57,10 +57,36 @@
 #    include "led_matrix.h"
 #endif
 
+#if defined(VIA_INDICATORS_ENABLE)
+#    include "host.h"
+#    include "action_layer.h"
+
+// clang-format off
+via_qmk_indicators_config_t via_qmk_indicators_config = {
+    .caps_lock_indicator = VIA_QMK_DEFAULT_CAPS_LOCK_HSV,
+    .num_lock_indicator = VIA_QMK_DEFAULT_NUM_LOCK_HSV,
+    .scroll_lock_indicator = VIA_QMK_DEFAULT_SCROLL_LOCK_HSV,
+    .layer_1_indicator = VIA_QMK_DEFAULT_LAYER_1_HSV,
+    .caps_lock_key = VIA_QMK_DEFAULT_CAPS_LOCK_KEY,
+    .num_lock_key = VIA_QMK_DEFAULT_NUM_LOCK_KEY,
+    .scroll_lock_key = VIA_QMK_DEFAULT_SCROLL_LOCK_KEY,
+    .layer_1_indicator_key = VIA_QMK_DEFAULT_LAYER_1_KEY,
+    .enable_caps_lock = VIA_QMK_DEFAULT_CAPS_LOCK_ENABLE,
+    .enable_num_lock = VIA_QMK_DEFAULT_NUM_LOCK_ENABLE,
+    .enable_scroll_lock = VIA_QMK_DEFAULT_SCROLL_LOCK_ENABLE,
+    .enable_layer_1_indicator = VIA_QMK_DEFAULT_LAYER_1_ENABLE,
+    .caps_lock_override_animation = VIA_QMK_DEFAULT_CAPS_LOCK_OVERRIDE_ANIM,
+    .num_lock_override_animation = VIA_QMK_DEFAULT_NUM_LOCK_OVERRIDE_ANIM,
+    .scroll_lock_override_animation = VIA_QMK_DEFAULT_SCROLL_LOCK_OVERRIDE_ANIM,
+    .layer_1_override_animation = VIA_QMK_DEFAULT_LAYER_1_OVERRIDE_ANIM
+};
+#endif
+// clang-format on
+
 // Can be called in an overriding via_init_kb() to test if keyboard level code usage of
 // EEPROM is invalid and use/save defaults.
 bool via_eeprom_is_valid(void) {
-    char *  p      = QMK_BUILDDATE; // e.g. "2019-11-05-11:29:54"
+    char   *p      = QMK_BUILDDATE; // e.g. "2019-11-05-11:29:54"
     uint8_t magic0 = ((p[2] & 0x0F) << 4) | (p[3] & 0x0F);
     uint8_t magic1 = ((p[5] & 0x0F) << 4) | (p[6] & 0x0F);
     uint8_t magic2 = ((p[8] & 0x0F) << 4) | (p[9] & 0x0F);
@@ -71,7 +97,7 @@ bool via_eeprom_is_valid(void) {
 // Sets VIA/keyboard level usage of EEPROM to valid/invalid
 // Keyboard level code (eg. via_init_kb()) should not call this
 void via_eeprom_set_valid(bool valid) {
-    char *  p      = QMK_BUILDDATE; // e.g. "2019-11-05-11:29:54"
+    char   *p      = QMK_BUILDDATE; // e.g. "2019-11-05-11:29:54"
     uint8_t magic0 = ((p[2] & 0x0F) << 4) | (p[3] & 0x0F);
     uint8_t magic1 = ((p[5] & 0x0F) << 4) | (p[6] & 0x0F);
     uint8_t magic2 = ((p[8] & 0x0F) << 4) | (p[9] & 0x0F);
@@ -100,6 +126,11 @@ void via_init(void) {
     // OK to load from EEPROM.
     if (!via_eeprom_is_valid()) {
         eeconfig_init_via();
+    } else {
+// Load VIA indicators from EEPROM to RAM
+#ifdef VIA_INDICATORS_ENABLE
+        via_qmk_indicators_load();
+#endif
     }
 }
 
@@ -112,6 +143,10 @@ void eeconfig_init_via(void) {
     dynamic_keymap_reset();
     // This resets the macros in EEPROM to nothing.
     dynamic_keymap_macro_reset();
+#ifdef VIA_INDICATORS_ENABLE
+    // This resets the indicators in EEPROM to default
+    via_qmk_indicators_save();
+#endif
     // Save the magic number last, in case saving was interrupted
     via_eeprom_set_valid(true);
 }
@@ -257,6 +292,13 @@ __attribute__((weak)) void via_custom_value_command(uint8_t *data, uint8_t lengt
 #if defined(AUDIO_ENABLE)
     if (*channel_id == id_qmk_audio_channel) {
         via_qmk_audio_command(data, length);
+        return;
+    }
+#endif // AUDIO_ENABLE
+
+#if defined(VIA_INDICATORS_ENABLE)
+    if (*channel_id == id_qmk_indicators_channel) {
+        via_qmk_indicators_command(data, length);
         return;
     }
 #endif // AUDIO_ENABLE
@@ -873,5 +915,245 @@ void via_qmk_audio_set_value(uint8_t *data) {
 void via_qmk_audio_save(void) {
     eeconfig_update_audio(audio_config.raw);
 }
-
 #endif // QMK_AUDIO_ENABLE
+
+#if defined(VIA_INDICATORS_ENABLE)
+// Some helpers for setting/getting HSV
+void _set_color(HSV *color, uint8_t *data) {
+    color->h = data[0];
+    color->s = data[1];
+}
+
+void _get_color(HSV *color, uint8_t *data) {
+    data[0] = color->h;
+    data[1] = color->s;
+}
+
+void via_qmk_indicators_command(uint8_t *data, uint8_t length) {
+    uint8_t *command_id        = &(data[0]);
+    uint8_t *value_id_and_data = &(data[2]);
+
+    switch (*command_id) {
+        case id_custom_set_value: {
+            via_qmk_indicators_set_value(value_id_and_data);
+            break;
+        }
+        case id_custom_get_value: {
+            via_qmk_indicators_get_value(value_id_and_data);
+            break;
+        }
+        case id_custom_save: {
+            via_qmk_indicators_save();
+            break;
+        }
+        default: {
+            // Unhandled message.
+            *command_id = id_unhandled;
+            break;
+        }
+    }
+}
+
+void via_qmk_indicators_set_value(uint8_t *data) {
+    uint8_t *value_id   = &(data[0]);
+    uint8_t *value_data = &(data[1]);
+
+    switch (*value_id) {
+        case id_qmk_caps_lock_enable:
+            via_qmk_indicators_config.enable_caps_lock = *value_data;
+            break;
+        case id_qmk_num_lock_enable:
+            via_qmk_indicators_config.enable_num_lock = *value_data;
+            break;
+        case id_qmk_scroll_lock_enable:
+            via_qmk_indicators_config.enable_scroll_lock = *value_data;
+            break;
+        case id_qmk_layer_1_indicator_enable:
+            via_qmk_indicators_config.enable_layer_1_indicator = *value_data;
+            break;
+        case id_qmk_caps_lock_brightness:
+            via_qmk_indicators_config.caps_lock_indicator.v = *value_data;
+            break;
+        case id_qmk_num_lock_brightness:
+            via_qmk_indicators_config.num_lock_indicator.v = *value_data;
+            break;
+        case id_qmk_scroll_lock_brightness:
+            via_qmk_indicators_config.scroll_lock_indicator.v = *value_data;
+            break;
+        case id_qmk_layer_1_indicator_brightness:
+            via_qmk_indicators_config.layer_1_indicator.v = *value_data;
+            break;
+        case id_qmk_caps_lock_color:
+            _set_color(&(via_qmk_indicators_config.caps_lock_indicator), value_data);
+            break;
+        case id_qmk_num_lock_color:
+            _set_color(&(via_qmk_indicators_config.num_lock_indicator), value_data);
+            break;
+        case id_qmk_scroll_lock_color:
+            _set_color(&(via_qmk_indicators_config.scroll_lock_indicator), value_data);
+            break;
+        case id_qmk_layer_1_indicator_color:
+            _set_color(&(via_qmk_indicators_config.layer_1_indicator), value_data);
+            break;
+        case id_qmk_caps_lock_key:
+            via_qmk_indicators_config.caps_lock_key = *value_data;
+            break;
+        case id_qmk_num_lock_key:
+            via_qmk_indicators_config.num_lock_key = *value_data;
+            break;
+        case id_qmk_scroll_lock_key:
+            via_qmk_indicators_config.scroll_lock_key = *value_data;
+            break;
+        case id_qmk_layer_1_indicator_key:
+            via_qmk_indicators_config.layer_1_indicator_key = *value_data;
+            break;
+        case id_qmk_caps_lock_override_animation:
+            via_qmk_indicators_config.caps_lock_override_animation = *value_data;
+            break;
+        case id_qmk_num_lock_override_animation:
+            via_qmk_indicators_config.num_lock_override_animation = *value_data;
+            break;
+        case id_qmk_scroll_lock_override_animation:
+            via_qmk_indicators_config.scroll_lock_override_animation = *value_data;
+            break;
+        case id_qmk_layer_1_indicator_override_animation:
+            via_qmk_indicators_config.layer_1_override_animation = *value_data;
+            break;
+    }
+}
+
+void via_qmk_indicators_get_value(uint8_t *data) {
+    uint8_t *value_id   = &(data[0]);
+    uint8_t *value_data = &(data[1]);
+
+    switch (*value_id) {
+        case id_qmk_caps_lock_enable:
+            *value_data = via_qmk_indicators_config.enable_caps_lock;
+            break;
+        case id_qmk_num_lock_enable:
+            *value_data = via_qmk_indicators_config.enable_num_lock;
+            break;
+        case id_qmk_scroll_lock_enable:
+            *value_data = via_qmk_indicators_config.enable_scroll_lock;
+            break;
+        case id_qmk_layer_1_indicator_enable:
+            *value_data = via_qmk_indicators_config.enable_layer_1_indicator;
+            break;
+        case id_qmk_caps_lock_brightness:
+            *value_data = via_qmk_indicators_config.caps_lock_indicator.v;
+            break;
+        case id_qmk_num_lock_brightness:
+            *value_data = via_qmk_indicators_config.num_lock_indicator.v;
+            break;
+        case id_qmk_scroll_lock_brightness:
+            *value_data = via_qmk_indicators_config.scroll_lock_indicator.v;
+            break;
+        case id_qmk_layer_1_indicator_brightness:
+            *value_data = via_qmk_indicators_config.layer_1_indicator.v;
+            break;
+        case id_qmk_caps_lock_color:
+            _get_color(&(via_qmk_indicators_config.caps_lock_indicator), value_data);
+            break;
+        case id_qmk_num_lock_color:
+            _get_color(&(via_qmk_indicators_config.num_lock_indicator), value_data);
+            break;
+        case id_qmk_scroll_lock_color:
+            _get_color(&(via_qmk_indicators_config.scroll_lock_indicator), value_data);
+            break;
+        case id_qmk_layer_1_indicator_color:
+            _get_color(&(via_qmk_indicators_config.layer_1_indicator), value_data);
+            break;
+        case id_qmk_caps_lock_key:
+            *value_data = via_qmk_indicators_config.caps_lock_key;
+            break;
+        case id_qmk_num_lock_key:
+            *value_data = via_qmk_indicators_config.num_lock_key;
+            break;
+        case id_qmk_scroll_lock_key:
+            *value_data = via_qmk_indicators_config.scroll_lock_key;
+            break;
+        case id_qmk_layer_1_indicator_key:
+            *value_data = via_qmk_indicators_config.layer_1_indicator_key;
+            break;
+        case id_qmk_caps_lock_override_animation:
+            *value_data = via_qmk_indicators_config.caps_lock_override_animation;
+            break;
+        case id_qmk_num_lock_override_animation:
+            *value_data = via_qmk_indicators_config.num_lock_override_animation;
+            break;
+        case id_qmk_scroll_lock_override_animation:
+            *value_data = via_qmk_indicators_config.scroll_lock_override_animation;
+            break;
+        case id_qmk_layer_1_indicator_override_animation:
+            *value_data = via_qmk_indicators_config.layer_1_override_animation;
+            break;
+    }
+}
+
+void via_qmk_indicators_save(void) {
+    eeprom_update_block(&via_qmk_indicators_config, ((void *)VIA_EEPROM_INDICATORS_CONFIG_ADDR), VIA_EEPROM_INDICATORS_SIZE);
+}
+
+void via_qmk_indicators_load(void) {
+    eeprom_read_block(&via_qmk_indicators_config, ((void *)VIA_EEPROM_INDICATORS_CONFIG_ADDR), VIA_EEPROM_INDICATORS_SIZE);
+}
+
+#    ifdef RGB_MATRIX_ENABLE
+void via_qmk_rgb_matrix_indicators(void) {
+    // caps lock cyan
+    if (via_qmk_indicators_config.enable_caps_lock) {
+        RGB rgb_caps = hsv_to_rgb(via_qmk_indicators_config.caps_lock_indicator);
+        if (host_keyboard_led_state().caps_lock) {
+            rgb_matrix_set_color(via_qmk_indicators_config.caps_lock_key, rgb_caps.r, rgb_caps.g, rgb_caps.b);
+        } else {
+            if (via_qmk_indicators_config.caps_lock_override_animation) {
+                rgb_matrix_set_color(via_qmk_indicators_config.caps_lock_key, 0, 0, 0);
+            }
+        }
+    }
+
+    // num lock cyan
+    if (via_qmk_indicators_config.enable_num_lock) {
+        RGB rgb_num = hsv_to_rgb(via_qmk_indicators_config.num_lock_indicator);
+        if (host_keyboard_led_state().num_lock) {
+            rgb_matrix_set_color(via_qmk_indicators_config.num_lock_key, rgb_num.r, rgb_num.g, rgb_num.b);
+        } else {
+            if (via_qmk_indicators_config.num_lock_override_animation) {
+                rgb_matrix_set_color(via_qmk_indicators_config.num_lock_key, 0, 0, 0);
+            }
+        }
+    }
+
+    // scroll lock cyan
+    if (via_qmk_indicators_config.enable_scroll_lock) {
+        RGB rgb_scroll = hsv_to_rgb(via_qmk_indicators_config.scroll_lock_indicator);
+        if (host_keyboard_led_state().scroll_lock) {
+            rgb_matrix_set_color(via_qmk_indicators_config.scroll_lock_key, rgb_scroll.r, rgb_scroll.g, rgb_scroll.b);
+        } else {
+            if (via_qmk_indicators_config.scroll_lock_override_animation) {
+                rgb_matrix_set_color(via_qmk_indicators_config.scroll_lock_key, 0, 0, 0);
+            }
+        }
+    }
+
+    // layer state
+    if (via_qmk_indicators_config.enable_layer_1_indicator) {
+        RGB rgb_layer = hsv_to_rgb(via_qmk_indicators_config.layer_1_indicator);
+        switch (get_highest_layer(layer_state)) {
+            case 0:
+                if (via_qmk_indicators_config.layer_1_override_animation) {
+                    rgb_matrix_set_color(via_qmk_indicators_config.layer_1_indicator_key, 0, 0, 0);
+                }
+                break;
+            case 1:
+                rgb_matrix_set_color(via_qmk_indicators_config.layer_1_indicator_key, rgb_layer.r, rgb_layer.g, rgb_layer.b);
+                break;
+            default:
+                // white
+                rgb_matrix_set_color(via_qmk_indicators_config.layer_1_indicator_key, 128, 128, 128);
+                break;
+        }
+    }
+}
+#    endif
+#endif

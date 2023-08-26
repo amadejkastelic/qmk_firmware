@@ -29,6 +29,11 @@
 
 #include <lib/lib8tion/lib8tion.h>
 
+// VIA indicators hook
+#if defined(VIA_INDICATORS_ENABLE)
+#include "via.h"
+#endif
+
 #ifndef RGB_MATRIX_CENTER
 const led_point_t k_rgb_matrix_center = {112, 32};
 #else
@@ -450,6 +455,11 @@ void rgb_matrix_task(void) {
 }
 
 void rgb_matrix_indicators(void) {
+    // add VIA indicators hook here
+    // can then be over-ridden by functions after
+#ifdef VIA_INDICATORS_ENABLE
+    via_qmk_rgb_matrix_indicators();
+#endif
     rgb_matrix_indicators_kb();
 }
 
