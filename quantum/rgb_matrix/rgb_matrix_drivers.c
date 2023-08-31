@@ -24,7 +24,7 @@
  * be here if shared between boards.
  */
 
-#if defined(IS31FL3731) || defined(IS31FL3733) || defined(IS31FL3736) || defined(IS31FL3737) || defined(IS31FL3741) || defined(IS31FLCOMMON) || defined(CKLED2001)
+#if defined(IS31FL3729) || defined(IS31FL3731) || defined(IS31FL3733) || defined(IS31FL3736) || defined(IS31FL3737) || defined(IS31FL3741) || defined(IS31FLCOMMON) || defined(CKLED2001)
 #    include "i2c_master.h"
 
 // TODO: Remove this at some later date
@@ -37,7 +37,19 @@
 static void init(void) {
     i2c_init();
 
-#    if defined(IS31FL3731)
+#    if defined(IS31FL3729)
+    is31fl3729_init(DRIVER_ADDR_1);
+#        if defined(DRIVER_ADDR_2)
+    is31fl3729_init(DRIVER_ADDR_2);
+#            if defined(DRIVER_ADDR_3)
+    is31fl3729_init(DRIVER_ADDR_3);
+#                if defined(DRIVER_ADDR_4)
+    is31fl3729_init(DRIVER_ADDR_4);
+#                endif
+#            endif
+#        endif
+
+#    elif defined(IS31FL3731)
     is31fl3731_init(DRIVER_ADDR_1);
 #        if defined(DRIVER_ADDR_2)
     is31fl3731_init(DRIVER_ADDR_2);
@@ -138,7 +150,9 @@ static void init(void) {
         bool enabled = true;
 
         // This only caches it for later
-#    if defined(IS31FL3731)
+#    if defined(IS31FL3729)
+        is31fl3729_set_led_control_register(index, enabled, enabled, enabled);
+#    elif defined(IS31FL3731)
         is31fl3731_set_led_control_register(index, enabled, enabled, enabled);
 #    elif defined(IS31FL3733)
         is31fl3733_set_led_control_register(index, enabled, enabled, enabled);
@@ -156,7 +170,19 @@ static void init(void) {
     }
 
     // This actually updates the LED drivers
-#    if defined(IS31FL3731)
+#    if defined(IS31FL3729)
+    is31fl3729_update_led_control_registers(DRIVER_ADDR_1, 0);
+#        if defined(DRIVER_ADDR_2)
+    is31fl3729_update_led_control_registers(DRIVER_ADDR_2, 1);
+#            if defined(DRIVER_ADDR_3)
+    is31fl3729_update_led_control_registers(DRIVER_ADDR_3, 2);
+#                if defined(DRIVER_ADDR_4)
+    is31fl3729_update_led_control_registers(DRIVER_ADDR_4, 3);
+#                endif
+#            endif
+#        endif
+
+#    elif defined(IS31FL3731)
     is31fl3731_update_led_control_registers(DRIVER_ADDR_1, 0);
 #        if defined(DRIVER_ADDR_2)
     is31fl3731_update_led_control_registers(DRIVER_ADDR_2, 1);
@@ -245,7 +271,28 @@ static void init(void) {
 #    endif
 }
 
-#    if defined(IS31FL3731)
+#    if defined(IS31FL3729)
+static void flush(void) {
+    is31fl3729_update_pwm_buffers(DRIVER_ADDR_1, 0);
+#        if defined(DRIVER_ADDR_2)
+    is31fl3729_update_pwm_buffers(DRIVER_ADDR_2, 1);
+#            if defined(DRIVER_ADDR_3)
+    is31fl3729_update_pwm_buffers(DRIVER_ADDR_3, 2);
+#                if defined(DRIVER_ADDR_4)
+    is31fl3729_update_pwm_buffers(DRIVER_ADDR_4, 3);
+#                endif
+#            endif
+#        endif
+}
+
+const rgb_matrix_driver_t rgb_matrix_driver = {
+    .init = init,
+    .flush = flush,
+    .set_color = is31fl3729_set_color,
+    .set_color_all = is31fl3729_set_color_all,
+};
+
+#    elif defined(IS31FL3731)
 static void flush(void) {
     is31fl3731_update_pwm_buffers(DRIVER_ADDR_1, 0);
 #        if defined(DRIVER_ADDR_2)
