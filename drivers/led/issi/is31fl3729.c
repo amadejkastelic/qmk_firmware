@@ -154,12 +154,13 @@ bool is31fl3729_write_pwm_buffer(uint8_t addr, uint8_t *pwm_buffer) {
         send_size = 16;
     }
 
+    int offset = 0;
     for (int i = 1; i <= ISSI_MAX_LEDS; i += send_size) {
-        g_twi_transfer_buffer[0] = i;
+        g_twi_transfer_buffer[0] = i + offset;
         // copy the data from i to i+ISSI_MAX_SCALINGS
         // device will auto-increment register for data after the first byte
         // thus this sets registers 0x01-0x10, 0x11-0x20, etc. in one transfer
-        memcpy(g_twi_transfer_buffer + 1, pwm_buffer + i, send_size);
+        memcpy(g_twi_transfer_buffer + 1, pwm_buffer + i - 1, send_size);
 
 #if ISSI_PERSISTENCE > 0
         for (uint8_t i = 0; i < ISSI_PERSISTENCE; i++) {
@@ -172,6 +173,9 @@ bool is31fl3729_write_pwm_buffer(uint8_t addr, uint8_t *pwm_buffer) {
             return false;
         }
 #endif
+        if (config_15x9) {
+            offset++;
+        }
     }
 
     return true;
