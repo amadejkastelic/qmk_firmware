@@ -93,19 +93,6 @@
 #    define DRIVER_4_CONFIG_15x9 false
 #endif
 
-// buffer for runtime check if it is configured as 16x8 or 15x9
-const bool g_driver_config_15x9[DRIVER_COUNT] = {DRIVER_1_CONFIG_15x9,
-#ifdef DRIVER_ADDR_2
-                                                     DRIVER_2_CONFIG_15x9,
-#endif
-#ifdef DRIVER_ADDR_3
-                                                         DRIVER_3_CONFIG_15x9,
-#endif
-#ifdef DRIVER_ADDR_4
-                                                             DRIVER_4_CONFIG_15x9
-#endif
-};
-
 // Transfer buffer for TWITransmitData()
 uint8_t g_twi_transfer_buffer[20];
 
@@ -120,14 +107,23 @@ bool    g_scaling_registers_update_required[DRIVER_COUNT]    = {false};
 // helper to get the configuration
 bool is_config_15x9(uint8_t addr) {
     if (addr == DRIVER_ADDR_1) {
-        return g_driver_config_15x9[0];
-    } else if (addr == DRIVER_ADDR_2) {
-        return g_driver_config_15x9[1];
-    } else if (addr == DRIVER_ADDR_3) {
-        return g_driver_config_15x9[2];
-    } else {
-        return g_driver_config_15x9[3];
+        return DRIVER_1_CONFIG_15x9;
     }
+#ifdef DRIVER_ADDR_2
+    else if (addr == DRIVER_ADDR_2) {
+        return gDRIVER_2_CONFIG_15x9;
+    }
+#    ifdef DRIVER_ADDR_3
+    else if (addr == DRIVER_ADDR_3) {
+        return DRIVER_3_CONFIG_15x9;
+    }
+#        ifdef DRIVER_ADDR_4
+    else if (addr == DRIVER_ADDR_4) {
+        return DRIVER_4_CONFIG_15x9;
+    }
+#        endif
+#    endif
+#endif
 }
 
 void is31fl3729_write_register(uint8_t addr, uint8_t reg, uint8_t data) {
