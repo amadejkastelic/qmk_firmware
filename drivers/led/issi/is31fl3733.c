@@ -95,9 +95,10 @@ const uint8_t driver_sync[IS31FL3733_DRIVER_COUNT] = {
 // buffers and the transfers in is31fl3733_write_pwm_buffer() but it's
 // probably not worth the extra complexity.
 typedef struct is31fl3733_driver_t {
-    uint8_t pwm_buffer[IS31FL3733_PWM_REGISTER_COUNT];
+    uint8_t pwm_buffer_0[IS31FL3733_PWM_REGISTER_COUNT];
 #ifdef IS31FL3733_DOUBLE_BUFFER
-    uint8_t pwm_flush_buffer[IS31FL3733_PWM_REGISTER_COUNT];
+    uint8_t pwm_buffer_1[IS31FL3733_PWM_REGISTER_COUNT];
+    bool    use_buffer_0;
 #endif
     bool    pwm_buffer_dirty;
     uint8_t led_control_buffer[IS31FL3733_LED_CONTROL_REGISTER_COUNT];
@@ -105,9 +106,10 @@ typedef struct is31fl3733_driver_t {
 } PACKED is31fl3733_driver_t;
 
 is31fl3733_driver_t driver_buffers[IS31FL3733_DRIVER_COUNT] = {{
-    .pwm_buffer = {0},
+    .pwm_buffer_0 = {0},
 #ifdef IS31FL3733_DOUBLE_BUFFER
-    .pwm_flush_buffer = {0},
+    .pwm_buffer_1 = {0},
+    .use_buffer_0 = true,
 #endif
     .pwm_buffer_dirty         = false,
     .led_control_buffer       = {0},
@@ -133,21 +135,33 @@ void is31fl3733_write_pwm_buffer(uint8_t index) {
     // Assumes page 1 is already selected.
     // Transmit PWM registers in 12 transfers of 16 bytes.
 
-    // Iterate over the pwm_buffer contents at 16 byte intervals.
+    // Iterate over the pwm_buffer_0 contents at 16 byte intervals.
     for (uint8_t i = 0; i < IS31FL3733_PWM_REGISTER_COUNT; i += 16) {
 #if IS31FL3733_I2C_PERSISTENCE > 0
         for (uint8_t j = 0; j < IS31FL3733_I2C_PERSISTENCE; j++) {
 #    ifdef IS31FL3733_DOUBLE_BUFFER
-            if (i2c_write_register(i2c_addresses[index] << 1, i, driver_buffers[index].pwm_flush_buffer + i, 16, IS31FL3733_I2C_TIMEOUT) == I2C_STATUS_SUCCESS) break;
+            if (driver_buffers[index].use_buffer_0) {
+                if (i2c_write_register(i2c_addresses[index] << 1, i, driver_buffers[index].pwm_buffer_0 + i, 16, IS31FL3733_I2C_TIMEOUT) == I2C_STATUS_SUCCESS) break;
+            } else {
+                if (i2c_write_register(i2c_addresses[index] << 1, i, driver_buffers[index].pwm_buffer_1 + i, 16, IS31FL3733_I2C_TIMEOUT) == I2C_STATUS_SUCCESS) break;
+            }
+
+            driver_buffers[index].use_buffer_0 = !driver_buffers[index].use_buffer_0;
 #    else
-            if (i2c_write_register(i2c_addresses[index] << 1, i, driver_buffers[index].pwm_buffer + i, 16, IS31FL3733_I2C_TIMEOUT) == I2C_STATUS_SUCCESS) break;
+            if (i2c_write_register(i2c_addresses[index] << 1, i, driver_buffers[index].pwm_buffer_0 + i, 16, IS31FL3733_I2C_TIMEOUT) == I2C_STATUS_SUCCESS) break;
 #    endif
         }
 #else
 #    ifdef IS31FL3733_DOUBLE_BUFFER
-        i2c_write_register(i2c_addresses[index] << 1, i, driver_buffers[index].pwm_flush_buffer + i, 16, IS31FL3733_I2C_TIMEOUT);
+        if (driver_buffers[index].use_buffer_0) {
+            i2c_write_register(i2c_addresses[index] << 1, i, driver_buffers[index].pwm_buffer_0 + i, 16, IS31FL3733_I2C_TIMEOUT);
+        } else {
+            i2c_write_register(i2c_addresses[index] << 1, i, driver_buffers[index].pwm_buffer_1 + i, 16, IS31FL3733_I2C_TIMEOUT);
+        }
+
+        driver_buffers[index].use_buffer_0 = !driver_buffers[index].use_buffer_0;
 #    else
-        i2c_write_register(i2c_addresses[index] << 1, i, driver_buffers[index].pwm_buffer + i, 16, IS31FL3733_I2C_TIMEOUT);
+        i2c_write_register(i2c_addresses[index] << 1, i, driver_buffers[index].pwm_buffer_0 + i, 16, IS31FL3733_I2C_TIMEOUT);
 #    endif
 #endif
     }
@@ -218,14 +232,34 @@ void is31fl3733_set_color(int index, uint8_t red, uint8_t green, uint8_t blue) {
     if (index >= 0 && index < IS31FL3733_LED_COUNT) {
         memcpy_P(&led, (&g_is31fl3733_leds[index]), sizeof(led));
 
-        if (driver_buffers[led.driver].pwm_buffer[led.r] == red && driver_buffers[led.driver].pwm_buffer[led.g] == green && driver_buffers[led.driver].pwm_buffer[led.b] == blue) {
+        uint8_t bufRed;
+        uint8_t bufGreen;
+        uint8_t bufBlue;
+
+        if (driver_buffers[led.driver].use_buffer_0) {
+            bufRed   = driver_buffers[led.driver].pwm_buffer_0[led.r];
+            bufGreen = driver_buffers[led.driver].pwm_buffer_0[led.g];
+            bufBlue  = driver_buffers[led.driver].pwm_buffer_0[led.b];
+        } else {
+            bufRed   = driver_buffers[led.driver].pwm_buffer_1[led.r];
+            bufGreen = driver_buffers[led.driver].pwm_buffer_1[led.g];
+            bufBlue  = driver_buffers[led.driver].pwm_buffer_1[led.b];
+        }
+
+        if (bufRed == red && bufGreen == green && bufBlue == blue) {
             return;
         }
 
-        driver_buffers[led.driver].pwm_buffer[led.r] = red;
-        driver_buffers[led.driver].pwm_buffer[led.g] = green;
-        driver_buffers[led.driver].pwm_buffer[led.b] = blue;
-        driver_buffers[led.driver].pwm_buffer_dirty  = true;
+        if (driver_buffers[led.driver].use_buffer_0) {
+            driver_buffers[led.driver].pwm_buffer_0[led.r] = red;
+            driver_buffers[led.driver].pwm_buffer_0[led.g] = green;
+            driver_buffers[led.driver].pwm_buffer_0[led.b] = blue;
+        } else {
+            driver_buffers[led.driver].pwm_buffer_1[led.r] = red;
+            driver_buffers[led.driver].pwm_buffer_1[led.g] = green;
+            driver_buffers[led.driver].pwm_buffer_1[led.b] = blue;
+        }
+        driver_buffers[led.driver].pwm_buffer_dirty = true;
     }
 }
 
@@ -270,13 +304,10 @@ void is31fl3733_update_pwm_buffers(uint8_t index) {
         driver_buffers[index].pwm_buffer_dirty = false;
 
 #ifdef IS31FL3733_DOUBLE_BUFFER
-        if (memcmp(driver_buffers[index].pwm_buffer, driver_buffers[index].pwm_flush_buffer, IS31FL3733_PWM_REGISTER_COUNT) == 0) {
+        if (memcmp(driver_buffers[index].pwm_buffer_0, driver_buffers[index].pwm_buffer_1, IS31FL3733_PWM_REGISTER_COUNT) == 0) {
             // if they are the same return early
             return;
         }
-
-        // copy the current buffer to the flush buffer
-        memcpy(driver_buffers[index].pwm_flush_buffer, driver_buffers[index].pwm_buffer, IS31FL3733_PWM_REGISTER_COUNT);
 #endif
         is31fl3733_select_page(index, IS31FL3733_COMMAND_PWM);
 
