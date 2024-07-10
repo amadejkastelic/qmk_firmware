@@ -485,6 +485,9 @@ void keyboard_init(void) {
 #ifdef HAPTIC_ENABLE
     haptic_init();
 #endif
+#ifdef KEY_INTERRUPT_ENABLE
+    key_interrupt_init();
+#endif
 
 #if defined(DEBUG_MATRIX_SCAN_RATE) && defined(CONSOLE_ENABLE)
     debug_enable = true;

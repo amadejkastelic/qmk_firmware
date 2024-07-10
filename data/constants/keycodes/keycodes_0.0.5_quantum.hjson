@@ -20,6 +20,13 @@
             "aliases": [
                 "KI_TOGG"
             ]
-        }
+        },
+        "0x7C7E": {
+            "group": "quantum",
+            "key": "QK_KEY_INTERRUPT_UP_STROKE_TOGGLE",
+            "aliases": [
+                "KI_USTG"
+            ]
+        },
     }
 }

@@ -8,9 +8,11 @@
 
 #define NUM_INTERRUPT_KEYCODES 2
 
+void key_interrupt_init(void);
 bool process_key_interrupt(uint16_t keycode, keyrecord_t *record);
 bool process_key_interrupt_user(uint16_t keycode, keyrecord_t *record);
 
+bool key_interrupt_up_stroke_is_enabled(void);
 bool key_interrupt_is_enabled(void);
 void key_interrupt_enable(void);
 void key_interrupt_disable(void);
