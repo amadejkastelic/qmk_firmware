@@ -23,19 +23,13 @@
 #include "keymap_introspection.h"
 #include "matrix.h"
 
+#define KEYREPORT_BUFFER_SIZE 10
+
 // key interrupt up stroke buffer
-typedef struct matrix_intersection_t {
-    uint8_t row;
-    uint8_t col;
-} matrix_intersection_t;
+uint16_t buffer_keyreports[KEYREPORT_BUFFER_SIZE];
 
-static bool failed_to_init = false;
-
-matrix_intersection_t *key_interrupt_unpress_buffer = NULL;
-
-// uint16_t buffer_keyreports[10];
-
-// matrix_intersection_t key_interrupt_unpress_buffer[key_interrupt_count_raw()];
+// is the next free one
+int buffer_keyreport_count = 0;
 
 /**
  * @brief function for querying the enabled state of key interrupt
@@ -113,6 +107,37 @@ void key_interrupt_init(void) {
     }
 }
 
+// check if key already in buffer
+bool key_interrupt_is_key_in_buffer(uint16_t keycode) {
+    for (int i = 0; i < buffer_keyreport_count; i++) {
+        if (buffer_keyreports[i] == keycode) {
+            return true;
+        }
+    }
+    return false;
+}
+
+void add_key_buffer(uint16_t keycode) {
+    if (key_interrupt_is_key_in_buffer(keycode)) {
+        return;
+    }
+    buffer_keyreports[buffer_keyreport_count] = keycode;
+    buffer_keyreport_count++;
+}
+
+// remove keycode and shift buffer
+void del_key_buffer(uint16_t keycode) {
+    for (int i = 0; i < buffer_keyreport_count; i++) {
+        if (buffer_keyreports[i] == keycode) {
+            for (int j = i; j < buffer_keyreport_count - 1; j++) {
+                buffer_keyreports[j] = buffer_keyreports[j + 1];
+            }
+            buffer_keyreport_count--;
+            break;
+        }
+    }
+}
+
 /**
  * @brief Process handler for key_interrupt feature
  *
@@ -152,32 +177,22 @@ bool process_key_interrupt(uint16_t keycode, keyrecord_t *record) {
         return true;
     }
 
+    if (record->event.pressed) {
+        add_key_buffer(keycode);
+    } else {
+        del_key_buffer(keycode);
+    }
+
     for (int i = 0; i < key_interrupt_count(); i++) {
-        const uint16_t keycode_press = key_interrupt_get_keycode_press_at_idx(i);
+        const uint16_t keycode_press   = key_interrupt_get_keycode_press_at_idx(i);
         const uint16_t keycode_unpress = key_interrupt_get_keycode_unpress_at_idx(i);
 
-        if (record->event.pressed) {
-            if (!failed_to_init && keycode == keycode_unpress) {
-                key_interrupt_unpress_buffer[i].row = record->event.key.row;
-                key_interrupt_unpress_buffer[i].col = record->event.key.col;
+        // check each key interrupt in the buffer from the right
+        for (int j = buffer_keyreport_count - 1; j >= 0; j--) {
+            const uint16_t buffer_keycode = buffer_keyreports[j];
+            if (buffer_keycode == keycode_press) {
+                del_key(buffer_keycode);
             }
-
-            if(keycode == keycode_press) {
-                del_key(keycode_unpress);
-            }
-        }
-        else
-        {
-            // key upstroke
-            if (!failed_to_init && keycode == keycode_press) {
-                uint16_t keycode_recover = keycode_at_keymap_location(get_highest_layer(layer_state | default_layer_state),
-                                                                      key_interrupt_unpress_buffer[i].row,
-                                                                      key_interrupt_unpress_buffer[i].col);
-                if (keycode_recover == keycode_unpress && matrix_is_on(key_interrupt_unpress_buffer[i].row, key_interrupt_unpress_buffer[i].col)) {
-                    add_key(keycode_unpress);
-                }
-            }
-
         }
     }
 
