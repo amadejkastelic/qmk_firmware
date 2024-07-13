@@ -82,47 +82,25 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 };
 
 #ifdef RGB_MATRIX_ENABLE
-bool rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
+bool rgb_matrix_indicators_user() {
     // caps lock cyan
-    if (host_keyboard_led_state().caps_lock) {
-        RGB_MATRIX_INDICATOR_SET_COLOR(27, 0, 128, 128);
-    } else {
-        RGB_MATRIX_INDICATOR_SET_COLOR(27, 0, 0, 0);
-    }
+    if (key_interrupt_is_enabled()) {
+        rgb_matrix_set_color(10, 0, 20, 20);
 
-    // num lock cyan
-    if (host_keyboard_led_state().num_lock) {
-        RGB_MATRIX_INDICATOR_SET_COLOR(26, 0, 128, 128);
-    } else {
-        RGB_MATRIX_INDICATOR_SET_COLOR(26, 0, 0, 0);
-    }
-
-    // scroll lock cyan
-    if (host_keyboard_led_state().scroll_lock) {
-        RGB_MATRIX_INDICATOR_SET_COLOR(25, 0, 128, 128);
-    } else {
-        RGB_MATRIX_INDICATOR_SET_COLOR(25, 0, 0, 0);
-    }
-
-    // layer state
-    switch (get_highest_layer(layer_state)) {
-        case 0:
-            RGB_MATRIX_INDICATOR_SET_COLOR(24, 0, 0, 0);
-            break;
-        case 1:
-            RGB_MATRIX_INDICATOR_SET_COLOR(24, 128, 0, 0);
-            break;
-        case 2:
-            RGB_MATRIX_INDICATOR_SET_COLOR(24, 0, 128, 0);
-            break;
-        case 3:
-            RGB_MATRIX_INDICATOR_SET_COLOR(24, 0, 0, 128);
-            break;
-        default:
-            // white
-            RGB_MATRIX_INDICATOR_SET_COLOR(24, 128, 128, 128);
-            break;
+        if (key_interrupt_recovery_is_enabled()) {
+            rgb_matrix_set_color(7, 0, 20, 20);
+        }
     }
     return false;
 }
+#endif
+
+#ifdef KEY_INTERRUPT_ENABLE
+const key_interrupt_t PROGMEM key_interrupt_list[] = {
+    // on key down
+    //       |    key to be released
+    //       |     |
+    [0] = {KC_D, KC_A},
+    [1] = {KC_A, KC_D},
+};
 #endif

@@ -17,3 +17,4 @@
 
 // More layers
 #define DYNAMIC_KEYMAP_LAYER_COUNT 8
+#define DEBOUNCE 15

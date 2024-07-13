@@ -1,1 +1,6 @@
 VIA_ENABLE = yes
+
+KEY_INTERRUPT_ENABLE = yes
+OPT = 2
+LTO_ENABLE = yes
+DEBOUNCE_TYPE = sym_defer_pk
