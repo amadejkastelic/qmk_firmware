@@ -1,18 +1,18 @@
- /* Copyright 2021 OpenAnnePro community
-  *
-  * This program is free software: you can redistribute it and/or modify
-  * it under the terms of the GNU General Public License as published by
-  * the Free Software Foundation, either version 2 of the License, or
-  * (at your option) any later version.
-  *
-  * This program is distributed in the hope that it will be useful,
-  * but WITHOUT ANY WARRANTY; without even the implied warranty of
-  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  * GNU General Public License for more details.
-  *
-  * You should have received a copy of the GNU General Public License
-  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
-  */
+/* Copyright 2021 OpenAnnePro community
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 
 #include QMK_KEYBOARD_H
 
@@ -132,14 +132,12 @@ layer_state_t layer_state_set_user(layer_state_t state) {
 // It's called after the capslock changes state or after entering layers 1 and 2.
 bool led_update_user(led_t leds) {
     if (leds.caps_lock) {
-        // Set the caps-lock to red
+        // Set the leds to red
         const ap2_led_t color = {.p.red = 0xff, .p.green = 0x00, .p.blue = 0x00, .p.alpha = 0xff};
-        ap2_led_sticky_set_key(2, 0, color);
-        /* NOTE: Instead of colouring the capslock only, you can change the whole
-           keyboard with ap2_led_mask_set_mono */
+        ap2_led_mask_set_mono(color);
     } else {
-        // Reset the capslock if there is no layer active
-        ap2_led_unset_sticky_key(2, 0);
+        const ap2_led_t color = {.p.red = 0x00, .p.green = 0x00, .p.blue = 0x00, .p.alpha = 0x00};
+        ap2_led_mask_set_mono(color);
     }
 
     return true;
